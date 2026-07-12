@@ -1,8 +1,8 @@
 # Delivery guide: Building B2B Pre-Orders
 
 Presenter-facing. This is the run-of-show for the 60-minute session: timings, what you say and
-show, the firsthand teaches, and the checkpoints. The attendee-facing build steps live in
-`hands-on-guide.md`; this guide wraps a narrative and a clock around them.
+show, the firsthand teaches, and the checkpoints. The attendee-facing build steps live in the
+repo `README.md` ("How the workshop runs"); this guide wraps a narrative and a clock around them.
 
 > **Terminology note.** The audience-facing concept is **pre-order** (matches the event title and
 > how merchants ask for it). The technical product state we tag and build against is **pre-book**
@@ -305,7 +305,7 @@ booth.
 | Slide deck (open + framing + toolkit + close) | TODO | DotDev 26 Workshops template (Light/Orange) |
 | Starter repo (scaffold + pre-seed prompt/script) | In progress | `dotdev-2026-building-b2b` |
 | Finished-state branch (reference/recovery) | TODO | `finished` branch |
-| Attendee HOK guide | ✅ | `workshop-assets/hands-on-guide.md` |
+| Attendee build track | ✅ | `README.md` ("How the workshop runs") |
 | Prerequisites (frozen) | ✅ draft | `workshop-assets/prerequisites.md` |
 | Pre-seed setup (script primary; AI prompt optional) | ✅ | `workshop-assets/setup/`, `prompts/00-store-setup.md` |
 | Data model seed (in-session, Admin; GraphiQL optional) | ✅ | `workshop-assets/data-model-seed.md` |
@@ -316,7 +316,7 @@ booth.
 ## Pre-submission checklist
 
 - [ ] Every part has ≥1 Step and ≥1 Teach; each ends with an observable checkpoint
-- [ ] HOK is followable independently; code blocks complete and tested
+- [ ] README build track is followable independently; code blocks complete and tested
 - [ ] Starter puts attendees at the exercise start; `finished` branch linked
 - [ ] Anticipated Q&A listed (6); Q&A protected at 10 min
 - [ ] Close names a concrete take-home (pattern map + finished branch)

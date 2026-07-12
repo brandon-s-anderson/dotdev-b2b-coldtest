@@ -1,6 +1,6 @@
 # Reset & redo reference
 
-A troubleshooting companion to `hands-on-guide.md`, not part of the follow-along. Use it to rewind a
+A troubleshooting companion to the README build track ("How the workshop runs"), not part of the follow-along. Use it to rewind a
 single part (to redo it) or to wipe the in-session build back to the **pre-seeded baseline**.
 
 **Scope.** This undoes only what you build *in the session*: the season values, the theme block, the

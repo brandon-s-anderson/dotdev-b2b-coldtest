@@ -9,7 +9,20 @@ The Shopify app you extend in the B2B pre-booking workshop. It holds two extensi
   pre-book item is in the cart it switches payment terms to due-on-fulfillment and hides the
   deferred payment option.
 
-Build the pieces by following the repo's `prompts/` and `workshop-assets/hands-on-guide.md`.
+Build the pieces by following the repo's `README.md` ("How the workshop runs") and the matching
+`prompts/`.
+
+## What ships vs. what you build
+
+- **`extensions/prebooking-theme`** ships as a **stub**: `blocks/b2b-prebooking.liquid` and
+  `assets/b2b-prebooking.css` contain a comment/TODO and the block schema only. You implement the
+  window display + line item properties in Part 1 (`../../prompts/02-theme-app-block.md`).
+- **`extensions/prebooking-payment-terms`** ships as a **stub**: `src/cart_payment_methods_transform_run.ts`
+  returns no operations. You implement the due-on-fulfillment + hide-deferred logic in Part 4
+  (`../../prompts/05-plus-payment-terms-function.md`).
+
+The app config, extension scaffolding, and the app-owned data model in `shopify.app.toml` ship
+complete; the business logic in those two source files is yours to build.
 
 ## Common commands
 
