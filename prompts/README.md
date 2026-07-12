@@ -3,7 +3,7 @@
 Work through these in order. Each file has the exact CLI command and/or AI prompt to use,
 plus what you should see when it works. They are labelled:
 
-- **[non-Plus]** works on Advanced and up
+- **[non-Plus]** works on plans below Plus (no Plus-tier features needed)
 - **[Plus]** needs Plus-tier capabilities
 - **[both]** works on either
 
@@ -11,8 +11,9 @@ You build all of them on your dev store (dev stores include Plus features). The 
 which merchant plan a capability requires, so you can build for and advise merchants on each.
 
 Philosophy: AI is an accelerator, not the author. Use the prompt to generate the code, then
-read and understand what it produced. The `starter/` app already contains a finished version
-of each piece so you can compare.
+read and understand what it produced. The `starter/` app ships the extensions as **stubs** you
+implement (see `../starter/b2b-prebooking-workshop/README.md`); a complete reference lives on the
+`finished` branch if you want to compare.
 
 | Step | File | Scope |
 |---|---|---|

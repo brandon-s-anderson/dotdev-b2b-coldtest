@@ -21,10 +21,6 @@ workshop shows how to build it on Shopify now.
 Pre-booking, in one line: a delayed-fulfillment order that carries a season signal and is
 paid on fulfillment.
 
-> Terminology: in prose we write **pre-book** / **pre-booking** (hyphenated). The literal
-> identifiers are one word: the product tag is `prebook`, the order tag is `Prebooking`, and the
-> data model is `b2b-prebooking`. When you see the unhyphenated form, it's a tag or identifier.
-
 ## What you'll build
 
 By the end, running against your own dev store: a B2B buyer views a pre-book product and sees its
@@ -34,7 +30,7 @@ due-on-fulfillment; when it ships, the vaulted card is charged automatically. Yo
 
 ## Two use cases
 
-| | Non-Plus (Advanced) | Plus |
+| | Non-Plus | Plus |
 |---|---|---|
 | Product modeling | Separate available-now and pre-book products | Available-now + pre-book in one mixed cart |
 | Visibility | Separate catalog + location/market per type | Single location with both catalogs |
@@ -45,7 +41,7 @@ due-on-fulfillment; when it ships, the vaulted card is charged automatically. Yo
 
 You build **both** on your dev store, which includes Plus features, so you can complete every
 part. The **non-Plus vs. Plus labels tell you which merchant plan a capability requires**, so
-you can build for a merchant on Advanced or on Plus and clearly explain the differences.
+you can build for a merchant below Plus or on Plus and clearly explain the differences.
 
 ## Plans: what B2B gives you, and what Plus adds
 
@@ -53,9 +49,11 @@ B2B itself is on **all plans** (Basic, Grow, Advanced, Plus): companies, locatio
 catalogs, net terms including due-on-fulfillment, vaulted cards, and Shopify Flow with B2B
 objects. See [B2B features by plan](https://help.shopify.com/en/manual/b2b/getting-started/plan-features).
 
-This workshop's "non-Plus" build targets **Advanced**, because it uses **contextual
-storefront/checkout customization by market** (the per-market navigation), which is Advanced and
-up (not Basic/Grow), and it stays within the **3-catalog** cap.
+The **non-Plus** build uses only core B2B that's available below Plus (companies and locations, up to
+3 catalogs, net terms, vaulted cards, and Flow), so it isn't tied to one specific tier. For simplicity
+it links **both** the Available Now and Pre-book collections in the navigation for **every** location.
+(Making the navigation contextual to each company location's catalog, so a buyer sees only what their
+location can order, is a nice refinement but out of scope here.)
 
 **Plus adds** the pieces the Plus build uses: the `paymentTermsSet` Function operation, unlimited
 and direct-to-company catalogs, deposits/partial payments, **payment requests per fulfillment**
@@ -68,7 +66,8 @@ force-vault Function must come from an **App Store (public) app**; on Plus a cus
 Full checklist (with the tricky Shopify Payments setup) is in
 [`workshop-assets/prerequisites.md`](workshop-assets/prerequisites.md). In short, before the session:
 
-- A **US Shopify Plus sandbox** development store with **B2B on** (gives you Advanced + Plus features).
+- A **US Shopify Plus sandbox** development store with **B2B on** (so you get every feature the workshop
+  uses, including the Plus-only pieces).
 - **Shopify Payments in test mode**, with payment capture set to **manual or on-fulfillment** (not at
   checkout).
 - **Shopify Flow** and the **Shopify GraphiQL App** installed (GraphiQL with
@@ -238,8 +237,8 @@ store already has:
 - **Everything else is the same build.** The theme block (Part 1) and both Flows (Parts 2 to 3) work
   unchanged; there is no new code for non-Plus.
 - **Force a vaulted card** by hiding the deferred option. On non-Plus this hide is a
-  payment-customization Function, and **custom apps that contain Functions require Plus**, so on Advanced
-  it must come from an **App Store (public) app**. This is the one piece an Advanced merchant reaches for
+  payment-customization Function, and **custom apps that contain Functions require Plus**, so on non-Plus
+  it must come from an **App Store (public) app**. This is the one piece a non-Plus merchant reaches for
   an app to do.
 
 - **Checkpoint.** On the two-location store, available-now and pre-book are ordered separately with
@@ -272,3 +271,9 @@ Need to redo a part or wipe the in-session build back to the pre-seeded baseline
 - Theme app extensions: https://shopify.dev/docs/apps/build/online-store/theme-app-extensions
 - B2B: https://shopify.dev/docs/apps/build/b2b
 - Shopify Flow: https://help.shopify.com/manual/shopify-flow
+
+---
+
+<sup>Terminology: in prose we write **pre-book** / **pre-booking** (hyphenated); the literal identifiers
+are one word (product tag `prebook`, order tag `Prebooking`, data model `b2b-prebooking`). The
+unhyphenated form is always a tag or identifier.</sup>

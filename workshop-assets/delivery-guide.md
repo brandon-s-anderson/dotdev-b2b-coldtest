@@ -139,7 +139,7 @@ Walk the building blocks on screen (no code yet). This is also the reference map
 - **Markets + catalogs:** scope which products each Company Location sees (pre-seeded).
 
 **Teach:** "Two of these are Plus-only: per-fulfillment charging and the terms Function. Everything
-else works on Advanced. The whole game is which combination you reach for on which plan."
+else works without Plus. The whole game is which combination you reach for on which plan."
 
 > 💡 Liam's open question on the outline was whether the toolkit is a doc the audience gets. Yes:
 > the pattern map in the close is this slide as a take-home reference.
@@ -252,7 +252,7 @@ built work unchanged. No new code.
 charging and the terms Function. So you can't switch terms mid-checkout and you can't split charges
 on one order. The move is to pre-separate the journeys into two locations with fixed terms. Same
 building blocks, different arrangement. The one thing you still need is to force a vaulted card,
-and since custom-app Functions require Plus, on Advanced that hide comes from an **App Store app**,
+and since custom-app Functions require Plus, on non-Plus that hide comes from an **App Store app**,
 not your own."
 
 **Checkpoint.** ✅ Available-now and pre-order are ordered from separate locations with their own

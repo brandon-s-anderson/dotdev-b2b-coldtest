@@ -146,9 +146,11 @@ and tag products in-session (see `data-model-seed.md`). Nothing to do here in ad
 
 B2B is available on **all plans** (Basic, Grow, Advanced, Plus): companies, locations, up to 3
 catalogs, net terms, vaulted cards, and Flow ([B2B features by plan](https://help.shopify.com/en/manual/b2b/getting-started/plan-features)).
-Our "non-Plus" build specifically targets **Advanced**, because it uses contextual customization
-by market (B2B catalogs and checkout context scoped per market), which is Advanced and up. On a **Plus sandbox** development
-store you have Advanced and Plus features together, so you build **every** part, including the
+Our "non-Plus" build uses only core B2B that's available below Plus (companies, locations, up to 3
+catalogs, terms, vaulted cards, and Flow), so it isn't tied to one specific tier; for simplicity it
+links both the Available Now and Pre-book collections in the nav for every location (making the nav
+contextual per company location is a nice refinement, but out of scope). On a **Plus sandbox**
+development store you have every feature together, so you build **every** part, including the
 Plus payment Function. The non-Plus vs. Plus labels tell you what a merchant actually gets on
 each plan. The Plus-only differences you build with in mind: the `paymentTermsSet` Function
 operation, checkout UI extensions on the payment step, per-fulfillment charging, unlimited and
