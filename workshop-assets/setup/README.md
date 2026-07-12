@@ -7,7 +7,7 @@ metafield). To minimize manual setup it creates the company (**Urban Style**) an
 
 ## Primary path: the setup script
 
-`setup-store.py` provisions the whole store in one run. This is the recommended pre-work path:
+`setup-store.mjs` provisions the whole store in one run. This is the recommended pre-work path:
 it's deterministic and mirrors how peer DotDev workshops seed stores (e.g. the Analytics
 workshop ships a `scripts/seed-*.mjs` run via `pnpm seed`). Run it once against your store and
 you're ready for the session.
@@ -23,8 +23,8 @@ read_online_store_navigation,write_online_store_navigation,\
 read_payment_customizations,write_payment_customizations
 
 # 2) Run the setup:
-STORE=<store>.myshopify.com BUYER_EMAIL=you+us@example.com python3 setup-store.py                 # full build
-STORE=<store>.myshopify.com BUYER_EMAIL=you+us@example.com NON_PLUS_ONLY=1 python3 setup-store.py # skip Plus Combined
+STORE=<store>.myshopify.com BUYER_EMAIL=you+us@example.com node setup-store.mjs                 # full build
+STORE=<store>.myshopify.com BUYER_EMAIL=you+us@example.com NON_PLUS_ONLY=1 node setup-store.mjs # skip Plus Combined
 ```
 
 `shopify store auth` without `--scopes` errors ("Missing required flag scopes"), and without a prior

@@ -87,7 +87,7 @@ tricky Shopify Payments setup and the exact steps. The short version:
 - **Shopify Flow** installed (free, from the App Store). No GraphiQL app: the Plus payment Function is
   activated in-session with the Shopify CLI (the two `*_payment_customizations` scopes are in the store
   auth).
-- **Node.js 20+**, **pnpm** (or npm), **Python 3**, and **Shopify CLI 4+**.
+- **Node.js 20+**, **pnpm** (or npm), and **Shopify CLI 4+**. (No Python: the setup script is Node.)
 - An **AI assistant** with the **Shopify Dev MCP** and **Shopify AI Toolkit** (the repo ships the MCP
   config, so most assistants auto-load it).
 - The store structure (company, buyer, locations, catalogs, markets, terms, products) is created for
@@ -107,7 +107,7 @@ git clone <this-repo-url>
 cd <this-repo>
 cd workshop-assets/setup
 shopify store auth --store <your-store>.myshopify.com --scopes <see setup/README.md>
-STORE=<your-store>.myshopify.com BUYER_EMAIL=you+us@example.com python3 setup-store.py
+STORE=<your-store>.myshopify.com BUYER_EMAIL=you+us@example.com node setup-store.mjs
 ```
 
 The pre-booking **data model** is *not* seeded here. It's app-owned (declared in the app's

@@ -1,7 +1,7 @@
 # 0. Store setup: catalogs, markets, locations, data model  [non-Plus + Plus]
 
 > **This AI-prompt path is OPTIONAL/educational.** The recommended one-shot pre-work is the setup
-> **script** (`../workshop-assets/setup/setup-store.py`, see `../workshop-assets/setup/README.md`),
+> **script** (`../workshop-assets/setup/setup-store.mjs`, see `../workshop-assets/setup/README.md`),
 > which is deterministic and matches how peer DotDev workshops seed stores. This prompt lags the
 > script on a few pieces (collections + menu, DTC catalog, `B2B -` naming, stray-location cleanup).
 > Use it only if you want to watch the Admin GraphQL run step by step.

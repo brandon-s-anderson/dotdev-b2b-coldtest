@@ -59,10 +59,8 @@ along; in the room we only clone, install, and build. Give yourself a few days o
     customers, but every login code still lands in `brandon.anderson@shopify.com`. Handy for
     testing different buyers/locations without extra inboxes.
 - **Node.js 20+** and a package manager: **pnpm or npm** (the commands in these docs use pnpm;
-  substitute `npm` if you prefer).
-- **Python 3** (`python3 --version`), used to run the pre-seed **setup script**. Only skippable if
-  you provision the store via the AI-prompt path (`../prompts/00-store-setup.md`) instead of the
-  script.
+  substitute `npm` if you prefer). Node also runs the pre-seed **setup script** (`setup-store.mjs`),
+  so there's no separate Python requirement.
 - **Shopify CLI 4+** installed and authenticated (`shopify version`). On an older major, upgrade
   with `pnpm add -g @shopify/cli@latest` (or `npm install -g @shopify/cli@latest`).
 - A supported **AI coding assistant**: Claude Code, Codex, Cursor, VS Code, Antigravity CLI,
@@ -127,7 +125,7 @@ is done well before the session; the clone and install are quick and safe to do 
 From the repo you cloned above, first authenticate the Shopify CLI to your store **with the required
 scopes** (one time per store, the script fails without it):
 `shopify store auth --store <your-store>.myshopify.com --scopes ...`.
-The exact scopes string is in `setup/README.md`. Then run the **setup script** (`setup/setup-store.py`,
+The exact scopes string is in `setup/README.md`. Then run the **setup script** (`setup/setup-store.mjs`,
 the recommended one-shot path) to provision everything **before** the workshop, so the in-session
 time goes to code. (An optional AI-prompt path, `../prompts/00-store-setup.md`, exists for those who
 want to see the Admin GraphQL step by step, but the script is the reliable route.) It creates:

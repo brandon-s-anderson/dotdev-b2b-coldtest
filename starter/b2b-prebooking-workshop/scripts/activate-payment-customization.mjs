@@ -34,14 +34,16 @@ function execute(query, mutate = false) {
     const err = clean(r.stderr).replace(/[│╭╮╰╯─]/g, "").trim();
     throw new Error("No JSON from `shopify store execute` (auth or GraphQL error?).\n" + err.slice(0, 1500));
   }
-  return JSON.parse(out.slice(i, j + 1));
+  // `shopify store execute --json` reports the query fields at the top level; tolerate a `data` wrapper.
+  const parsed = JSON.parse(out.slice(i, j + 1));
+  return parsed && parsed.data !== undefined ? parsed.data : parsed;
 }
 
 // 1) Find this app's payment-customization Function.
 const fnData = execute(
   `query { shopifyFunctions(first: 100) { nodes { id title apiType app { title } } } }`
 );
-const nodes = fnData?.data?.shopifyFunctions?.nodes || [];
+const nodes = fnData?.shopifyFunctions?.nodes || [];
 let candidates = nodes.filter((n) => /payment/i.test(n.apiType || ""));
 if (candidates.length > 1) {
   const preferred = candidates.filter((n) => /b2b-prebooking/i.test(n.app?.title || ""));
@@ -64,7 +66,7 @@ console.log(`Function: ${fn.title} (${fn.apiType}) from app "${fn.app?.title}"\n
 const existing = execute(
   `query { paymentCustomizations(first: 50) { nodes { id title enabled } } }`
 );
-const already = (existing?.data?.paymentCustomizations?.nodes || []).find((c) => c.title === TITLE);
+const already = (existing?.paymentCustomizations?.nodes || []).find((c) => c.title === TITLE);
 if (already) {
   console.log(`Already active: "${already.title}" (${already.id}, enabled=${already.enabled}). Nothing to do.`);
   process.exit(0);
@@ -84,7 +86,7 @@ const created = execute(
   }`,
   true
 );
-const res = created?.data?.paymentCustomizationCreate;
+const res = created?.paymentCustomizationCreate;
 const errs = res?.userErrors || [];
 if (errs.length) {
   console.error("paymentCustomizationCreate returned errors:", JSON.stringify(errs, null, 2));

@@ -6,7 +6,7 @@ single part (to redo it) or to wipe the in-session build back to the **pre-seede
 **Scope.** This undoes only what you build *in the session*: the season values, the theme block, the
 two Flows, and the Plus payment customization. It does **not** touch the pre-seeded store structure
 (products, collections, catalogs, markets, locations, terms) that the setup script created. To rebuild
-that, re-run `setup/setup-store.py` (see `setup/README.md`).
+that, re-run `setup/setup-store.mjs` (see `setup/README.md`).
 
 Most steps are in the **Shopify admin**. The one exception is the payment customization, which has no
 Admin UI, so it's a GraphQL mutation run with the **Shopify CLI** (`shopify store execute`; you already
