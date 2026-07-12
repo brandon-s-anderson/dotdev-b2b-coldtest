@@ -19,7 +19,11 @@ is required or auth errors, and without it the script fails with "No stored app 
       read_publications,write_publications,read_customers,write_customers,\
       read_markets,write_markets,read_payment_terms,\
       read_metaobjects,write_metaobjects,read_metaobject_definitions,write_metaobject_definitions,\
-      read_online_store_navigation,write_online_store_navigation
+      read_online_store_navigation,write_online_store_navigation,\
+      read_payment_customizations,write_payment_customizations
+
+(The last two scopes aren't used by this script; they cover the in-session payment-customization
+activation so the same auth is reused. See ../payment-customization-activation.md.)
 
 Then:
     STORE=<store>.myshopify.com BUYER_EMAIL=you+us@example.com python3 setup-store.py                 # full build

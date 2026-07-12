@@ -85,11 +85,10 @@ along; in the room we only clone, install, and build. Give yourself a few days o
   installed. App installs aren't scriptable, so this is a manual step.
 - **Sidekick** is built into the Shopify admin (no setup needed); you'll use it in-session to
   build the two Flows.
-- The **Shopify GraphiQL App** installed on your store, used to activate the Plus payment
-  Function. Install: https://shopify-graphiql-app.shopifycloud.com/login (enter your store
-  domain; sign in as an account that can install apps, or you'll get a read-only session).
-  When authorizing, enable the `read_payment_customizations` and `write_payment_customizations`
-  scopes.
+- **No GraphiQL app needed.** The Plus payment Function is activated **in-session** with the Shopify
+  CLI (or by asking your AI assistant), using the `read_payment_customizations` and
+  `write_payment_customizations` scopes that are already in the `shopify store auth` step below.
+  Nothing to install here.
 
 ## Get the project (clone)
 

@@ -9,26 +9,28 @@ two Flows, and the Plus payment customization. It does **not** touch the pre-see
 that, re-run `setup/setup-store.py` (see `setup/README.md`).
 
 Most steps are in the **Shopify admin**. The one exception is the payment customization, which has no
-Admin UI, so it's a GraphQL mutation in the **Shopify GraphiQL App** (API version 2026-07; you already
-granted it `read_payment_customizations` + `write_payment_customizations` in activation).
+Admin UI, so it's a GraphQL mutation run with the **Shopify CLI** (`shopify store execute`; you already
+authed with `read_payment_customizations` + `write_payment_customizations`). No GraphiQL app needed.
 
 ---
 
 ## Undo a single piece
 
 ### Plus payment customization (Part 4)
-No Admin UI. In the GraphiQL App, list customizations and delete yours:
+No Admin UI. With the CLI, list customizations and delete yours (`--allow-mutations` for the delete):
 
-```graphql
-query { paymentCustomizations(first: 20) { edges { node { id title enabled } } } }
+```bash
+shopify store execute --store <store>.myshopify.com --json \
+  --query 'query { paymentCustomizations(first: 20) { nodes { id title enabled } } }'
 ```
 
-```graphql
-mutation { paymentCustomizationDelete(id: "gid://shopify/PaymentCustomization/XXXX") { deletedId userErrors { field message } } }
+```bash
+shopify store execute --store <store>.myshopify.com --json --allow-mutations \
+  --query 'mutation { paymentCustomizationDelete(id: "gid://shopify/PaymentCustomization/XXXX") { deletedId userErrors { field message } } }'
 ```
 
-Then re-activate from `payment-customization-activation.md`. (To only pause it, set `enabled: false`
-with `paymentCustomizationUpdate` instead of deleting.)
+Then re-activate with `pnpm run activate` (see `payment-customization-activation.md`). (To only pause
+it, set `enabled: false` with `paymentCustomizationUpdate` instead of deleting.)
 
 ### Season values (Part 1)
 - **Un-assign from products:** Products, select the pre-book products, **Edit products**, the
@@ -55,7 +57,7 @@ can't be hard-deleted; cancel + archive clears them from the working list.
 
 Run in this order:
 
-1. **Delete the payment customization** (GraphiQL `paymentCustomizationDelete`, above).
+1. **Delete the payment customization** (CLI `paymentCustomizationDelete`, above).
 2. **Turn off / delete both Flows** (Flow app).
 3. **Delete the season entry + clear the product metafields** (Admin Custom data + bulk editor, above).
 4. **Remove the theme block** from the product template.

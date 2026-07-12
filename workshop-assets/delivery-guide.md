@@ -39,7 +39,8 @@ Attendees complete these **before** the session (full steps in `prerequisites.md
 sandbox store with B2B on; **Shopify Payments in test mode** with a vaulted test card; **payment
 capture not set to at-checkout** (manual or on-fulfillment, either works); **clone the repo** (the setup script runs from it); run the pre-work
 **setup script** (products, collections, company/buyer, locations, markets, catalogs, terms, DTC);
-`shopify store auth` with the scope list; install the **GraphiQL app** and **Shopify Flow**; an AI
+`shopify store auth` with the scope list (includes the two `*_payment_customizations` scopes for
+in-session Function activation, no GraphiQL app needed); install **Shopify Flow**; an AI
 assistant with the Dev MCP + AI Toolkit. `pnpm install` is an **in-session** step (like the other
 workshops); the store structure is scripted; the **data model is created by the app**
 (`shopify app dev`), not pre-work.
@@ -173,6 +174,15 @@ properties** (`Season`, `Delivery window`) into the add-to-cart form, the all-pl
 pre-order context to cart and checkout; non-Plus has no other hook there (works everywhere, not a
 Plus feature).
 
+> **Highlight (say this) — for a non-dev presenter, point at two lines in `b2b-prebooking.liquid`:**
+> 1. `product.metafields["$app"]["b2b-prebooking"]` (near the top): *"This one line is the whole
+>    data-model connection. The block reads the season we attached to this product, nothing is
+>    hardcoded, so it updates automatically when you change the season."*
+> 2. The small `<script>` block: *"And this is how pre-book context reaches checkout on any plan, no
+>    Plus required. It writes the Season and Delivery window onto the cart line as line-item
+>    properties, so they show in the cart, at checkout, and on the order."*
+> That's the whole file in two sentences: **read the season, carry it to checkout everywhere.**
+
 **Checkpoint.** ✅ `metafieldDefinitions(ownerType: PRODUCT)` shows the `$app` `b2b-prebooking` field;
 a B2B buyer on a pre-order product sees the windows; adding it shows `Season` and `Delivery window`
 on the cart line and at checkout. Available-now shows nothing.
@@ -194,12 +204,23 @@ re-fulfillment double-charges.)
 
 ### 2d. Plus payment-terms Function (~7 min)  [Plus]: the payoff
 **Step.** Build and deploy the Function from `prompts/05-plus-payment-terms-function.md`, then
-activate it via `payment-customization-activation.md` (GraphiQL).
+activate it via `payment-customization-activation.md` (`pnpm run activate`, or ask the AI assistant,
+no GraphiQL app).
 **Teach.** This is the Plus payoff: on the combined location, a mixed cart flips **only that
 checkout** from Net 30 to due-on-fulfillment (`paymentTermsSet`, Plus-only) and hides the deferred
 option, so the buyer gets one smart cart. Two firsthand gotchas: (1) match the deferred method by
 its **real input name** (`"Deferred"`), not the display label; (2) fail open, return no change for
 non-B2B and available-now-only carts, because the Function runs on every checkout.
+
+> **Highlight (say this) — point at two spots in `cart_payment_methods_transform_run.ts`:**
+> 1. The two `return NO_CHANGES` guards at the top: *"The function only acts on a B2B cart that
+>    actually contains a pre-book item. Every other checkout, DTC or available-now-only, passes through
+>    untouched, that's the fail-open safety."*
+> 2. The `operations` it returns: *"When it does act, it does exactly two things: switch the terms to
+>    due-on-fulfillment, and hide the 'pay later' option so a card gets vaulted, which is what lets
+>    Flow charge automatically on shipment."*
+> Two sentences: **only on a B2B pre-book cart, do exactly two things.**
+
 **Checkpoint.** ✅ Mixed cart on the combined location flips to due-on-fulfillment and hides
 deferred; available-now-only cart stays Net 30; Flow 2 then charges per fulfillment.
 

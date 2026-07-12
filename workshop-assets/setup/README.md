@@ -19,7 +19,8 @@ read_products,write_products,read_inventory,write_inventory,read_locations,\
 read_publications,write_publications,read_customers,write_customers,\
 read_markets,write_markets,read_payment_terms,\
 read_metaobjects,write_metaobjects,read_metaobject_definitions,write_metaobject_definitions,\
-read_online_store_navigation,write_online_store_navigation
+read_online_store_navigation,write_online_store_navigation,\
+read_payment_customizations,write_payment_customizations
 
 # 2) Run the setup:
 STORE=<store>.myshopify.com BUYER_EMAIL=you+us@example.com python3 setup-store.py                 # full build
@@ -28,7 +29,9 @@ STORE=<store>.myshopify.com BUYER_EMAIL=you+us@example.com NON_PLUS_ONLY=1 pytho
 
 `shopify store auth` without `--scopes` errors ("Missing required flag scopes"), and without a prior
 `store auth` the script fails with "No stored app authentication found for &lt;store&gt;". Both are
-one-time-per-store.
+one-time-per-store. The last two scopes (`read_payment_customizations`, `write_payment_customizations`)
+aren't used by this script; they're here so the same auth also covers the **in-session** activation of
+the Plus payment Function (`../payment-customization-activation.md`), so you never re-auth.
 
 It creates the **products** (from `../products/products-import.csv`: publishes them to the Online
 Store, stocks available-now, leaves pre-book at 0/continue), two **smart collections** (Available

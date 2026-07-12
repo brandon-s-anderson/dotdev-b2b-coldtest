@@ -31,8 +31,9 @@ pnpm shopify app dev       # local development (runs with --use-localhost, see b
 pnpm shopify app deploy    # release a new app version
 ```
 
-Deploy releases both extensions. The Plus payment Function is then activated once via the
-Shopify GraphiQL App (see `../../workshop-assets/payment-customization-activation.md`).
+Deploy releases both extensions. The Plus payment Function is then activated once with the Shopify CLI
+(`STORE=<store>.myshopify.com pnpm run activate`, or ask your AI assistant); see
+`../../workshop-assets/payment-customization-activation.md`.
 
 This workshop is deploy-based, so you rarely need `app dev`. When you do, the `dev` script uses
 `--use-localhost` to skip the Cloudflare tunnel (important when a full room runs it at once).
