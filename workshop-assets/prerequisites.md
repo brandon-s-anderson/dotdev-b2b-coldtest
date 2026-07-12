@@ -146,7 +146,8 @@ and tag products in-session (see `data-model-seed.md`). Nothing to do here in ad
 
 ## Plan note
 
-You build everything on your Plus sandbox, so you get every feature the workshop uses. The only plan
+**B2B is now available on all plans** (Basic and up), not just Plus, a recent change worth knowing. You
+build everything on your Plus sandbox, so you get every feature the workshop uses. The only plan
 differences that change how a *merchant* ships this are the ones we build around: dynamic payment terms
 at checkout (`paymentTermsSet` Function) and per-fulfillment charging are **Plus-only**, and **custom
 apps that contain Functions require Plus** (so a non-Plus merchant does the force-vault with an App Store

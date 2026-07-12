@@ -54,6 +54,10 @@ you can build for a merchant below Plus or on Plus and clearly explain the diffe
 
 ## Plus vs. non-Plus: what actually changes the build
 
+**B2B is now on every plan** (Basic and up), not just Plus. That's a recent, significant change: any
+merchant can run companies, company locations, catalogs, net terms, and vaulted cards without upgrading.
+So most of this workshop applies broadly.
+
 You build everything on your Plus-enabled dev store. Only three plan differences change how a *merchant*
 would ship this, and those are the ones worth knowing:
 
