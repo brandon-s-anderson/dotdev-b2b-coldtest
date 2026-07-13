@@ -1,157 +1,97 @@
 # Prerequisites
 
-**Everything here is required, and most of it cannot be done during the session.** This workshop has
-heavier setup than most: a US Plus sandbox with B2B, Shopify Payments in test mode, Shopify Flow, and a
-store seed script, and some steps have verification or approval delays (Payments especially). **Finish
-all of it before you arrive.** If your store isn't set up ahead of time, you won't be able to follow
-along; in the room we only clone, install, and build. Give yourself a few days of lead time for Payments.
+**All required, and most can't be done in the session.** This workshop has heavier setup than most (a
+US Plus sandbox with B2B, Shopify Payments in test mode, Shopify Flow, and a store seed script), and
+some steps have approval delays, Payments especially. Finish everything below **before you arrive**; in
+the room we only clone, install, and build. Give yourself a few days of lead time for Payments.
 
-## Accounts and tools
+## 1. Accounts and tools
 
-- A **Shopify Partner account** and a **development store** created as a **Shopify Plus sandbox**
-  build (Partner dashboard, Add store, Create development store, choose the Plus sandbox build),
-  or a Partner sandbox org. This gives you B2B **and** the Plus-tier features the workshop uses
-  (the payment-customization Function's `paymentTermsSet`). A standard/basic development store
-  can use B2B but does not expose Plus-tier features, so you couldn't build the Plus parts.
-  - **Create it as a United States store.** You pick the store's country when you create it,
-    regardless of where you're based, so anyone can do this. US keeps everything in the materials
-    consistent: USD pricing (the setup script's price lists are USD), Net 30 / due-on-fulfillment
-    terms, the US business address, and the US SSN used in Shopify Payments onboarding. A non-US
-    store would change the currency and the Payments identity fields and won't match the scripts.
-  - **B2B is on automatically** on a Plus sandbox, so this is just a **verify**, not a setup step:
-    open **Settings, B2B** and confirm it's enabled (enable it in the unlikely case it isn't). You do
-    **not** create the company, buyer, locations, or products by hand, the setup step below does that
-    for you.
-- **Set up Shopify Payments in test mode.** In Settings, Payments, **Activate Shopify Payments** (if
-  another provider like a test gateway is already active, deactivate it first), then Manage, Test mode,
-  **Enable test mode**. Use test cards like `4242 4242 4242 4242`. Without a card gateway, checkout shows
-  no card option and the buyer can't vault a card. Use Shopify Payments, **not the "Bogus Gateway"**: B2B
-  vaulted cards are Shopify-Payments-only ([Help Center](https://help.shopify.com/en/manual/b2b/vaulted-cards)),
-  and the pre-order flow needs the card vaulted and charged later on fulfillment. A Plus sandbox supports
-  this. Not scriptable (no Admin API to enable a payment provider), so it's a manual step.
-  - **Onboarding on a sandbox:** you click through the Shopify Payments account setup first. These test
-    values are known to pass on a **US** sandbox (use your own name/email if you prefer, just not anyone
-    else's real details); business type **Individual**:
-    - **Name:** any, a made-up one is fine (e.g. `John Anderson`)
-    - **Date of birth:** any adult date, e.g. `10 / 01 / 1990` (MM / DD / YYYY)
-    - **Email:** any inbox you control
-    - **Phone:** `(415) 555-1234`
-    - **Address:** `123 Brooklyn Ave`, `Brooklyn`, `New York` `11213`, United States
-    - **SSN:** `078-05-1120` (the classic voided SSN; `000-00-0000` and the ad-reserved `987-65-...`
-      range are rejected as invalid format)
-    - **Store / business description:** `this is a test store`
+- **Shopify Partner account + a US Plus sandbox dev store** (Partner dashboard, Add store, Create
+  development store, choose the Plus sandbox build). The Plus sandbox gives you B2B plus the Plus-only
+  features the workshop uses.
+  - **Create it as a United States store** (you pick the country at creation, wherever you're based).
+    Keeps it consistent with the materials: USD pricing, US address, and the US SSN for Payments.
+  - **B2B is on automatically**, just verify in **Settings, B2B**. You don't set up the company, buyer,
+    locations, or products by hand, the seed script does that.
+- **Node.js 20+** and **pnpm** (or npm). Node also runs the seed script.
+- **Shopify CLI 4+** (`shopify version`; upgrade with `pnpm add -g @shopify/cli@latest`).
+- **Shopify Flow** installed (free: `apps.shopify.com/flow`). You build the two workflows in-session.
+- **An AI coding assistant** (Claude Code, Codex, Cursor, VS Code, Antigravity CLI, or Hermes) with
+  **both** of these:
+  - **Shopify Dev MCP**, docs + API schema while you build. The repo ships the config, so most
+    assistants auto-load it (approve if prompted). Add it manually only if your tool doesn't read a
+    project MCP file.
+  - **Shopify AI Toolkit** plugin, Shopify skills + CLI store-execute (the seed step uses it). Cursor:
+    `/add-plugin shopify`. Claude Code: `claude plugin install shopify-ai-toolkit@claude-plugins-official`.
+  - Install links: [AI Toolkit](https://shopify.dev/docs/apps/build/ai-toolkit),
+    [Dev MCP](https://shopify.dev/docs/apps/build/devmcp).
 
-    After submitting you'll see
-    **"Some of your details couldn't be verified"** / "update your business details by [date]" and a
-    Payments banner saying it "isn't processing transactions, select a plan." **All of that is expected
-    and ignorable on a dev sandbox**, it only affects real payouts/live selling. **Test mode still works**:
-    test cards charge and B2B cards vault. Confirm by seeing the save-payment-method option at checkout.
-  - **Heads up on the grace period:** the "update your business details by [date]" notice is roughly a
-    **30-day** window, after which test payments on the sandbox can get restricted. So do this Payments
-    setup **close to the workshop date**, not weeks early, or it may lapse before the session.
-  - **Optional, ACH Direct Debit** (bank-account vaulting, the flows charge card *or* bank): to offer it,
-    turn **off Managed payment methods** and enable **ACH Direct Debit**. Card alone is enough for the
-    demo, so this is optional.
-- **Set payment capture so it is NOT taken at checkout** (Settings, Payments, Payment capture). The
-  default, *automatically at checkout*, takes payment immediately and defeats the pay-on-fulfillment
-  model. **Either of the other two options works for this build: "Automatically capture payment for
-  orders when they're fully fulfilled" or "Manually capture payments for orders."** Both leave the B2B
-  payment authorized/vaulted so the charge-on-fulfillment Flow collects it when the order ships; the
-  charge-vaulted-payment Flow action behaves the same regardless of which of the two you pick.
-- **Node.js 20+** and a package manager: **pnpm or npm** (the commands in these docs use pnpm;
-  substitute `npm` if you prefer). Node also runs the pre-seed **setup script** (`setup-store.mjs`).
-- **Shopify CLI 4+** installed and authenticated (`shopify version`). On an older major, upgrade
-  with `pnpm add -g @shopify/cli@latest` (or `npm install -g @shopify/cli@latest`).
-- A supported **AI coding assistant**: Claude Code, Codex, Cursor, VS Code, Antigravity CLI,
-  or Hermes.
-- **Install BOTH of the following** in your assistant (they cover different needs and don't
-  conflict; the plugin does not auto-register the Dev MCP):
-  - The **Shopify Dev MCP** server, docs, API schema, and GraphQL validation while you build the
-    extensions. **The repo already ships this config** (`.mcp.json`, `.cursor/mcp.json`, and
-    `.vscode/mcp.json`, at both the repo root and in `starter/b2b-prebooking-workshop`), so most
-    assistants auto-load `@shopify/dev-mcp@latest` when you open the folder, just approve it if
-    prompted. Only add it manually if your tool doesn't read a project MCP file. Claude Code:
-    `claude mcp add --transport stdio shopify-dev-mcp -- npx -y @shopify/dev-mcp@latest`.
-  - The **Shopify AI Toolkit** plugin, adds Shopify skills and **CLI store-execute**, which the
-    store-setup prompt (`00-store-setup.md`) uses to provision your store. Cursor: `/add-plugin shopify`.
-    Claude Code: `claude plugin install shopify-ai-toolkit@claude-plugins-official`.
-  - All install paths per tool: https://shopify.dev/docs/apps/build/ai-toolkit
-    and https://shopify.dev/docs/apps/build/devmcp.
-- **Shopify Flow** installed (free, from the App Store: `apps.shopify.com/flow`). The two workflows
-  (tag pre-book orders; charge the vaulted card on fulfillment) are built in Flow, so it must be
-  installed. App installs aren't scriptable, so this is a manual step.
-- **Sidekick** is built into the Shopify admin (no setup needed); you'll use it in-session to
-  build the two Flows.
-- **The Plus payment Function is activated in-session** with the Shopify CLI (or by asking your AI
-  assistant), using the `read_payment_customizations` and `write_payment_customizations` scopes that
-  are already in the `shopify store auth` step below.
+## 2. Shopify Payments (test mode)
 
-## Get the project (clone)
+Settings, Payments, **Activate Shopify Payments** (deactivate any test gateway first), then Manage,
+Test mode, **Enable test mode**. Use **Shopify Payments, not the Bogus Gateway**, B2B vaulted cards are
+Shopify-Payments-only and the pre-order flow vaults a card to charge later. Test card:
+`4242 4242 4242 4242`.
 
-Clone the workshop repo **before the session** (it's small, ~23 MB, mostly the product images the
-setup step imports). You need it early because the pre-seed setup step below runs from it, and you'll
-build in it during the session.
+Onboarding asks for account details first. These values pass on a US sandbox (use your own name/email
+if you like, just not anyone else's real details; business type **Individual**):
+
+| Field | Value |
+| --- | --- |
+| Name | any, e.g. `John Anderson` |
+| Date of birth | any adult date, e.g. `10 / 01 / 1990` |
+| Email | any inbox you control |
+| Phone | `(415) 555-1234` |
+| Address | `123 Brooklyn Ave`, `Brooklyn`, `New York` `11213`, US |
+| SSN | `078-05-1120` (`000-00-0000` and the `987-65-...` range are rejected) |
+| Store description | `this is a test store` |
+
+After submitting you'll see "some details couldn't be verified" and a "select a plan" banner. **Ignore
+both**, they only affect real payouts; test mode still works (cards charge, B2B cards vault). That
+verify notice is a **~30-day window**, so do Payments **close to the workshop date**, not weeks early.
+
+**Payment capture:** set it so payment is **not** taken at checkout (Settings, Payments, Payment
+capture). Either "when fully fulfilled" or "manually" works, just not "automatically at checkout" (that
+charges up front and defeats pay-on-fulfillment).
+
+## 3. Clone the repo (before the session)
+
+The seed step runs from it, so clone early (it's ~23 MB, mostly product images):
 
 ```bash
-# from a folder you keep projects in (not inside another git repo)
 git clone https://github.com/brandon-s-anderson/dotdev-b2b-coldtest.git
 ```
 
-**You install the app's dependencies in the session, not now** (same as the other DotDev workshops).
-The first thing you do in the build is `cd starter/b2b-prebooking-workshop && pnpm install` (~100 MB,
-well under a minute on the venue wifi), then `shopify app dev`. What you can't catch up on in the
-room is the **store setup** (the pre-seed script plus Shopify Payments and Flow), so make sure that
-is done well before the session; the clone and install are quick and safe to do live.
+`pnpm install` is an **in-session** step, not now (`cd starter/b2b-prebooking-workshop && pnpm install`,
+under a minute on venue wifi). Clone and install are safe to do live; the store setup below is not.
 
-## Store data
+## 4. Seed the store (before the session)
 
-- **Apparel products.** The setup step **creates these for you** from
-  `products/products-import.csv` (10 products, pre-split into **Available Now** and **Pre-book**,
-  published to the Online Store, available-now stocked and pre-book at 0 with continue policy).
-  Fallback if you skip the script: import the CSV by hand (Shopify admin, Products, Import) and
-  keep **"Publish new products to all sales channels"** checked, then run setup with
-  `SKIP_PRODUCTS=1`.
-- The products carry the tags that drive your collections, B2B catalogs, and Flow conditions:
-  `available-now` for available-now products, `prebook` (plus `season:spring-summer-2027`) for
-  pre-book products. You can bring your own products instead, as long as they carry those tags.
-- **You do not need to vault a card in advance.** Forcing a vaulted card is part of the workshop
-  itself: when you place a pre-order test order as the buyer, checkout requires a card, and Flow 2
-  then charges it on fulfillment.
+From the repo, authenticate the CLI (full scope string in `setup/README.md`), then run the seed script:
 
-## Store structure to pre-seed (before the session)
+```bash
+shopify store auth --store <store>.myshopify.com --scopes <see setup/README.md>
+cd workshop-assets/setup
+STORE=<store>.myshopify.com BUYER_EMAIL=you+us@example.com node setup-store.mjs
+```
 
-From the repo you cloned above, first authenticate the Shopify CLI to your store **with the required
-scopes** (one time per store, the script fails without it):
-`shopify store auth --store <your-store>.myshopify.com --scopes ...`.
-The exact scopes string is in `setup/README.md`. Then run the **setup script** (`setup/setup-store.mjs`,
-the recommended one-shot path) to provision everything **before** the workshop, so the in-session
-time goes to code. (An optional AI-prompt path, `../prompts/00-store-setup.md`, exists for those who
-want to see the Admin GraphQL step by step, but the script is the reliable route.)
+`BUYER_EMAIL` is the B2B buyer (Maria Cruz) you sign in as. Login is a one-time emailed code, so use an
+inbox you control; the `+` alias trick (`you+us@example.com`) lets one inbox run several buyers.
 
-Pass **`BUYER_EMAIL`** when you run it: that's the buyer (Maria Cruz) you'll sign in as, since B2B uses
-**new customer accounts** and login is a one-time code emailed to that address. Use any inbox you
-control. **Tip:** the `+` alias trick lets you run several buyer accounts from one inbox, e.g.
-`you+us@example.com` and `you+us2@example.com` are distinct customers but both deliver to `you@example.com`.
+The script creates the products, collections + navigation, the company and buyer, all three locations
+(each sharing one address and the same buyer as admin), markets, catalogs, and payment terms (pre-book
+due-on-fulfillment, Available Now Net 30). Products come from `products/products-import.csv` and carry
+the tags that drive collections, catalogs, and Flow (`available-now`, `prebook`); bring your own
+products only if they carry those tags. You **don't** vault a card in advance, that's part of the build.
 
-The script creates:
-
-- **B2B catalogs, markets, and company locations** that separate Available Now from pre-book:
-  - Non-Plus: two locations/markets, each with one catalog (Available Now vs pre-book).
-  - Plus: one combined location with both catalogs assigned (mixed cart).
-  - Every location shares the same shipping/billing address and the same buyer as location admin.
-- **Payment terms:** the pre-book location set to due-on-fulfillment; the Available Now location
-  on your normal terms (for example Net 30).
-
-The **pre-booking data model is not pre-seeded.** Its definitions live in the app's `shopify.app.toml`
-(`$app` namespace) and are created when you run `shopify app dev` in the session; you seed the season
-and tag products in-session (see `data-model-seed.md`). Nothing to do here in advance.
+The pre-booking **data model is not seeded here**, the app creates it on `shopify app dev` in the
+session. (Optional: `../prompts/00-store-setup.md` walks the same setup via AI prompt if you'd rather
+watch it run.)
 
 ## Plan note
 
-**B2B is now available on all plans** (Basic and up), not just Plus, a recent change worth knowing. You
-build everything on your Plus sandbox, so you get every feature the workshop uses. The only plan
-differences that change how a *merchant* ships this are the ones we build around: dynamic payment terms
-at checkout (`paymentTermsSet` Function) and per-fulfillment charging are **Plus-only**, and **custom
-apps that contain Functions require Plus** (so a non-Plus merchant does the force-vault with an App Store
-app instead). Everything else in the build is the same on either tier. Note: B2B also requires **new
-customer accounts** and **Shopify Markets** (enable B2B-with-Markets via feature test drive if prompted).
+B2B is now on **all plans** (Basic and up), not just Plus. You build on a Plus sandbox so you get every
+feature; the only Plus-only pieces are dynamic payment terms at checkout (`paymentTermsSet`) and
+per-fulfillment charging (a non-Plus merchant force-vaults with an App Store app instead). B2B also
+needs new customer accounts and Shopify Markets.
