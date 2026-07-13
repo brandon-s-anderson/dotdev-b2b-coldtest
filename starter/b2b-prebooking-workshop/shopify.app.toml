@@ -21,7 +21,11 @@ embedded_app_direct_api_access = true
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = "write_products"
+# The app-owned data model needs: write_products (product metafield definition),
+# write_metaobjects + write_metaobject_definitions (the season metaobject). Matches Shopify's
+# canonical app-owned metaobject/metafield template. write_payment_customizations lets the app
+# run paymentCustomizationCreate (Part 4 activation) from its own GraphiQL (press `g`).
+scopes = "write_products,write_metaobjects,write_metaobject_definitions,read_payment_customizations,write_payment_customizations"
 
 [auth]
 redirect_urls = [ "https://shopify.dev/apps/default-app-home/api/auth" ]

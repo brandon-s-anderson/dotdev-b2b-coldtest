@@ -4,6 +4,10 @@ Presenter-facing. This is the run-of-show for the 60-minute session: timings, wh
 show, the firsthand teaches, and the checkpoints. The attendee-facing build steps live in the
 repo `README.md` ("How the workshop runs"); this guide wraps a narrative and a clock around them.
 
+> **Building live? Keep [`presenter-runbook.md`](presenter-runbook.md) open beside you.** It's the
+> step-by-step cue card (exact commands, tab, prompt link, verify, gotcha per step). This guide is the
+> narrative; the runbook is the do-this-next.
+
 > **Terminology note.** The audience-facing concept is **pre-order** (matches the event title and
 > how merchants ask for it). The technical product state we tag and build against is **pre-book**
 > (`prebook` tag, `b2b-prebooking` metaobject). Say "pre-order" to the room; the code says
@@ -37,11 +41,11 @@ the room.
 
 Attendees complete all prework **before** the session; full steps in `prerequisites.md`. In brief: a
 **US** Plus sandbox with B2B on; **Shopify Payments in test mode** with a vaulted test card and capture
-**not** at-checkout; the repo **cloned**; the CLI **authed** with the scope list (includes the two
-`*_payment_customizations` scopes for in-session Function activation); the **seed script** run (products,
-collections, company/buyer, locations, markets, catalogs, terms, DTC); **Shopify Flow** installed; an AI
-assistant with the Dev MCP + AI Toolkit. `pnpm install` is in-session; the **data model is created by the
-app** on `shopify app dev`, not pre-work.
+**not** at-checkout; the repo **cloned**; the CLI **authed** with the seed script's scope list; the
+**seed script** run (products, collections, company/buyer, locations, markets, catalogs, terms, DTC);
+**Shopify Flow** installed; an AI assistant with the Dev MCP + AI Toolkit. `pnpm install` is in-session;
+the **data model is created by the app** on `shopify app dev`, not pre-work. In-session Function
+activation uses the app's own GraphiQL (press `g`), not the CLI auth.
 
 **Contingency (stragglers).** The line that matters is **local vs server-side**. Clone + `pnpm install`
 are local and fast (~100 MB, under a minute on venue wifi), and `pnpm install` is an in-session step
@@ -199,8 +203,10 @@ re-fulfillment double-charges.)
 **Checkpoint.** ✅ Fulfilling a pre-order order charges the vaulted method for the due amount, once.
 
 ### 2d. Plus payment-terms Function (~7 min)  [Plus]: the payoff
-**Step.** Build and deploy the Function from `prompts/05-plus-payment-terms-function.md`, then
-activate it via `payment-customization-activation.md` (`pnpm run activate`, or ask the AI assistant).
+**Step.** Implement the Function from `prompts/05-plus-payment-terms-function.md` (no deploy: `dev`
+serves it), then activate it with one mutation in the app's GraphiQL, press `g` in the `dev` tab and
+run the `paymentCustomizationCreate` from `payment-customization-activation.md`. The mutation is
+identical for everyone (stable function handle).
 **Teach.** This is the Plus payoff: on the combined location, a mixed cart flips **only that
 checkout** from Net 30 to due-on-fulfillment (`paymentTermsSet`, Plus-only) and hides the deferred
 option, so the buyer gets one smart cart. Two firsthand gotchas: (1) match the deferred method by
@@ -239,6 +245,13 @@ you go deeper, so the repeat is deliberate reinforcement.)
 
 **2. Place the mixed order.** If the buyer doesn't check "save card," they're **prompted to add a
 card**: the order carries terms, so a vaulted method is required. Place it.
+
+> ⏱ **Flow is async, place the order first and let it work while you talk.** Flow 1 can take
+> **2-3 minutes** to apply the `Prebooking` tag, and Flow 2 keys off that tag, so **don't fulfill
+> until the tag has landed** or Flow 2 skips the charge and it looks broken on the projector. Pacing:
+> place this order at the *start* of the payoff, narrate steps 1 and 3 (three carts, the Orders
+> filter) while the tag lands, then fulfill in step 4. If you must show it fast, place a throwaway
+> pre-order order during Part 3 (non-Plus) so it's already tagged when you circle back.
 
 **3. It's tagged and filterable.** Flow 1 auto-tags the order `Prebooking`. Show the Orders list
 **filtered by the `Prebooking` tag**, the merchant's clean pre-order view.
@@ -322,6 +335,7 @@ booth.
 | Starter repo (scaffold + pre-seed prompt/script) | In progress | `dotdev-2026-building-b2b` |
 | Finished-state branch (reference/recovery) | TODO | `finished` branch |
 | Attendee build track | ✅ | `README.md` ("How the workshop runs") |
+| Presenter live-build runbook | ✅ | `workshop-assets/presenter-runbook.md` |
 | Prerequisites (frozen) | ✅ draft | `workshop-assets/prerequisites.md` |
 | Pre-seed setup (script primary; AI prompt optional) | ✅ | `workshop-assets/setup/`, `prompts/00-store-setup.md` |
 | Data model seed (in-session, Admin; GraphiQL optional) | ✅ | `workshop-assets/data-model-seed.md` |

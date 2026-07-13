@@ -17,11 +17,20 @@ Pick your Partner org and the `b2b-prebooking` dev store when prompted. Keep thi
 build against it.
 
 **First run links the app to your org.** The starter ships unlinked (no `client_id`), so the first
-`dev` asks to create the app in your org and writes the `client_id` into `shopify.app.toml` in place.
-That's expected. **Do not run `shopify app dev --reset`**, reset generates a fresh minimal config and
-drops the app-owned data model (the `$app` metaobject + product metafield), which breaks Part 1.
-(Some other DotDev workshops tell you to `--reset` for a clean start, that's fine for them because
-they don't ship a data model in the toml; here it would wipe ours, so don't.)
+`dev` asks about the app. **Choose "create a new app"** (accept the default name), don't pick an
+existing app, so the CLI creates the app from this repo's `shopify.app.toml` (with its access scopes)
+and writes the `client_id` back into that file. Approve the install in the browser when it opens; that
+grants the app's scopes (products, metaobjects, and `write_payment_customizations` for Part 4). **Do
+not run `shopify app dev --reset`**, reset generates a fresh minimal config and drops the app-owned
+data model (the `$app` metaobject + product metafield), which breaks Part 1. (Some other DotDev
+workshops tell you to `--reset`, fine for them because they don't ship a data model in the toml; here
+it would wipe ours.)
+
+**If the first run exits with a scope error** (e.g. `[product]: Requires ... write_products`) on a
+brand-new store: that's the app not being installed yet. Finish the browser install/approve, then run
+`pnpm run dev` again, the second run starts clean, syncs the data model, and serves the extensions. If
+scopes still don't take, run `pnpm shopify app deploy` once (pushes the scopes to your app) and then
+`pnpm run dev`.
 
 **When it asks for a store password**, that's your storefront password (dev stores are
 password-protected and the theme app extension needs it to preview). Paste the value from Admin,
@@ -44,8 +53,10 @@ the whole room starts at once).
   set to `merchant_read_write`, the **values** are yours to edit in Admin, which is how you seed the
   season in Part 1. This is the data-model read in Part 1 / prompt 02.
 - **Serves the theme app extension** so the block is available in the theme editor while dev runs.
-- **Opens the app's GraphiQL** (press `g`). You seed the season values in the **Admin** in Part 1;
-  GraphiQL is the optional code path for the same thing (`$app` resolves to this app here).
+- **Opens the app's GraphiQL** (press `g`). You seed the season values in the **Admin** in Part 1
+  (GraphiQL is the optional code path there), and in **Part 4 you press `g` to activate the Plus
+  payment Function** with one mutation, GraphiQL runs in this app's context, so `$app` resolves here
+  and the app owns its Function.
 
 ## Notes
 
@@ -54,8 +65,9 @@ the whole room starts at once).
   once). It's fine here: this app uses none of the tunnel-only features (webhooks/events, app proxy,
   app-defined Flow actions, POS). Localhost mode uses a reverse proxy on port 3458
   (`--localhost-port` to change it).
-- `shopify app deploy` releases a version; you'll use it in Part 4 to activate the Plus Function.
-  Definitions sync on both `dev` and `deploy`.
+- This workshop is **deploy-free**: `dev` serves both extensions and rebuilds on save, and Part 4
+  activates the Function in the app's GraphiQL (press `g`), no deploy. `shopify app deploy` is only for
+  making the build persist after `dev` stops (an optional take-home step). Definitions sync on `dev`.
 - Pin every extension and the app's webhooks to the latest **production** (GA) API version, kept
   consistent. When you change a Function's `api_version`, also run `pnpm shopify app function schema`
   to refresh its `schema.graphql`, or the build fails.

@@ -23,52 +23,52 @@ The starter already includes `extensions/prebooking-payment-terms/` with a **stu
 
 ## Prompt (Cursor / your AI tool)
 
-> Implement the `cart.payment-methods.transform.run` target. Input query: the cart's
-> purchasing company id, each line's `merchandise ... on ProductVariant { product { metafield(namespace:"$app", key:"b2b-prebooking"){ value } } }`,
-> and the available `paymentMethods { id name }`. Logic: if there's no purchasing company,
-> return no changes. If any line's product has the app-owned `$app` `b2b-prebooking` metafield
-> set, it's a pre-book cart: return a `paymentTermsSet` operation with an event trigger of
-> `FULFILLMENT_CREATED` (due on fulfillment), plus `paymentMethodHide` for any payment method
-> whose name matches the deferred option. Match the deferred method by name; on B2B checkout
-> the underlying name is "Deferred" (the label shown to buyers is "Choose payment method at a
-> later time"). Keep the match configurable.
-
-## Build and test locally
-
-```bash
-pnpm shopify app function build
-cat src/run.test.json | pnpm shopify app function run
+```text
+Implement the `cart.payment-methods.transform.run` target. Input query: the cart's purchasing company id, each line's `merchandise ... on ProductVariant { product { metafield(namespace:"$app", key:"b2b-prebooking"){ value } } }`, and the available `paymentMethods { id name }`. Logic: if there's no purchasing company, return no changes. If any line's product has the app-owned `$app` `b2b-prebooking` metafield set, it's a pre-book cart: return a `paymentTermsSet` operation with an event trigger of `FULFILLMENT_CREATED` (due on fulfillment), plus `paymentMethodHide` for any payment method whose name matches the deferred option. Match the deferred method by name; on B2B checkout the underlying name is "Deferred" (the label shown to buyers is "Choose payment method at a later time"). Keep the match configurable.
 ```
 
-## Deploy and activate
+## No deploy needed
 
-```bash
-pnpm shopify app deploy
+`shopify app dev` is already serving this Function (it rebuilds on every save). You don't run
+`shopify app deploy` in the session, you activate the **development** Function directly. (Optional
+local unit test, no store: `cat src/*.test.json | pnpm shopify app function run`.)
+
+## Activate
+
+Activation is one GraphQL mutation in your **app's own GraphiQL**. In the tab where `shopify app dev`
+runs, press **`g`** to open GraphiQL, then run:
+
+```graphql
+mutation {
+  paymentCustomizationCreate(paymentCustomization: {
+    title: "B2B Prebooking Payment Terms"
+    enabled: true
+    functionHandle: "prebooking-payment-terms"
+  }) {
+    paymentCustomization { id title enabled }
+    userErrors { field message }
+  }
+}
 ```
 
-**Restart `shopify app dev` after this first deploy.** Deploying while your `dev` session is still
-attached rotates the app version and leaves the theme app extension's *dev* asset URL stale, so the
-PDP block's CSS (`asset_url`) starts returning 404 and the block renders unstyled. Quit `dev` (`q`)
-and run it again; the block re-styles immediately. (Symptom: the block content shows but the panel,
-badge, and grid disappear; the CSS request in DevTools is a `…/dev-…/assets/b2b-prebooking.css` 404.)
-
-Activation is a one-time step done with the Shopify CLI: `shopify store execute`
-queries `shopifyFunctions` for this function's global id, then runs `paymentCustomizationCreate`. Run
-`STORE=<store>.myshopify.com pnpm run activate` (or just ask your AI assistant to do it). Full steps
-and mutations are in `../workshop-assets/payment-customization-activation.md`.
+The `functionHandle` comes from `shopify.extension.toml`, so this mutation is identical for everyone,
+nothing to fill in. Expect an `id` back and empty `userErrors`. Full context and troubleshooting
+(`Could not find Function`, scope errors) are in `../workshop-assets/payment-customization-activation.md`.
 
 ## You should see
 
 On the combined (Plus) location, a mixed cart (an available-now item plus a pre-book item)
 switches to due-on-fulfillment and hides the deferred payment option; an available-now-only
-cart stays on Net 30 with the deferred option visible. Flow (step 4) then charges the vaulted
-card per fulfillment.
+cart stays on Net 30 with the deferred option visible. The `shopify app dev` tab prints each
+Function execution as you check out. Flow (Part 3) then charges the vaulted card per fulfillment.
 
 ## Teach
 
 - The deferred method's `name` ("Deferred") is not the checkout display label ("Choose payment
-  method at a later time"). Match against real Function input, not the visible text. Inspect
-  input via the Partner dashboard function runs (the CLI `shopify app logs` only attaches to
-  dev stores in the app's org, not a demo store).
-- `functionId` is global, so the CLI (`shopify store execute`) can create the payment customization
-  even though it isn't the owning app.
+  method at a later time"). Match against real Function input, not the visible text. Watch the
+  `shopify app dev` output to see the actual input each checkout hands your Function.
+- A Function only runs at checkout once a **payment customization** points at it. Only the app that
+  owns the Function can create that customization, which is why you activate in the app's own
+  GraphiQL (press `g`), not the CLI or a standalone GraphiQL app (those are a different app identity
+  and can't see your Function). The stable `functionHandle` means no id lookup and the same mutation
+  for every attendee.

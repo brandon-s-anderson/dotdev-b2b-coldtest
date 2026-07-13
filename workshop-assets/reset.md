@@ -9,28 +9,27 @@ two Flows, and the Plus payment customization. It does **not** touch the pre-see
 that, re-run `setup/setup-store.mjs` (see `prerequisites.md`, "Seed the store").
 
 Most steps are in the **Shopify admin**. The one exception is the payment customization, which has no
-Admin UI, so it's a GraphQL mutation run with the **Shopify CLI** (`shopify store execute`; you already
-authed with `read_payment_customizations` + `write_payment_customizations`).
+Admin UI, so it's a GraphQL mutation run in your **app's own GraphiQL** (press `g` in the tab where
+`shopify app dev` runs, the same place you activated it).
 
 ---
 
 ## Undo a single piece
 
 ### Plus payment customization (Part 4)
-No Admin UI. With the CLI, list customizations and delete yours (`--allow-mutations` for the delete):
+No Admin UI. In the app's GraphiQL (press `g` in the `shopify app dev` tab), list customizations and
+delete yours:
 
-```bash
-shopify store execute --store <store>.myshopify.com --json \
-  --query 'query { paymentCustomizations(first: 20) { nodes { id title enabled } } }'
+```graphql
+query { paymentCustomizations(first: 20) { nodes { id title enabled } } }
 ```
 
-```bash
-shopify store execute --store <store>.myshopify.com --json --allow-mutations \
-  --query 'mutation { paymentCustomizationDelete(id: "gid://shopify/PaymentCustomization/XXXX") { deletedId userErrors { field message } } }'
+```graphql
+mutation { paymentCustomizationDelete(id: "gid://shopify/PaymentCustomization/XXXX") { deletedId userErrors { field message } } }
 ```
 
-Then re-activate with `pnpm run activate` (see `payment-customization-activation.md`). (To only pause
-it, set `enabled: false` with `paymentCustomizationUpdate` instead of deleting.)
+Then re-activate with the `paymentCustomizationCreate` mutation from `payment-customization-activation.md`.
+(To only pause it, set `enabled: false` with `paymentCustomizationUpdate` instead of deleting.)
 
 ### Season values (Part 1)
 - **Un-assign from products:** Products, select the pre-book products, **Edit products**, the

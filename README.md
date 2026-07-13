@@ -83,7 +83,7 @@ catalog). Advanced flags are documented at the top of `setup-store.mjs`.
 git clone <this-repo-url>
 
 # 1) authenticate the CLI to your store (one time; edit only the store URL)
-shopify store auth --store <your-store>.myshopify.com --scopes read_products,write_products,read_inventory,write_inventory,read_locations,read_publications,write_publications,read_customers,write_customers,read_markets,write_markets,read_payment_terms,read_metaobjects,write_metaobjects,read_metaobject_definitions,write_metaobject_definitions,read_online_store_navigation,write_online_store_navigation,read_payment_customizations,write_payment_customizations
+shopify store auth --store <your-store>.myshopify.com --scopes read_products,write_products,read_inventory,write_inventory,read_locations,read_publications,write_publications,read_customers,write_customers,read_markets,write_markets,read_payment_terms,read_metaobjects,write_metaobjects,read_metaobject_definitions,write_metaobject_definitions,read_online_store_navigation,write_online_store_navigation
 
 # 2) seed the store
 cd <this-repo>/workshop-assets/setup
@@ -93,17 +93,21 @@ STORE=<your-store>.myshopify.com BUYER_EMAIL=you+us@example.com node setup-store
 The pre-booking **data model** is *not* seeded here: it's app-owned (declared in `shopify.app.toml`) and
 created when you run `shopify app dev` in Part 1.
 
-**In the session, start the app:**
+**In the session, start the app** (this is tab 1, it stays running):
 
 ```bash
 cd starter/b2b-prebooking-workshop
 pnpm install
-shopify app dev
+pnpm run dev   # = shopify app dev --use-localhost
 ```
 
-The first `shopify app dev` **links the app in your Partner org** and creates the app-owned data model.
-**Do not run `--reset`**: it drops the declarative data model. Expect a **storefront password** prompt
-(Admin, Online Store, Preferences) and a **sudo/login password** for the local `mkcert` certificate.
+On the first run, pick your Partner org, **create a new app** (accept the default name; don't reuse an
+existing one), and pick your dev store; approve the install in the browser (grants the app's scopes).
+The first `dev` **links the app and creates the app-owned data model**. **Do not run `--reset`**: it
+drops the declarative data model. Expect a **storefront password** prompt (Admin, Online Store,
+Preferences) and a **sudo/login password** for the local `mkcert` certificate. If the very first run
+exits with a `write_products` scope error on a brand-new store, finish the browser install and run
+`pnpm run dev` again. Details and troubleshooting: [`prompts/01`](prompts/01-scaffold-app.md).
 
 ## Repo structure
 
@@ -150,12 +154,18 @@ Build the full Plus experience first (Parts 1 to 4), then adapt for non-Plus (Pa
 by **logging in as your B2B buyer through the storefront** (a one-time code is emailed); the admin
 preview and D2C visitors won't trigger the block or the B2B payment behavior.
 
+**How to work: two terminal tabs.** Tab 1 runs `shopify app dev` the whole session (it serves the theme
+block and the Function, and rebuilds on every save); when you need GraphiQL, press `g` **here** and it
+opens in your browser while `dev` keeps running. Tab 2 is your AI assistant, where you edit code. You
+don't run `shopify app deploy` in the session, `dev` serves everything live, so there's no third tab and
+no deploy/restart dance.
+
 | Part | Plan | You build | Prompt | Verify |
 |---|---|---|---|---|
 | **1. Data model + theme block** | both | `shopify app dev` creates the app-owned metaobject + product metafield; seed one season and tag pre-book products in Admin; build and place the PDP block | [`01`](prompts/01-scaffold-app.md), [`02`](prompts/02-theme-app-block.md) | Pre-book PDP shows the windows; `Season` + `Delivery window` appear on cart and checkout; available-now shows nothing |
 | **2. Flow: tag pre-book orders** | both | Flow 1 (Sidekick prompt), B2B-guarded, adds the `Prebooking` order tag | [`03`](prompts/03-flow-tag-prebook-orders.md) | A B2B pre-book order gets `Prebooking`; a DTC order with the same product does not |
 | **3. Flow: charge on fulfillment** | both | Flow 2 (Sidekick prompt) charges the vaulted card when fulfilled, with a `completedAt` double-charge guard | [`04`](prompts/04-flow-charge-on-fulfillment.md) | Fulfilling a pre-book order charges the vaulted method once |
-| **4. Plus payment-terms Function** | Plus | build + deploy the Function, then activate the payment customization | [`05`](prompts/05-plus-payment-terms-function.md) | On Combined, a mixed cart flips to due-on-fulfillment and hides deferred; a Net-30 cart is unchanged |
+| **4. Plus payment-terms Function** | Plus | implement the Function, then activate it with one mutation in the app's GraphiQL (press `g`) | [`05`](prompts/05-plus-payment-terms-function.md) | On Combined, a mixed cart flips to due-on-fulfillment and hides deferred; a Net-30 cart is unchanged |
 | **5. Adapt for non-Plus** | non-Plus | no new code: two fixed-term locations; force-vault via an App Store app | n/a | Available-now and pre-book are ordered separately with their own terms; the app hides deferred on a pre-book cart |
 
 Key points per part:
@@ -169,9 +179,10 @@ Key points per part:
   fulfillment, driven by how each plan generates payment schedules, not by anything you author.
 - **Part 4.** The Plus payoff. The Function detects a pre-book item and, for that checkout only, switches
   Net 30 to due-on-fulfillment (`paymentTermsSet`, Plus-only) and hides the deferred option (match it by
-  its real input name "Deferred", not the label). Activate it per
-  [`payment-customization-activation.md`](workshop-assets/payment-customization-activation.md), and
-  **restart `shopify app dev` after the first deploy** (deploying while dev runs stales the block's asset URL).
+  its real input name "Deferred", not the label). No deploy: `shopify app dev` already serves the
+  Function, so you activate it with **one mutation in the app's GraphiQL** (press `g`), using the stable
+  function handle, so the mutation is identical for everyone. See
+  [`payment-customization-activation.md`](workshop-assets/payment-customization-activation.md).
 - **Part 5.** Most B2B merchants aren't on Plus. Without the two Plus-only pieces they pre-separate the
   journeys (Available Now on Net 30, Pre-book on due-on-fulfillment), so each single-term order charges
   correctly via the same Flow. The theme block and both Flows work unchanged. The only non-Plus-specific

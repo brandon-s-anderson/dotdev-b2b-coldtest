@@ -27,18 +27,20 @@ complete; the business logic in those two source files is yours to build.
 ## Common commands
 
 ```shell
-pnpm shopify app dev       # local development (runs with --use-localhost, see below)
-pnpm shopify app deploy    # release a new app version
+pnpm run dev               # = shopify app dev --use-localhost; keep this running all session
+pnpm shopify app deploy    # optional: release a persistent app version (take-home only)
 ```
 
-Deploy releases both extensions. The Plus payment Function is then activated once with the Shopify CLI
-(`STORE=<store>.myshopify.com pnpm run activate`, or ask your AI assistant); see
-`../../workshop-assets/payment-customization-activation.md`.
+This workshop is **dev-based, not deploy-based**: `shopify app dev` serves both extensions live and
+rebuilds on save, so you build and test entirely under `dev`, no deploy in the session. The Plus
+payment Function is activated with **one mutation in the app's own GraphiQL** (press `g` in the `dev`
+tab), using the function's stable handle; see
+`../../workshop-assets/payment-customization-activation.md`. Run `deploy` only if you want the build to
+persist after `dev` stops.
 
-This workshop is deploy-based, so you rarely need `app dev`. When you do, the `dev` script uses
-`--use-localhost` to skip the Cloudflare tunnel (important when a full room runs it at once).
-Localhost mode serves over `https://localhost` with a reverse proxy on port 3458 (override with
-`--localhost-port`). It's safe here because this app uses none of the tunnel-only features
+The `dev` script uses `--use-localhost` to skip the Cloudflare tunnel (important when a full room runs
+it at once). Localhost mode serves over `https://localhost` with a reverse proxy on port 3458 (override
+with `--localhost-port`). It's safe here because this app uses none of the tunnel-only features
 (webhooks/events, app proxy, app-defined Flow actions, POS).
 
 ## Notes

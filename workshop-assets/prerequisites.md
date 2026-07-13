@@ -73,12 +73,12 @@ The seed script talks to your store through the CLI, so authenticate once with t
 Copy this as-is and change only the store URL:
 
 ```bash
-shopify store auth --store <store>.myshopify.com --scopes read_products,write_products,read_inventory,write_inventory,read_locations,read_publications,write_publications,read_customers,write_customers,read_markets,write_markets,read_payment_terms,read_metaobjects,write_metaobjects,read_metaobject_definitions,write_metaobject_definitions,read_online_store_navigation,write_online_store_navigation,read_payment_customizations,write_payment_customizations
+shopify store auth --store <store>.myshopify.com --scopes read_products,write_products,read_inventory,write_inventory,read_locations,read_publications,write_publications,read_customers,write_customers,read_markets,write_markets,read_payment_terms,read_metaobjects,write_metaobjects,read_metaobject_definitions,write_metaobject_definitions,read_online_store_navigation,write_online_store_navigation
 ```
 
-It opens a browser to approve the scopes and is one time per store. (The last two,
-`*_payment_customizations`, aren't used by the seed; they're here so the same auth also covers the
-in-session activation of the Plus payment Function, so you never re-auth.)
+It opens a browser to approve the scopes and is one time per store. (These are the scopes the seed
+script needs. Activating the Plus payment Function in-session uses your app's own GraphiQL, not this
+CLI auth, so it isn't in this list.)
 
 ## 5. Seed the store (before the session)
 

@@ -14,8 +14,7 @@
     "dev": "shopify app dev --use-localhost",
     "info": "shopify app info",
     "generate": "shopify app generate",
-    "deploy": "shopify app deploy",
-    "activate": "node scripts/activate-payment-customization.mjs"
+    "deploy": "shopify app deploy"
   },
   "dependencies": {},
   "trustedDependencies": [

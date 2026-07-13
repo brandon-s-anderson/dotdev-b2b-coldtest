@@ -2,76 +2,47 @@
 
 The `prebooking-payment-terms` Function (Plus use case) flips a mixed cart from Net 30 to
 due-on-fulfillment when a pre-book item is present, and hides "Choose payment method at a
-later time" so a card or bank account is vaulted. Deploying the app registers the Function,
-but it does not run at checkout until you create a **payment customization** that points at it.
+later time" so a card or bank account is vaulted. Implementing the Function is not enough: it
+does not run at checkout until you create a **payment customization** that points at it.
 
-Creating one is a single Admin API mutation, `paymentCustomizationCreate`. There's no native admin
-screen for it, so you run it once with the **Shopify CLI** (`shopify store execute`), the same tool the
-pre-work setup script uses. This is a one-time activation per store.
+You do this with **one GraphQL mutation** in your **app's own GraphiQL**, the GraphiQL that
+`shopify app dev` opens when you press **`g`**. That runs in your app's context, so it can see and
+own your Function, and you reference the Function by its stable **handle** (no id lookup). It's a
+one-time activation per store, and **no `shopify app deploy` is needed**: the mutation activates the
+development Function that `dev` is already serving.
 
-> **Prerequisite (already done in pre-work):** `shopify store auth` was run with
-> `read_payment_customizations` and `write_payment_customizations` in the scope list (see
-> `prerequisites.md`, step 4). Those two scopes are what let the CLI create the customization. If you
-> authed before those were added, re-run `shopify store auth` with the full scope string once.
+## Steps
 
-You can run the two steps yourself in a terminal, or just ask your AI assistant to do it. Both use the
-same CLI under the hood.
+1. Keep `shopify app dev` running (the tab you started it in). Your Function is served there.
+2. In that tab, press **`g`**. Your app's GraphiQL opens in the browser.
+3. Set the **API version** field to the latest stable version.
+4. Run this mutation. It's **the same for everyone**, the handle is defined in the repo
+   (`extensions/prebooking-payment-terms/shopify.extension.toml` -> `handle = "prebooking-payment-terms"`),
+   so there's nothing to fill in:
 
-## Option A: Ask your AI assistant (simplest)
-
-With `shopify app dev` context and the CLI authed to your store, prompt your assistant:
-
-> Using `shopify store execute` against my store, find my payment-customization Function's id with the
-> `shopifyFunctions` query (the one whose `app.title` is my workshop app), then run
-> `paymentCustomizationCreate` with `enabled: true` pointing at that id. Confirm `userErrors` is empty.
-
-The assistant runs the query, reads the id, fills it into the mutation, and reports back. Nothing to
-copy by hand.
-
-## Option B: One command
-
-From the app folder (`starter/b2b-prebooking-workshop`), with the store authed:
-
-```bash
-STORE=<your-store>.myshopify.com pnpm run activate
-```
-
-`activate` queries for this app's payment-customization Function, then creates and enables the
-customization pointing at it. It prints the new customization id on success.
-
-## Option C: Run the two calls yourself
-
-**Step 1, find the Function's id.** `functionId` is a global id, so you copy it from here into the
-mutation:
-
-```bash
-shopify store execute --store <your-store>.myshopify.com --json \
-  --query 'query { shopifyFunctions(first: 100) { nodes { id title apiType app { title } } } }'
-```
-
-Find the node where `apiType` is the payment-customization type and `app.title` is **your app**
-(the starter defaults the name to `b2b-prebooking-workshop`; if you linked with a different name, match
-that). The function `title` comes from the extension's `shopify.extension.toml`. Copy its `id`.
-
-**Step 2, create and enable the payment customization.** Paste the `id` from Step 1 into `functionId`
-(`--allow-mutations` is required for any mutation):
-
-```bash
-shopify store execute --store <your-store>.myshopify.com --json --allow-mutations \
-  --query 'mutation {
-    paymentCustomizationCreate(paymentCustomization: {
-      title: "B2B Prebooking Payment Terms"
-      enabled: true
-      functionId: "PASTE_FUNCTION_ID_HERE"
-    }) {
-      paymentCustomization { id title enabled }
-      userErrors { field message }
-    }
-  }'
+```graphql
+mutation {
+  paymentCustomizationCreate(paymentCustomization: {
+    title: "B2B Prebooking Payment Terms"
+    enabled: true
+    functionHandle: "prebooking-payment-terms"
+  }) {
+    paymentCustomization { id title enabled }
+    userErrors { field message }
+  }
+}
 ```
 
 A successful response returns the new `paymentCustomization.id` and an empty `userErrors` array. The
 Function is now live at checkout for the store.
+
+> **`Could not find Function`?** Confirm `shopify app dev` is running (that's what serves the
+> Function) and that the handle above matches the one in `shopify.extension.toml`.
+
+> **An access-denied / scope error?** The app needs `write_payment_customizations`. The starter
+> already declares it in `shopify.app.toml`, and it's granted when you install the app in Part 1. If
+> you see a scope error, the app installed before that scope was added: quit `dev`, run it again, and
+> approve the updated permission when the browser prompts.
 
 ## Verify
 
@@ -81,13 +52,18 @@ Logged in as a B2B buyer on the combined (Plus) company location:
   due-on-fulfillment and "Choose payment method at a later time" is hidden.
 - Available-now only: terms stay on the location default (Net 30) and pay-later still shows.
 
+Watch the `shopify app dev` tab as you hit checkout, it prints each Function execution, which
+confirms your Function (not a stale one) ran.
+
 ## Notes
 
-- The Function hides payment methods whose name contains "later" (matches "Choose payment
-  method at a later time"). If your store shows a different label, update
-  `DEFERRED_METHOD_PATTERNS` in
+- **This activates the dev Function**, which lives only while `shopify app dev` runs, exactly what
+  you want for the session. To keep the customization working after you close `dev`, run
+  `pnpm shopify app deploy` once to release a persistent app version (optional take-home step).
+- The Function hides payment methods whose name matches the deferred option ("Deferred"). If your
+  store shows a different underlying name, update `DEFERRED_METHOD_PATTERNS` in
   `starter/b2b-prebooking-workshop/extensions/prebooking-payment-terms/src/cart_payment_methods_transform_run.ts`
-  and redeploy.
-- To change the customization later, use `paymentCustomizationUpdate`; to remove it, use
-  `paymentCustomizationDelete` (both run the same way with `shopify store execute --allow-mutations`).
+  (`dev` picks the change up on save).
+- To pause it, run `paymentCustomizationUpdate` with `enabled: false`; to remove it,
+  `paymentCustomizationDelete`. Both run the same way in the app's GraphiQL.
 - A store can have up to 25 active payment customization Functions.

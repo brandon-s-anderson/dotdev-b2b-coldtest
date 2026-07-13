@@ -52,25 +52,22 @@ as a **stub** (the `{% schema %}` + `product` setting, no logic yet) and an empt
 
 ## Prompt (Cursor / your AI tool)
 
-> In this theme app extension, create an app block `blocks/b2b-prebooking.liquid` with a
-> `product` setting (autofill true). Read the product's app-owned metaobject reference into a
-> `season` variable using the reserved `$app` namespace:
-> `product.metafields["$app"]["b2b-prebooking"].value`. Render only when the season is present AND the buyer is
-> a B2B buyer (`customer.b2b?`), plus also render in the theme editor (`request.design_mode`)
-> so the block can be positioned. When shown, display a "Pre-book: {season_name}" badge, the
-> ordering window (order_start_date to order_end_date) and the expected delivery window
-> (delivery_start_date to delivery_end_date), formatted as dates, and a short note that the
-> item is placed now and ships in the delivery window with payment due on fulfillment. Put
-> CSS in `assets/b2b-prebooking.css` and load it with `asset_url | stylesheet_tag` (theme app
-> blocks cannot use the `{% stylesheet %}` tag). Add a script that injects hidden inputs
-> `properties[Season]` and `properties[Delivery window]` into the product's add-to-cart form
-> so they become visible line item properties.
+```text
+In this theme app extension, create an app block `blocks/b2b-prebooking.liquid` with a `product` setting (autofill true). Read the product's app-owned metaobject reference into a `season` variable using the reserved `$app` namespace: `product.metafields["$app"]["b2b-prebooking"].value`. Render only when the season is present AND the buyer is a B2B buyer (`customer.b2b?`), plus also render in the theme editor (`request.design_mode`) so the block can be positioned. When shown, display a "Pre-book: {season_name}" badge, the ordering window (order_start_date to order_end_date) and the expected delivery window (delivery_start_date to delivery_end_date), formatted as dates, and a short note that the item is placed now and ships in the delivery window with payment due on fulfillment. Put CSS in `assets/b2b-prebooking.css` and load it with `asset_url | stylesheet_tag` (theme app blocks cannot use the `{% stylesheet %}` tag). Use neutral colors that read on a light storefront theme, and do NOT add an OS `prefers-color-scheme` dark-mode media query (the storefront theme controls the palette, not the visitor's OS). Add a script that injects hidden inputs `properties[Season]` and `properties[Delivery window]` into the product's add-to-cart form so they become visible line item properties.
+```
+
+> **If the block looks fine in the theme editor but washed-out on the storefront** (invisible panel,
+> unreadable text), your AI likely added a `@media (prefers-color-scheme: dark)` block and your OS is
+> in dark mode. The editor renders light so it hides the bug. Delete that media query, the block should
+> follow the storefront theme, not the OS. (The `finished` branch CSS is the known-good reference.)
 
 ## Place it
 
-Deploy (`pnpm shopify app deploy`), then in the theme editor open a **pre-book product** and
-add the block to the product template (Add block, Apps). The `design_mode` condition lets you
-see it in the editor even though you aren't a logged-in B2B buyer.
+No deploy: with `shopify app dev` running, the block is served as a **development block** and shows up
+in the theme editor immediately. Open a **pre-book product** in the theme editor and add the block to
+the product template (Add block, Apps, B2B Pre-booking). The `design_mode` condition lets you see it in
+the editor even though you aren't a logged-in B2B buyer. (Keep `dev` running while you preview, the
+block's assets are served by `dev`.)
 
 ## You should see
 
