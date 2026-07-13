@@ -67,6 +67,10 @@ tricky Shopify Payments setup and exact steps. The short version:
   config, so most assistants auto-load it).
 - The store structure is created for you by the seed script in **Get ready**; you don't build it by hand.
 
+You're done with prework only when the **validation checklist at the end of
+[`prerequisites.md`](workshop-assets/prerequisites.md) passes**. The two that can't be fixed live are
+**Shopify Payments** and the **store seed**, so confirm those especially.
+
 ## Get ready
 
 **Before the session, seed your store.** Clone the repo, authenticate the CLI (step 1), then run the

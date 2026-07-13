@@ -103,9 +103,36 @@ The pre-booking **data model is not seeded here**, the app creates it on `shopif
 session. (Optional: `../prompts/00-store-setup.md` walks the same setup via AI prompt if you'd rather
 watch it run.)
 
-**At the session, confirm your seed worked** before the build: in Admin, your store should have the
-workshop products, the Available Now / Pre-book collections, and the company **Urban Style** with three
-locations. If it doesn't, re-run steps 4 and 5 (a TA can help), it takes a couple of minutes.
+## Prework checklist (validate before you arrive)
+
+You're ready only when **every** box is true. Verify each, don't assume:
+
+- [ ] **US Plus sandbox store exists**, and **Settings, B2B** shows B2B enabled.
+- [ ] **Node 20+** (`node --version`), **pnpm** or **npm** (`pnpm --version`), and **Shopify CLI 4+**
+      (`shopify version`).
+- [ ] **Shopify Flow installed** (Admin, Apps lists "Shopify Flow").
+- [ ] **AI assistant ready** with the Shopify **Dev MCP** and **AI Toolkit** (your assistant can run
+      `shopify store execute`).
+- [ ] **Shopify Payments in test mode** (Settings, Payments shows Shopify Payments active with test mode
+      on), and **payment capture is NOT "automatically at checkout"** (set to "when fully fulfilled" or
+      "manually").
+- [ ] **Repo cloned** to a local folder.
+- [ ] **CLI authed to your store**: the shop query below returns your shop name.
+- [ ] **Store seeded** (the one thing that can't be fixed live). In Admin you can see:
+  - the workshop products (5 available-now + 5 pre-book; pre-book titles end in `(Pre-book)`),
+  - the **Available Now** and **Pre-book** collections,
+  - the company **Urban Style** with **three** locations (Available Now, Pre-book, Combined),
+  - and you can sign into the **storefront** as the buyer (**Maya Cruz**) using the emailed code.
+
+Verify CLI auth:
+
+```bash
+shopify store execute --store <store>.myshopify.com --query 'query { shop { name id } }'
+```
+
+Everything except **Payments** and the **store seed** is quick to fix in the room, so double-check those
+two hardest. If the seed box isn't fully true, re-run steps 4 and 5 (a couple of minutes; a TA can help
+at the door).
 
 ## Plan note
 
