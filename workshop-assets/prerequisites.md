@@ -89,6 +89,10 @@ cd workshop-assets/setup
 STORE=<store>.myshopify.com BUYER_EMAIL=you+us@example.com node setup-store.mjs
 ```
 
+**This takes several minutes** (roughly 5-10 on the first run: it makes many API calls and uploads the
+product images). It prints each step as it goes, so let it finish, don't cancel it if it looks quiet for
+a bit.
+
 `BUYER_EMAIL` is the B2B buyer (Maya Cruz) you sign in as. Login is a one-time emailed code, so use an
 inbox you control; the `+` alias trick (`you+us@example.com`) lets one inbox run several buyers.
 
