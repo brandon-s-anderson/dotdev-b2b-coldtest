@@ -327,7 +327,7 @@ Your seeded store already has both locations, so you can see the split.
 
 | Problem | Fix |
 |---|---|
-| `dev` stopped with `AbortError` | Restart: `pnpm run dev` |
+| `dev` stopped (`AbortError`), or the block suddenly renders **unstyled** (CSS 404), often right after a build step | Work down this ladder: **1)** restart `pnpm run dev` + hard-refresh the storefront; **2)** if the preview is stuck (`app-preview` errors, edits not landing): `shopify app dev clean` then `pnpm run dev`; **3)** if it says **"CLI credentials are invalid"**: `shopify auth logout` → `shopify auth login`, then `pnpm run dev`. |
 | Red `TranslationKeyExists` lines in the terminal | Ignore them (theme-check false positive); the prompt uses literal strings to avoid this |
 | GraphiQL says "Could not find Function" | `dev` must be running; press `g` again |
 | Activation says `ACCESS_DENIED` / needs `write_payment_customizations` | Run `pnpm run set-scopes` in `starter/b2b-prebooking-workshop`, re-approve the install in the browser, then re-run the mutation. More: [`payment-customization-activation.md`](workshop-assets/payment-customization-activation.md) |
