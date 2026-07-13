@@ -29,7 +29,7 @@ Admin GraphQL via the CLI). If the prompt goes sideways, use the fallback script
 >   places; we're using company locations as the *mechanism* to separate the pre-book and
 >   available-now journeys (distinct catalogs, terms, and orders under one company). Reusing one
 >   address makes that point explicit to the buyer and to your audience.
-> - Assign **the same B2B buyer** (Maria Cruz, the company contact you log in as) to the location
+> - Assign **the same B2B buyer** (Maya Cruz, the company contact you log in as) to the location
 >   as a **location admin**, so one login can access and switch between all the locations.
 > - Set the location's **payment terms** as called out in its section.
 
@@ -39,11 +39,11 @@ Admin GraphQL via the CLI). If the prompt goes sideways, use the fallback script
 
 Give your assistant this prompt (it creates the company and buyer, then the resources):
 
-> On my store, create a B2B company named "Urban Style" with a main contact (buyer) named Maria
+> On my store, create a B2B company named "Urban Style" with a main contact (buyer) named Maya
 > Cruz, email [BUYER EMAIL] (use an address I can receive mail at, since B2B login codes go
 > there). Then set up the "Available Now" B2B side. Create a company location named "Available
 > Now". Give it this shipping and billing address (use the same address for both): [PASTE YOUR
-> ADDRESS]. Assign Maria Cruz to this location as a location admin. Create an ACTIVE B2B market
+> ADDRESS]. Assign Maya Cruz to this location as a location admin. Create an ACTIVE B2B market
 > whose condition is that company location, and an ACTIVE catalog in that market with a price
 > list at 50% off the default (parent adjustment, percentage decrease). Publish every product
 > tagged `available-now` to that catalog's publication. Set the Available Now location's payment
@@ -51,7 +51,7 @@ Give your assistant this prompt (it creates the company and buyer, then the reso
 > the company id, buyer contact id, market id, catalog id, price list id, and how many products
 > were published.
 
-**Checkpoint.** The company "Urban Style" exists with Maria Cruz as a location admin, and a B2B
+**Checkpoint.** The company "Urban Style" exists with Maya Cruz as a location admin, and a B2B
 buyer on the Available Now location sees only `available-now` products, priced 50% off, on Net 30
 terms.
 

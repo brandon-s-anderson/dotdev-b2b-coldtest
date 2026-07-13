@@ -71,7 +71,7 @@ tricky Shopify Payments setup and exact steps. The short version:
 
 **Before the session, seed your store.** Clone the repo, authenticate the CLI (step 1), then run the
 setup script (step 2). It provisions the whole B2B structure (products with images, collections + menu,
-company **Urban Style**, buyer **Maria Cruz**, all three locations, markets, catalogs, terms, DTC
+company **Urban Style**, buyer **Maya Cruz**, all three locations, markets, catalogs, terms, DTC
 catalog). Advanced flags are documented at the top of `setup-store.mjs`.
 
 ```bash

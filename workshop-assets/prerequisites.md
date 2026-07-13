@@ -89,7 +89,7 @@ cd workshop-assets/setup
 STORE=<store>.myshopify.com BUYER_EMAIL=you+us@example.com node setup-store.mjs
 ```
 
-`BUYER_EMAIL` is the B2B buyer (Maria Cruz) you sign in as. Login is a one-time emailed code, so use an
+`BUYER_EMAIL` is the B2B buyer (Maya Cruz) you sign in as. Login is a one-time emailed code, so use an
 inbox you control; the `+` alias trick (`you+us@example.com`) lets one inbox run several buyers.
 
 The script creates the products, collections + navigation, the company and buyer, all three locations

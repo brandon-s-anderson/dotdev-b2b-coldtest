@@ -4,7 +4,7 @@
 // Provisions the full pre-work build: the B2B company + buyer, the non-Plus structure (two
 // locations/markets/catalogs), a DTC catalog, and the Plus "Combined" location (dev stores have
 // Plus features). It also CREATES the products (from the import CSV), the company ("Urban Style"),
-// its buyer/main contact ("Maria Cruz"), and all three locations, to keep manual setup minimal.
+// its buyer/main contact ("Maya Cruz"), and all three locations, to keep manual setup minimal.
 // The only manual step is confirming B2B is on (Plus sandbox stores include it).
 //
 // Requires the Shopify CLI authenticated to the store WITH scopes (one time per store; --scopes is
@@ -23,7 +23,7 @@
 //   STORE=<store>.myshopify.com BUYER_EMAIL=you+us@example.com node setup-store.mjs                  # full build
 //   STORE=<store>.myshopify.com BUYER_EMAIL=you+us@example.com NON_PLUS_ONLY=1 node setup-store.mjs  # skip Plus Combined
 //
-// BUYER_EMAIL is REQUIRED and must be an address you can receive at (Maria's login codes go there).
+// BUYER_EMAIL is REQUIRED and must be an address you can receive at (Maya's login codes go there).
 // COMPANY_NAME / BUYER_FIRST / BUYER_LAST / PRODUCTS_CSV / ADDRESS fields are overridable via env
 // vars; SKIP_PRODUCTS=1 skips product creation if you imported the CSV by hand instead. Every
 // location gets the SAME shipping+billing address (they aren't separate physical places; they're
@@ -41,7 +41,7 @@ const STORE = env.STORE;
 if (!STORE) die("Set STORE=<your-store>.myshopify.com");
 const BUYER_EMAIL = env.BUYER_EMAIL;
 if (!BUYER_EMAIL) {
-  die("Set BUYER_EMAIL=<an address you can receive mail at> (the buyer, Maria Cruz, signs in with a one-time code emailed there).");
+  die("Set BUYER_EMAIL=<an address you can receive mail at> (the buyer, Maya Cruz, signs in with a one-time code emailed there).");
 }
 const SKIP_PLUS = env.NON_PLUS_ONLY === "1"; // default builds the Plus Combined location too
 const SKIP_PRODUCTS = env.SKIP_PRODUCTS === "1"; // set if you imported products-import.csv by hand instead
@@ -63,7 +63,7 @@ const ADDRESS = {
 };
 
 const COMPANY_NAME = env.COMPANY_NAME || "Urban Style";
-const BUYER_FIRST = env.BUYER_FIRST || "Maria";
+const BUYER_FIRST = env.BUYER_FIRST || "Maya";
 const BUYER_LAST = env.BUYER_LAST || "Cruz";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PRODUCTS_CSV = env.PRODUCTS_CSV || join(__dirname, "..", "products", "products-import.csv");
