@@ -97,22 +97,26 @@ The seed script also creates the pre-booking **data model** (the `b2b_prebooking
 and the `custom.b2b-prebooking` product metafield), **store-owned** so it's fully visible and editable
 in Admin. You author the season **values** in Part 1; the definitions are ready before the session.
 
-**In the session, start the app** (this is tab 1, it stays running):
+**In the session, set up the app** (one-time; tab 1 stays running afterward):
 
 ```bash
 cd starter/b2b-prebooking-workshop
 pnpm install
-pnpm run dev              # = shopify app dev --use-localhost
+shopify app deploy         # creates your app in your Partner org (pick org, name it, release)
+pnpm run set-scopes        # re-adds the payment scope the CLI blanks on create, then redeploys
+pnpm run dev               # = shopify app dev --use-localhost; approve the install, press g for GraphiQL
 ```
 
-<sub>Using npm instead of pnpm? Swap `pnpm` for `npm` throughout (`npm install`, `npm run dev`).</sub>
+<sub>Using npm instead of pnpm? `npm install`, `shopify app deploy`, `npm run set-scopes`, `npm run dev`.</sub>
 
-The first `dev` links the app in your Partner org, then pick your dev store and **approve the install
-in the browser** (one click; the app's only scope is payment customizations, used in Part 3). The app
-ships **no data model in `shopify.app.toml`**, so this first `dev` needs no write scopes and starts
-cleanly on a fresh store. Expect a **storefront password** prompt (Admin, Online Store, Preferences)
-and, on first `--use-localhost`, a **mkcert** prompt: select **"Yes, use mkcert to generate it"**, then
-enter your Mac/admin (sudo) password. Details and troubleshooting: [`prompts/01`](prompts/01-scaffold-app.md).
+**Why `set-scopes`:** when the CLI first creates your app it blanks the `access_scopes` in
+`shopify.app.toml`. `set-scopes` restores them (`read/write_payment_customizations`), pins the
+`api_version`, and redeploys, so your **first** install already grants the payment-customizations
+permission and Part 3 activation works on the first try (no access-denied, no standalone GraphiQL app).
+Then `dev` links to that already-scoped app, so nothing re-blanks. Expect a **storefront password**
+prompt (Admin, Online Store, Preferences) and, on first `--use-localhost`, a **mkcert** prompt: select
+**"Yes, use mkcert to generate it"**, then enter your Mac/admin (sudo) password. Details and
+troubleshooting: [`prompts/01`](prompts/01-scaffold-app.md).
 
 ## Repo structure
 

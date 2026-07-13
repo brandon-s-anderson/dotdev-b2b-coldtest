@@ -5,22 +5,28 @@ build, the payment-customization Function. The starter already **is** that app: 
 extensions are scaffolded for you in `starter/b2b-prebooking-workshop`, so you don't init or generate
 anything, you install dependencies and start the dev session.
 
-## Command
+## Commands (one-time app setup)
 
 ```bash
 cd starter/b2b-prebooking-workshop
 pnpm install
-pnpm run dev              # = shopify app dev --use-localhost
+shopify app deploy         # creates your app (pick org, name it, release the version)
+pnpm run set-scopes        # re-adds the payment scope the CLI blanks on create, then redeploys
+pnpm run dev               # = shopify app dev --use-localhost; approve the install, press g
 ```
 
-- The first `dev` **links the app** in your Partner org and writes `client_id` into `shopify.app.toml`
-  for you. Pick your Partner org and the `b2b-prebooking` dev store when prompted, and keep `dev`
-  running, you build against it.
-- **Approve the install in the browser** if it opens: pick your dev store and click **Install**. One
-  click, by design (see below). The app's only scope is payment customizations, used in Part 3.
-- The starter carries **no data model** in `shopify.app.toml`, so this first `dev` needs no write
-  scopes and starts cleanly on a fresh store. (The season metaobject + product metafield already exist
-  on your store, created store-owned by the pre-work seed script, verify them below.)
+- **`shopify app deploy`** creates/links your app in your Partner org and writes `client_id` into
+  `shopify.app.toml`. Pick your org, name the app, and release the version.
+- **`pnpm run set-scopes`** is the one that matters. When the CLI creates the app it **blanks** the
+  `access_scopes` in your toml (a create-time CLI behavior, confirmed on fresh stores). `set-scopes`
+  restores them (`read/write_payment_customizations`), pins the `api_version`, and redeploys, so the app
+  is registered **with** the scope before you install. Without it, Part 3 activation fails with an
+  access-denied error.
+- **`pnpm run dev`** links to that already-scoped app (nothing re-blanks), serves both extensions, and
+  prompts the install. **Approve it in the browser** (the consent screen lists payment customizations)
+  and keep `dev` running, you build against it.
+- The season metaobject + product metafield already exist on your store, created store-owned by the
+  pre-work seed script, verify them below.
 
 > **Why a browser step?** Installing an app that has access scopes goes through the merchant OAuth
 > consent screen, a one-click browser step by design, with **no terminal-only install** (the CLI's own
@@ -64,12 +70,13 @@ product page), which is exactly how you seed the season in Part 1. Nothing to cr
   once). It's fine here: this app uses none of the tunnel-only features (webhooks/events, app proxy,
   app-defined Flow actions, POS). Localhost mode uses a reverse proxy on port 3458
   (`--localhost-port` to change it).
-- The **build is deploy-free**: `dev` serves both extensions and rebuilds on save, and Part 3
-  activates the Function in the app's GraphiQL (press `g`), no `shopify app deploy` needed in the
-  session. A later `shopify app deploy` is only for making the build persist after `dev` stops (an
-  optional take-home step).
-- `shopify app dev --reset` is harmless now (the app owns no data model to lose); use it only if the
-  CLI ever links you to the wrong org/store and you want to re-pick.
+- The two deploys above are **one-time app setup** (create the app + seat the scope). After that the
+  **code build is deploy-free**: `dev` serves both extensions and rebuilds on save, and Part 3 activates
+  the Function in the app's GraphiQL (press `g`), so you don't run `shopify app deploy` again while
+  building. (The deploy already made the extensions persist after `dev` stops, a nice side benefit.)
+- `shopify app dev --reset` is harmless (the app owns no data model to lose); use it only if the CLI
+  ever links you to the wrong org/store and you want to re-pick. If you reset and recreate the app,
+  run `pnpm run set-scopes` again.
 - Pin every extension and the app's webhooks to the latest **production** (GA) API version, kept
   consistent. When you change a Function's `api_version`, also run `pnpm shopify app function schema`
   to refresh its `schema.graphql`, or the build fails.

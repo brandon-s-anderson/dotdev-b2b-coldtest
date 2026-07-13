@@ -29,23 +29,32 @@ No third tab. No `shopify app deploy` during the build. `dev` hot-reloads on sav
 
 ## Start the app (Tab 1)
 
+First run is a one-time **app setup**: three commands that register your app **with** the
+payment-customizations scope *before* you install, so Part 3 activation works on the first try.
+
 ```bash
 cd starter/b2b-prebooking-workshop
 pnpm install
-pnpm run dev
+shopify app deploy          # creates your app (pick org, name it, release the version)
+pnpm run set-scopes         # re-adds the scope the CLI blanks on create, then redeploys
+pnpm run dev                # approve the browser install (now includes the scope); press g for GraphiQL
 ```
 
-<sub>Using npm? Swap `pnpm` for `npm`.</sub>
+<sub>Using npm? `npm install`, `shopify app deploy`, `npm run set-scopes`, `npm run dev`.</sub>
 
-On first run:
+**Why the extra step:** the CLI wipes your app's access scopes when it first creates the app.
+`set-scopes` puts them back and redeploys, so your **first** install already grants the
+payment-customizations permission and you never hit an access-denied error at Part 3.
 
-1. Pick your Partner org → your Plus sandbox store → **approve Install in the browser** (one click;
-   payment-customizations scope only).
-2. If asked for a **storefront password**: Admin → Online Store → Preferences → Password protection.
-3. On first `--use-localhost`, when mkcert asks **"Yes, use mkcert to generate it"**, select **Yes**,
-   then enter your Mac/admin (sudo) password. One-time per machine.
+Prompts you'll see:
 
-Leave Tab 1 running.
+1. `shopify app deploy` → pick your Partner org → **create it as a new app** → name it → **release** the version.
+2. `pnpm run set-scopes` → runs automatically, then `deploy` again → **release** the version.
+3. `pnpm run dev` → pick your store → **approve Install in the browser** (consent lists payment
+   customizations) → **storefront password** if asked (Admin → Online Store → Preferences) → mkcert
+   **"Yes, use mkcert to generate it"** + your Mac/sudo password (one-time per machine).
+
+Leave Tab 1 (`dev`) running the rest of the session.
 
 ---
 
@@ -312,7 +321,7 @@ Your seeded store already has those two locations so you can demo the split.
 | `dev` died with `AbortError` | Restart: `pnpm run dev` |
 | Red `TranslationKeyExists` in terminal | Ignore (theme-check false positive) if you used `| t`; prompt asks for literal strings |
 | GraphiQL: Could not find Function | `dev` must be running; retry press `g` |
-| Scope error on activation | See [`payment-customization-activation.md`](workshop-assets/payment-customization-activation.md) |
+| Scope error on activation (`ACCESS_DENIED`, `write_payment_customizations`) | `pnpm run set-scopes` in `starter/b2b-prebooking-workshop`, then re-approve the install in the browser and re-run the mutation. More: [`payment-customization-activation.md`](workshop-assets/payment-customization-activation.md) |
 | Need a full reset | [`reset.md`](workshop-assets/reset.md) |
 
 ---

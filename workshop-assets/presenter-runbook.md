@@ -105,26 +105,27 @@ Then the "why the obvious approaches fail" framing (~5 min) and the Toolkit slid
 
 ## PART 1 - Data model (~5 min) [both] - prompt [`01`](../prompts/01-scaffold-app.md)
 
-### 1a. Start the app (tab 1)
+### 1a. App setup, one-time, three commands (tab 1)
 ```bash
 cd starter/b2b-prebooking-workshop
 pnpm install
-pnpm run dev
+shopify app deploy         # creates the app: pick org, name it, release
+pnpm run set-scopes        # re-adds the payment scope + api_version, redeploys
+pnpm run dev               # approve the install (scope included), press g
 ```
-- On first `dev`: pick org -> pick your dev store -> **approve the browser install** (one click; the
-  app's only scope is payment customizations, used in Part 3). Enter the **storefront password** if asked.
-  On first `--use-localhost`, when mkcert prompts **"Yes, use mkcert to generate it"**, select Yes, then
-  enter the **sudo/Mac login** password.
-- **Say (frame the browser step):** "Installing any app with scopes goes through the standard consent
-  screen, that's a one-click browser step, not an error. There's no terminal-only install." Click Install,
-  move on.
-- **Why it starts clean now:** the app ships **no data model** in `shopify.app.toml`, so the first `dev`
-  needs no write scopes, this is the fix for the old `write_products`/blank-scopes failure on fresh stores.
-  The season metaobject + `custom.b2b-prebooking` product metafield already exist store-owned (seeded in
-  pre-work).
-- **STILL TO CONFIRM (store-7 dry run):** fresh clone -> `pnpm run dev` starts with NO scope error; then
-  Part 3 activation (press `g`) succeeds. If activation reports a payment-customizations scope error, seat
-  it once with `pnpm shopify app deploy` + reinstall (see prompt [`03`](../prompts/03-plus-payment-terms-function.md) / punch list).
+- **Why `set-scopes` (say it plainly):** "The CLI blanks the app's scopes when it first creates the app.
+  `set-scopes` puts them back and redeploys, so your first install already has the payment-customizations
+  permission and Part 3 just works." This is the fix for the create-time blank confirmed on stores 5-9.
+- On `deploy`: pick org -> create as new app -> name it -> **release**. `set-scopes` runs `deploy` again
+  (release again). On `dev`: pick store -> **approve the browser install** (consent lists payment
+  customizations) -> **storefront password** if asked -> mkcert **"Yes, use mkcert to generate it"** +
+  sudo/Mac password.
+- **Say (frame the browser step):** "Installing an app with scopes goes through the standard consent
+  screen, one click, not an error. There's no terminal-only install." Click Install, move on.
+- The season metaobject + `custom.b2b-prebooking` product metafield already exist store-owned (seeded in
+  pre-work); after `dev` starts, show them in 1b.
+- **STILL TO CONFIRM (store-9 dry run):** `deploy` -> `set-scopes` -> `dev` gives ONE install consent that
+  includes the scope, and Part 3 activation (press `g`) succeeds first try with no standalone GraphiQL app.
 
 ### 1b. Show the data model (no code)
 - Admin, Settings, Custom data: point at the **B2B Pre-booking** metaobject (Metaobjects) and the **B2B Pre-booking** product metafield (Metafields, Products). Both were seeded store-owned in pre-work.
@@ -229,8 +230,8 @@ Close + take-home (pattern map + `finished` branch) per the delivery guide. Q&A 
 ## Dry-run debrief (capture Monday)
 
 - [ ] Total time vs 60 min (Opening 3 + Framing 5 + Toolkit 4 + Build P1-5 26 + Payoff 4 + non-Plus 7 + Close 2 + Q&A 10). Build P1-5 = data model 5, theme 6, Function 7, Flow tag 4, Flow charge 4.
-- [ ] Part 1 first-run (data model moved OUT of the toml): does a plain `pnpm run dev` give ONE clean pass on a truly fresh clone, NO `write_products`/scope error, single browser install, no URL-paste gymnastics? (This is the fix for the stores 5/6/7 blank-scopes failure.) The data model should already be visible in Settings, Custom data from the pre-work seed.
-- [ ] Part 3 activation: does `paymentCustomizationCreate` (press `g`) succeed on the first try, or does it report a payment-customizations scope error? If it errors, confirm the one-time `pnpm shopify app deploy` + reinstall seats the scope. (The web consent stays; there's no terminal-only install.)
+- [ ] Part 1 app setup (`deploy` -> `set-scopes` -> `dev`): does it give ONE install consent that includes the payment scope on a truly fresh clone? Confirm `grep scopes shopify.app.toml` shows the two payment scopes after `set-scopes` (not `""`). The data model should already be visible in Settings, Custom data from the pre-work seed.
+- [ ] Part 3 activation: does `paymentCustomizationCreate` (press `g`) succeed on the first try (no standalone GraphiQL app)? If it reports a scope error, `pnpm run set-scopes` + re-approve install seats it.
 - [ ] Did building the Function (Part 3) before the Flows keep test-order terms correct end to end?
 - [ ] Flow tag latency, did the payoff pacing hide it?
 - [ ] Any AI prompt (02, 03) that produced code needing hand-fixing on stage.
@@ -251,7 +252,8 @@ one, prefer `pnpm shopify` so everyone's on the same version.
 |---|---|---|
 | `cd starter/b2b-prebooking-workshop` | Move into the app folder (shell). All commands run from here. | Once |
 | `pnpm install` | Downloads the app's code dependencies into `node_modules` (makes the CLI + build tools available). | Once per fresh clone |
-| `pnpm shopify app deploy` | Bundles app config + both extensions into a new **app version** and pushes it to Shopify's servers. Not used in the session build; optional take-home to make the extensions persist after `dev` stops (also the fallback to seat the Part 3 payment scope if activation reports one). | Optional / take-home |
+| `shopify app deploy` | Bundles app config + both extensions into a new **app version** and pushes it to Shopify. First run **creates** the app (and blanks the local scopes). Used twice in one-time app setup (create, then again inside `set-scopes`); not during the code build. | App setup |
+| `pnpm run set-scopes` | Repo helper: rewrites the blanked `access_scopes` back to `read/write_payment_customizations`, pins `api_version`, and redeploys, so the app is registered **with** the scope before you install. | App setup (after first deploy) |
 | `pnpm run dev` | = `shopify app dev --use-localhost`. Starts the **local dev session**: builds + serves the extensions live, hot-reloads on save, opens GraphiQL on press `g`. Stays running in Tab 1. | All session |
 | `--use-localhost` | Serves `dev` over a local HTTPS proxy (the `mkcert` cert prompt) instead of a Cloudflare tunnel; avoids room-wide throttling. Applies **only** to `dev`, not `deploy`. | Inside the `dev` script |
 | press `g` (in the dev tab) | Keystroke, not a command. Opens **GraphiQL** (query console) scoped to your app; how we activate the payment Function in Part 3. | Part 3 |

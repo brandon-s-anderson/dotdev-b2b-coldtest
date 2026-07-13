@@ -23,22 +23,25 @@ Build the pieces by following the repo's `README.md` ("How the workshop runs") a
 
 The app config and both extension scaffolds ship complete; the business logic in those two source
 files is yours to build. The pre-booking data model (the season metaobject + `custom.b2b-prebooking`
-product metafield) is **not** in this app, it's created store-owned by the pre-work seed script, so
-this app carries no data model and starts cleanly on a fresh store.
+product metafield) is **not** in this app, it's created store-owned by the pre-work seed script.
 
-## Common commands
+## Commands
+
+One-time app setup (registers the app **with** the payment scope before you install):
 
 ```shell
-pnpm run dev               # = shopify app dev --use-localhost; keep this running all session
-pnpm shopify app deploy    # optional: release a persistent app version (take-home only)
+pnpm install
+shopify app deploy         # creates the app (the CLI blanks the scopes here)
+pnpm run set-scopes        # re-adds read/write_payment_customizations + api_version, redeploys
+pnpm run dev               # = shopify app dev --use-localhost; approve the install, keep this running
 ```
 
-This workshop is **dev-based, not deploy-based**: `shopify app dev` serves both extensions live and
-rebuilds on save, so you build and test entirely under `dev`, no deploy in the session. The Plus
-payment Function is activated with **one mutation in the app's own GraphiQL** (press `g` in the `dev`
-tab), using the function's stable handle; see
-`../../workshop-assets/payment-customization-activation.md`. Run `deploy` only if you want the build to
-persist after `dev` stops.
+`set-scopes` exists because the CLI wipes the app's `access_scopes` when it first creates the app.
+Running it before you install means the very first consent grants `write_payment_customizations`, so the
+Plus Function activation in Part 3 works first try. After setup, the **code build is deploy-free**:
+`shopify app dev` serves both extensions live and rebuilds on save, and the Function is activated with
+**one mutation in the app's own GraphiQL** (press `g` in the `dev` tab); see
+`../../workshop-assets/payment-customization-activation.md`.
 
 The `dev` script uses `--use-localhost` to skip the Cloudflare tunnel (important when a full room runs
 it at once). Localhost mode serves over `https://localhost` with a reverse proxy on port 3458 (override
