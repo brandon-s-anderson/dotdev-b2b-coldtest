@@ -6,7 +6,8 @@ step lists the exact command/tab, the prompt to paste (linked), what to verify, 
 Built for the **Monday dry run**, run it start to finish once and time it.
 
 Attendee-facing source of truth **in the room** is [`SESSION.md`](../SESSION.md) (one follow-along
-doc with every paste prompt and teach-aloud callout). Overview + prework: [`README.md`](../README.md).
+follow-along doc with every paste prompt, Admin step, and checkpoint, written for the attendee).
+Overview + prework: [`README.md`](../README.md).
 This runbook is the presenter's do-this-next card. Parts: 1 = app setup `01` + season seed; 2 = `02`
 theme block; 3 = `03` Plus Function; **4 = Flows** (`04` tag + `05` charge as sub-steps). **Talk track
 after the data model:** theme block so the buyer sees pre-book context; payment Function so checkout

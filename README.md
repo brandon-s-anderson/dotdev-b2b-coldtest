@@ -5,7 +5,7 @@ Shopify capabilities, before selling plans are available for B2B. This repo is a
 build from**, not a turnkey product: patterns, prompts, and a starter app you extend for your merchant.
 
 **This README is the workshop overview + prework.** For the live build, attendees use one doc:
-[`SESSION.md`](SESSION.md) (prompts, checkpoints, and teach-aloud callouts in one place). Each step
+[`SESSION.md`](SESSION.md) (copy-paste prompts, Admin steps, and checkpoints in one place). Each step
 also has a matching prompt file in [`prompts/`](prompts); the `finished` branch is the reference
 solution.
 
@@ -161,8 +161,8 @@ values** (create the season, assign it to the pre-book products), which is Part 
 
 ## How the workshop runs (Plus first)
 
-> **Attendees:** open [`SESSION.md`](SESSION.md) and keep it open. Everything you need in the room
-> (talk track, Admin clicks, copy-paste prompts, while-it-builds teach notes, checkpoints) is there.
+> **Follow along in [`SESSION.md`](SESSION.md)**, keep it open the whole session. It has everything you
+> need to build: copy-paste prompts, Admin steps, and checkpoints, in order.
 > You do not need to open Liquid, TypeScript, or TOML files to follow along.
 
 **The session opens with a live demo of the finished flow** on a fully built store, so you see exactly
