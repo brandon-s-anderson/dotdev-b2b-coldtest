@@ -1,6 +1,14 @@
 {
   "permissions": {
     "defaultMode": "acceptEdits",
-    "allow": ["Read", "Glob", "Grep", "Edit", "Write", "MultiEdit"]
+    "allow": [
+      "Read",
+      "Glob",
+      "Grep",
+      "Edit",
+      "Write",
+      "MultiEdit",
+      "mcp__shopify-dev-mcp"
+    ]
   }
 }
