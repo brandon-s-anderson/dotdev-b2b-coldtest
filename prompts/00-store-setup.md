@@ -57,7 +57,7 @@ if you're setting the store up by hand instead.) Store-owned (not app-owned) kee
 and editable in Admin, and lets the theme block/Function read it via the `custom` namespace.
 
 ```text
-On my store, create a store-owned metaobject definition named "B2B Pre-booking" (type b2b_prebooking), display name field season_name, storefront access public read, admin access merchant read/write, with fields: season_name (single_line_text_field, required), order_start_date, order_end_date, delivery_start_date, delivery_end_date (all date). Then create a PRODUCT metafield definition: name "B2B Pre-booking", namespace "custom", key "b2b-prebooking", type metaobject_reference constrained to that metaobject definition, admin merchant read/write, storefront public read. Show me both definition ids.
+On my store, create a store-owned metaobject definition named "B2B Pre-booking" (type b2b_prebooking), display name field season_name, storefront access public read, with fields: season_name (single_line_text_field, required), order_start_date, order_end_date, delivery_start_date, delivery_end_date (all date). Then create a PRODUCT metafield definition: name "B2B Pre-booking", namespace "custom", key "b2b-prebooking", type metaobject_reference constrained to that metaobject definition, storefront public read. Do NOT set admin access on either definition: admin access is only allowed on app-reserved ($app) types, and merchant-owned definitions are already read/write in Admin by default. Show me both definition ids.
 ```
 
 Only the **definitions** are created here. You seed the season **entry** and assign it to each pre-book

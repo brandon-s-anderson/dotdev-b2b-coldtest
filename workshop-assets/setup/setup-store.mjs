@@ -288,7 +288,7 @@ function createDataModel() {
           name: "B2B Pre-booking",
           type: "b2b_prebooking",
           displayNameKey: "season_name",
-          access: { admin: "MERCHANT_READ_WRITE", storefront: "PUBLIC_READ" },
+          access: { storefront: "PUBLIC_READ" }, // admin defaults to merchant read/write; admin access is only settable on app-reserved $app types
           fieldDefinitions: [
             { key: "season_name", name: "Season name", type: "single_line_text_field", required: true },
             { key: "order_start_date", name: "Order start date", type: "date" },
@@ -322,7 +322,7 @@ function createDataModel() {
           ownerType: "PRODUCT",
           type: "metaobject_reference",
           validations: [{ name: "metaobject_definition_id", value: defId }],
-          access: { admin: "MERCHANT_READ_WRITE", storefront: "PUBLIC_READ" },
+          access: { storefront: "PUBLIC_READ" }, // admin defaults to merchant read/write; admin access is only settable on app-reserved $app types
         },
       },
       true
