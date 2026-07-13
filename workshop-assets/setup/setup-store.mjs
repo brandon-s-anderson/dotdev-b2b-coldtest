@@ -4,7 +4,8 @@
 // Provisions the full pre-work build: the B2B company + buyer, the non-Plus structure (two
 // locations/markets/catalogs), a DTC catalog, and the Plus "Combined" location (dev stores have
 // Plus features). It also CREATES the products (from the import CSV), the company ("Urban Style"),
-// its buyer/main contact ("Maya Cruz"), and all three locations, to keep manual setup minimal.
+// its buyer/main contact ("Maya Cruz"), all three locations, and the pre-booking data model (the
+// season metaobject + the custom.b2b-prebooking product metafield), to keep manual setup minimal.
 // The only manual step is confirming B2B is on (Plus sandbox stores include it).
 //
 // Requires the Shopify CLI authenticated to the store WITH scopes (one time per store; --scopes is
@@ -14,10 +15,10 @@
 //     read_publications,write_publications,read_customers,write_customers,\
 //     read_markets,write_markets,read_payment_terms,\
 //     read_metaobjects,write_metaobjects,read_metaobject_definitions,write_metaobject_definitions,\
-//     read_online_store_navigation,write_online_store_navigation,\
-//     read_payment_customizations,write_payment_customizations
-//   (last two scopes cover the in-session payment-customization activation; see
-//    ../payment-customization-activation.md)
+//     read_online_store_navigation,write_online_store_navigation
+//   (write_metaobject_definitions + write_products cover the pre-booking data model this script
+//    creates; the in-session payment-customization activation runs in the app's OWN context, not
+//    this CLI auth, so no payment_customizations scopes are needed here.)
 //
 // Then:
 //   STORE=<store>.myshopify.com BUYER_EMAIL=you+us@example.com node setup-store.mjs                  # full build
@@ -262,11 +263,74 @@ function marketWithCatalog(name, handle, locationId, tag) {
   return [marketId, catalogId];
 }
 
-// NOTE: the pre-booking data model is NOT created here. The metaobject + product metafield
-// DEFINITIONS are declared in the app's shopify.app.toml under the reserved $app namespace and are
-// created on `shopify app dev`. The season entry + per-product values are app-owned, so they're
-// written in-session (Admin bulk editor, or the app's `press g` GraphiQL). See data-model-seed.md.
-// SEASON_* above are the reference values for that in-session step.
+// Create the pre-booking data model (STORE-owned): the "season" metaobject definition + a product
+// metafield (custom.b2b-prebooking) that references it. Store-owned (not app-owned $app) so it is
+// fully visible + editable in Admin (Settings, Custom data) and both the theme block and the payment
+// Function read it via the "custom" namespace. Only the DEFINITIONS are created here (pre-work); the
+// season ENTRY + per-product assignment are done in-session in Admin (that's Part 1). SEASON_* above
+// are the reference values for that in-session step. Idempotent: reuses an existing definition.
+function createDataModel() {
+  // The "season" metaobject. Reuse if the type already exists (re-run safety).
+  let defId = null;
+  const existingDef = run(
+    "query { metaobjectDefinitions(first: 50) { nodes { id type } } }"
+  ).metaobjectDefinitions.nodes.find((n) => n.type === "b2b_prebooking");
+  if (existingDef) {
+    defId = existingDef.id;
+    console.log("  metaobject 'b2b_prebooking' already exists; reusing");
+  } else {
+    const d = run(
+      "mutation($def: MetaobjectDefinitionCreateInput!) {" +
+        "  metaobjectDefinitionCreate(definition: $def) {" +
+        "    metaobjectDefinition { id type } userErrors { field message } } }",
+      {
+        def: {
+          name: "B2B Pre-booking",
+          type: "b2b_prebooking",
+          displayNameKey: "season_name",
+          access: { admin: "MERCHANT_READ_WRITE", storefront: "PUBLIC_READ" },
+          fieldDefinitions: [
+            { key: "season_name", name: "Season name", type: "single_line_text_field", required: true },
+            { key: "order_start_date", name: "Order start date", type: "date" },
+            { key: "order_end_date", name: "Order end date", type: "date" },
+            { key: "delivery_start_date", name: "Delivery start date", type: "date" },
+            { key: "delivery_end_date", name: "Delivery end date", type: "date" },
+          ],
+        },
+      },
+      true
+    ).metaobjectDefinitionCreate;
+    if (errs(d, "metaobject definition").length) return;
+    defId = d.metaobjectDefinition.id;
+  }
+  // Product metafield custom.b2b-prebooking -> references the season metaobject. Reuse if present.
+  const existingMf = run(
+    'query { metafieldDefinitions(first: 50, ownerType: PRODUCT, namespace: "custom") { nodes { id key } } }'
+  ).metafieldDefinitions.nodes.find((n) => n.key === "b2b-prebooking");
+  if (existingMf) {
+    console.log("  product metafield 'custom.b2b-prebooking' already exists; reusing");
+  } else {
+    const m = run(
+      "mutation($def: MetafieldDefinitionInput!) {" +
+        "  metafieldDefinitionCreate(definition: $def) {" +
+        "    createdDefinition { id } userErrors { field message } } }",
+      {
+        def: {
+          name: "B2B Pre-booking",
+          namespace: "custom",
+          key: "b2b-prebooking",
+          ownerType: "PRODUCT",
+          type: "metaobject_reference",
+          validations: [{ name: "metaobject_definition_id", value: defId }],
+          access: { admin: "MERCHANT_READ_WRITE", storefront: "PUBLIC_READ" },
+        },
+      },
+      true
+    ).metafieldDefinitionCreate;
+    errs(m, "product metafield definition");
+  }
+  console.log("  data model: B2B Pre-booking metaobject + custom.b2b-prebooking product metafield");
+}
 
 // The store's fulfillment location (for inventory) and the Online Store publication (so products
 // appear on the storefront).
@@ -525,6 +589,9 @@ function createDtcCatalog() {
 
 function main() {
   const [locId, onlinePub] = shopLocationAndOnlinePublication();
+
+  console.log("Data model:");
+  createDataModel();
 
   if (!SKIP_PRODUCTS) {
     console.log("Products:");

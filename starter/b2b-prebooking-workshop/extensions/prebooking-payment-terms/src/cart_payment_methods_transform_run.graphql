@@ -1,6 +1,6 @@
 query CartPaymentMethodsTransformRunInput {
-  # STARTER STUB. TODO (prompt 05): add the purchasing company id and, on each line's
-  # ProductVariant, product { metafield(namespace: "$app", key: "b2b-prebooking") { value } }
+  # STARTER STUB. TODO (prompt 03): add the purchasing company id and, on each line's
+  # ProductVariant, product { metafield(namespace: "custom", key: "b2b-prebooking") { value } }
   # so the function can detect a pre-book cart.
   cart {
     lines {

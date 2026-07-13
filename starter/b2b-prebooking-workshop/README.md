@@ -16,13 +16,15 @@ Build the pieces by following the repo's `README.md` ("How the workshop runs") a
 
 - **`extensions/prebooking-theme`** ships as a **stub**: `blocks/b2b-prebooking.liquid` and
   `assets/b2b-prebooking.css` contain a comment/TODO and the block schema only. You implement the
-  window display + line item properties in Part 1 (`../../prompts/02-theme-app-block.md`).
+  window display + line item properties in Part 2 (`../../prompts/02-theme-app-block.md`).
 - **`extensions/prebooking-payment-terms`** ships as a **stub**: `src/cart_payment_methods_transform_run.ts`
-  returns no operations. You implement the due-on-fulfillment + hide-deferred logic in Part 4
-  (`../../prompts/05-plus-payment-terms-function.md`).
+  returns no operations. You implement the due-on-fulfillment + hide-deferred logic in Part 3
+  (`../../prompts/03-plus-payment-terms-function.md`).
 
-The app config, extension scaffolding, and the app-owned data model in `shopify.app.toml` ship
-complete; the business logic in those two source files is yours to build.
+The app config and both extension scaffolds ship complete; the business logic in those two source
+files is yours to build. The pre-booking data model (the season metaobject + `custom.b2b-prebooking`
+product metafield) is **not** in this app, it's created store-owned by the pre-work seed script, so
+this app carries no data model and starts cleanly on a fresh store.
 
 ## Common commands
 
@@ -42,6 +44,14 @@ The `dev` script uses `--use-localhost` to skip the Cloudflare tunnel (important
 it at once). Localhost mode serves over `https://localhost` with a reverse proxy on port 3458 (override
 with `--localhost-port`). It's safe here because this app uses none of the tunnel-only features
 (webhooks/events, app proxy, app-defined Flow actions, POS).
+
+## Working with your AI assistant
+
+Both builds (theme block, Function) are **edit-only**, `dev` hot-reloads on save, so the AI just edits
+files and never needs to run a command. Turn on **auto-accept edits** so it doesn't stop for approval on
+every file: Claude Code reads `.claude/settings.json` (shipped here, auto-accepts edits while still
+prompting on commands); in Cursor, enable **Auto-Run**. If the AI proposes a CLI command, you can decline
+it, it isn't needed in the session.
 
 ## Notes
 

@@ -66,7 +66,9 @@ everything and watches the live vault + charge on the presenter's screen.
 
 ## Opening: show the end goal (~3 min)
 
-**Demo, no code.** On a seeded B2B store, logged in as a Plus buyer at the Combined location:
+**Demo, no code.** Run this on a **separate, fully built "finished" store** (data model, block, both
+Flows, Function all live), kept aside from the store you build on live so the end state is guaranteed.
+Logged in as the Plus buyer (Maya Cruz) at the Combined location:
 
 1. Show a pre-order product PDP: the ordering window and expected delivery window render on the
    page.
@@ -83,6 +85,31 @@ thing working."
 
 > 💡 Highest-ROI 3 minutes in the session. They see the destination before any code, so every step
 > later has a "why."
+
+---
+
+## Prework check (~3 min hands-up triage; TAs fix reds in parallel)
+
+Fast gut-check, not a fix-it session, and it can overlap the intro/framing rather than eat dedicated
+clock. Run the full list; the **only** thing that can't be fixed in a few minutes is the **store seed**
+(the script takes 5-10 min), so that's the one that truly gates building. Everything else a TA sorts
+live while the room keeps moving.
+
+**The one that can't be fixed live, ask first:**
+- Store **seeded**: 5 available-now + 5 pre-book products, the Available Now + Pre-book collections, and
+  the company **Urban Style** with **three** locations (Available Now, Pre-book, Combined). Anyone red
+  follows on the presenter screen and rebuilds from `finished` later.
+
+**Fixable in the room (TAs, ~1-3 min each):**
+- **US Plus sandbox** store, **US / USD**, **B2B on**.
+- Shopify Payments **activated**, **test mode on**, capture **manual or on-fulfillment** (not at checkout).
+- Can **sign into the storefront as the buyer (Maya Cruz)** via the emailed code, on Combined (every
+  in-session test runs as the buyer; a TA can resend/confirm the code).
+- Shopify **Flow installed** (free App Store install).
+- **Repo cloned** (they `pnpm install` as the first build step) and **CLI authed** (shop query returns).
+- Tooling: Node 20+, pnpm/npm, Shopify CLI 4+, AI assistant with Dev MCP + AI Toolkit.
+
+Note reds, hand them to a TA, keep building. Don't hold the whole session.
 
 ---
 
@@ -123,8 +150,9 @@ see teams make on B2B pre-orders."
 Walk the building blocks on screen (no code yet). This is also the reference map they take home.
 
 - **Season data model (metaobject + product metafield):** the pre-order "season" (ordering +
-  delivery windows) lives on the **product** via an app-owned metaobject; a product metafield
-  references it. That metafield is also what marks a product as "pre-order."
+  delivery windows) lives on the **product** via a store-owned metaobject (seeded in pre-work); a
+  product metafield (`custom.b2b-prebooking`) references it. That metafield is also what marks a
+  product as "pre-order."
 - **PDP theme block:** reads the season and renders the windows for B2B buyers, and injects
   `Season` + `Delivery window` as **line item properties** (all plans, the only cross-plan hook to
   carry pre-order context into cart and checkout).
@@ -157,25 +185,25 @@ Two beats; keep them mentally separate so a stall on seeding doesn't eat the the
 
 **Beat 1, the data model (~5 min).** In the already-cloned starter app
 (`starter/b2b-prebooking-workshop`), run `pnpm install` (~100 MB, under a minute on the venue wifi)
-then `shopify app dev` (`--use-localhost`). Before seeding, **open `shopify.app.toml` and read the
-two data-model blocks**: the app declares the `b2b-prebooking` metaobject + product metafield, so
-`dev` creates those definitions (in the `$app` namespace) for you, no mutations, confirm them in
-**Settings, Custom data**. Then seed one **season** entry and assign it to the pre-order products
+then `shopify app dev` (`--use-localhost`), it starts clean (the app ships no data model, so no scope
+errors). The season **metaobject** + `custom.b2b-prebooking` product **metafield** were created
+store-owned by the pre-work seed script, so **open Settings, Custom data and show them** (Metaobjects,
+then Metafields, Products). Then seed one **season** entry and assign it to the pre-order products
 (`workshop-assets/data-model-seed.md`).
-**Teach.** The data model is **app-owned**: declaring the metaobject + metafield in
-`shopify.app.toml` versions the schema with the app and avoids per-store mutation drift; `$app`
-scopes it to your app. Only the **values** (the season entry + the per-product assignment) are
-authored at runtime.
+**Teach.** The data model is **store-owned**, created once in pre-work: a season metaobject and a
+`custom.b2b-prebooking` product metafield, both fully visible and editable in Admin. Only the
+**values** (the season entry + the per-product assignment) are authored live, everything reads them
+via the `custom` namespace.
 
 **Beat 2, the theme block (~6 min).** Build the block from `prompts/02-theme-app-block.md` (it reads
-`$app:b2b-prebooking`), add it to the product template, and preview a pre-order product.
+`custom.b2b-prebooking`), add it to the product template, and preview a pre-order product.
 **Teach.** The block reads the season server-side in Liquid and injects **visible line item
 properties** (`Season`, `Delivery window`) into the add-to-cart form, the all-plans way to carry
 pre-order context to cart and checkout; non-Plus has no other hook there (works everywhere, not a
 Plus feature).
 
 > **Highlight (say this). For a non-dev presenter, point at two lines in `b2b-prebooking.liquid`:**
-> 1. `product.metafields["$app"]["b2b-prebooking"]` (near the top): *"This one line is the whole
+> 1. `product.metafields["custom"]["b2b-prebooking"]` (near the top): *"This one line is the whole
 >    data-model connection. The block reads the season we attached to this product, nothing is
 >    hardcoded, so it updates automatically when you change the season."*
 > 2. The small `<script>` block: *"And this is how pre-book context reaches checkout on any plan, no
@@ -183,35 +211,23 @@ Plus feature).
 >    properties, so they show in the cart, at checkout, and on the order."*
 > That's the whole file in two sentences: **read the season, carry it to checkout everywhere.**
 
-**Checkpoint.** ✅ `metafieldDefinitions(ownerType: PRODUCT)` shows the `$app` `b2b-prebooking` field;
-a B2B buyer on a pre-order product sees the windows; adding it shows `Season` and `Delivery window`
-on the cart line and at checkout. Available-now shows nothing.
+**Checkpoint.** ✅ Settings, Custom data shows the **B2B Pre-booking** metaobject + the
+`custom.b2b-prebooking` product metafield; a B2B buyer on a pre-order product sees the windows; adding
+it shows `Season` and `Delivery window` on the cart line and at checkout. Available-now shows nothing.
 
-### 2b. Flow: tag pre-order B2B orders (~4 min)  [both]
-**Step.** Build Flow 1 from `prompts/03-flow-tag-prebook-orders.md` (Sidekick prompt).
-**Teach.** Iterate the Sidekick prompt and read what it generates. The B2B guard keeps DTC orders
-untagged; the `Prebooking` tag is both a merchant filter and the signal Flow 2 keys on.
-**Checkpoint.** ✅ A new B2B order with a pre-order product gets the `Prebooking` tag; a DTC order
-does not.
-
-### 2c. Flow: charge the vaulted card on fulfillment (~4 min)  [both]
-**Step.** Build Flow 2 from `prompts/04-flow-charge-on-fulfillment.md` (Sidekick prompt).
-**Teach.** One Flow serves both plans: non-Plus charges once at full fulfillment, Plus charges per
-fulfillment, driven by how each plan generates payment schedules, not by anything you author. The
-`completedAt does not exist` condition is your double-charge guard. (Hard-won: without it, a
-re-fulfillment double-charges.)
-**Checkpoint.** ✅ Fulfilling a pre-order order charges the vaulted method for the due amount, once.
-
-### 2d. Plus payment-terms Function (~7 min)  [Plus]: the payoff
-**Step.** Implement the Function from `prompts/05-plus-payment-terms-function.md` (no deploy: `dev`
+### 2b. Plus payment-terms Function (~7 min)  [Plus]: the Plus differentiator
+Built **before** the Flows on purpose: on the combined location only the Function flips terms to
+due-on-fulfillment, so the test orders you place while building the Flows already carry the right
+terms (build the Flows first and your test orders stay Net 30, and the charge Flow looks broken).
+**Step.** Implement the Function from `prompts/03-plus-payment-terms-function.md` (no deploy: `dev`
 serves it), then activate it with one mutation in the app's GraphiQL, press `g` in the `dev` tab and
 run the `paymentCustomizationCreate` from `payment-customization-activation.md`. The mutation is
 identical for everyone (stable function handle).
-**Teach.** This is the Plus payoff: on the combined location, a mixed cart flips **only that
-checkout** from Net 30 to due-on-fulfillment (`paymentTermsSet`, Plus-only) and hides the deferred
-option, so the buyer gets one smart cart. Two firsthand gotchas: (1) match the deferred method by
-its **real input name** (`"Deferred"`), not the display label; (2) fail open, return no change for
-non-B2B and available-now-only carts, because the Function runs on every checkout.
+**Teach.** On the combined location, a mixed cart flips **only that checkout** from Net 30 to
+due-on-fulfillment (`paymentTermsSet`, Plus-only) and hides the deferred option, so the buyer gets
+one smart cart. Two firsthand gotchas: (1) match the deferred method by its **real input name**
+(`"Deferred"`), not the display label; (2) fail open, return no change for non-B2B and
+available-now-only carts, because the Function runs on every checkout.
 
 > **Highlight (say this). Point at two spots in `cart_payment_methods_transform_run.ts`:**
 > 1. The two `return NO_CHANGES` guards at the top: *"The function only acts on a B2B cart that
@@ -223,7 +239,22 @@ non-B2B and available-now-only carts, because the Function runs on every checkou
 > Two sentences: **only on a B2B pre-book cart, do exactly two things.**
 
 **Checkpoint.** ✅ Mixed cart on the combined location flips to due-on-fulfillment and hides
-deferred; available-now-only cart stays Net 30; Flow 2 then charges per fulfillment.
+deferred; available-now-only cart stays Net 30. (The Flows you build next do the charging.)
+
+### 2c. Flow: tag pre-order B2B orders (~4 min)  [both]
+**Step.** Build Flow 1 from `prompts/04-flow-tag-prebook-orders.md` (Sidekick prompt).
+**Teach.** Iterate the Sidekick prompt and read what it generates. The B2B guard keeps DTC orders
+untagged; the `Prebooking` tag is both a merchant filter and the signal the charge Flow keys on.
+**Checkpoint.** ✅ A new B2B order with a pre-order product gets the `Prebooking` tag; a DTC order
+does not.
+
+### 2d. Flow: charge the vaulted card on fulfillment (~4 min)  [both]
+**Step.** Build Flow 2 from `prompts/05-flow-charge-on-fulfillment.md` (Sidekick prompt).
+**Teach.** One Flow serves both plans: non-Plus charges once at full fulfillment, Plus charges per
+fulfillment, driven by how each plan generates payment schedules, not by anything you author. The
+`completedAt does not exist` condition is your double-charge guard. (Hard-won: without it, a
+re-fulfillment double-charges.)
+**Checkpoint.** ✅ Fulfilling a pre-order order charges the vaulted method for the due amount, once.
 
 > 💡 Every sub-part carries a firsthand teach (line-item-properties as the all-plans hook, the
 > double-charge guard, the input-name gotcha, fail-open). That density is the "why in-person."
@@ -233,7 +264,7 @@ deferred; available-now-only cart stays Net 30; Flow 2 then charges per fulfillm
 ## Part 2 payoff: the pre-order lifecycle, end to end (~4 min)
 
 Everything is built; now run the whole lifecycle live on the **combined** location. This is the
-money shot, it's what they just built, all working together. (The Opening was a quick teaser; here
+high point, it's what they just built, all working together. (The Opening was a quick teaser; here
 you go deeper, so the repeat is deliberate reinforcement.)
 
 **1. Three carts, three behaviors** (same buyer, same location):
@@ -315,12 +346,13 @@ booth.
    and this one returns no change for non-B2B and available-now-only carts.
 5. **Can a buyer bypass the hidden "pay later" option?** No; the payment customization re-runs at
    checkout completion. On non-Plus the App Store app enforces the same.
-6. **Where do the season dates live, and who edits them?** In the app-owned `b2b-prebooking`
-   metaobject (`$app` namespace), declared in the app's `shopify.app.toml`; edit them in one place
-   and both the block and the Function read them.
-7. **Why is the data model in the app config instead of a mutation?** Shopify's Custom Data guidance:
-   declare static metaobject/metafield definitions in `shopify.app.toml` so they version with the app
-   and don't drift per store. Only the values (season entry + product references) are written at runtime.
+6. **Where do the season dates live, and who edits them?** In the store-owned `b2b_prebooking`
+   metaobject (read via `custom.b2b-prebooking` on the product); edit them in one place in Admin and
+   both the block and the Function read them.
+7. **Where does the data model come from?** The pre-work seed script creates it store-owned (a season
+   metaobject + a `custom.b2b-prebooking` product metafield), so it's fully editable in Admin and the
+   app itself carries no data model. Only the values (season entry + product references) are written in
+   the session.
 8. **My Shopify Payments won't verify / says "select a plan."** Expected on a sandbox. Use the test
    SSN, ignore the "couldn't be verified" and "select a plan" banners, test mode still processes test
    charges and vaults cards. (TA: this is the top support item.)
@@ -351,11 +383,11 @@ booth.
 - [ ] Anticipated Q&A listed (8); Q&A protected at 10 min
 - [ ] Close names a concrete take-home (pattern map + finished branch)
 - [ ] Screen legibility: ≥18pt terminal / 150% editor / high-contrast
-- [ ] Timed: Opening 3 + Framing 5 + Toolkit 4 + Build 25 + Payoff 4 + Non-Plus 7 + Close 2 + Q&A 10 = 60
+- [ ] Timed (hard 60-min slot; Gita ~10 up front, Q&A ~10 protected): Opening 3 + Framing 5 + Toolkit 4 + Build 25 + Payoff 4 + Non-Plus 7 + Close 2 + Q&A 10 = 60. **Prework check = ~3-min hands-up triage that overlaps the opening/framing** (TAs work reds in parallel), so it doesn't add to the clock.
 - [ ] TA has run the full exercise end to end
-- [ ] Prerequisites specific and frozen; store structure pre-seeded (script), data model created by the app
+- [ ] Prerequisites specific and frozen; store structure + data model pre-seeded (script)
 - [ ] **Shopify Payments** (test mode) + capture not at-checkout (manual or on-fulfillment) + US store called out in the attendee prereq email; **TAs briefed on Payments as the #1 support item**
-- [ ] Data model declared in `shopify.app.toml` (`$app`); created on `shopify app dev`, not pre-work
+- [ ] Data model created store-owned by the pre-work seed script (`custom.b2b-prebooking`); the app carries none
 - [ ] Gita aligned on Plus-first order and the pre-order/pre-book terminology split
 - [ ] Repo made public by an org admin (attendees clone it; hosts product images)
 - [ ] Final external copy approved; deck submitted for AV check

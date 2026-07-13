@@ -13,8 +13,8 @@ Two Shopify Flow workflows power the pre-book order lifecycle, and both work on 
 Build each Flow live with its Sidekick prompt. The prompts, triggers, conditions, actions,
 and teach notes are documented in the build walkthrough, which is the **single source of truth**:
 
-- Flow 1: [`../../prompts/03-flow-tag-prebook-orders.md`](../../prompts/03-flow-tag-prebook-orders.md)
-- Flow 2: [`../../prompts/04-flow-charge-on-fulfillment.md`](../../prompts/04-flow-charge-on-fulfillment.md)
+- Flow 1: [`../../prompts/04-flow-tag-prebook-orders.md`](../../prompts/04-flow-tag-prebook-orders.md)
+- Flow 2: [`../../prompts/05-flow-charge-on-fulfillment.md`](../../prompts/05-flow-charge-on-fulfillment.md)
 
 ## Importing them (optional)
 

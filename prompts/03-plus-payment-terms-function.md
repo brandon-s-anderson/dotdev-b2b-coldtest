@@ -1,4 +1,4 @@
-# 5. Plus payment-terms Function  [Plus]
+# 3. Plus payment-terms Function  [Plus]
 
 This is the Plus differentiator for the single-location mixed cart. A payment-customization
 Function detects a pre-book item in the cart and, for that checkout only:
@@ -23,8 +23,14 @@ The starter already includes `extensions/prebooking-payment-terms/` with a **stu
 
 ## Prompt (Cursor / your AI tool)
 
+> **Speed it up.** This build is **edit-only**, `shopify app dev` rebuilds the Function on save, so the
+> AI only needs to edit `src/` files; it does **not** need to run `function build`, `deploy`, or any
+> command. Before you paste, put your AI tool in **auto-accept edits** (Claude Code: Shift+Tab to
+> "auto-accept edits on"; Cursor: enable Auto-Run). The starter ships `.claude/settings.json` that does
+> this for Claude Code automatically. Commands still prompt, so decline any the AI proposes.
+
 ```text
-Implement the `cart.payment-methods.transform.run` target. Input query: the cart's purchasing company id, each line's `merchandise ... on ProductVariant { product { metafield(namespace:"$app", key:"b2b-prebooking"){ value } } }`, and the available `paymentMethods { id name }`. Logic: if there's no purchasing company, return no changes. If any line's product has the app-owned `$app` `b2b-prebooking` metafield set, it's a pre-book cart: return a `paymentTermsSet` operation with an event trigger of `FULFILLMENT_CREATED` (due on fulfillment), plus `paymentMethodHide` for any payment method whose name matches the deferred option. Match the deferred method by name; on B2B checkout the underlying name is "Deferred" (the label shown to buyers is "Choose payment method at a later time"). Keep the match configurable.
+Implement the `cart.payment-methods.transform.run` target. You only need to edit files in `src/` (dev is running and rebuilds on save); do not run any CLI commands. Input query: the cart's purchasing company id, each line's `merchandise ... on ProductVariant { product { metafield(namespace:"custom", key:"b2b-prebooking"){ value } } }`, and the available `paymentMethods { id name }`. Logic: if there's no purchasing company, return no changes. If any line's product has the `custom.b2b-prebooking` metafield set, it's a pre-book cart: return a `paymentTermsSet` operation with an event trigger of `FULFILLMENT_CREATED` (due on fulfillment), plus `paymentMethodHide` for any payment method whose name matches the deferred option. Match the deferred method by name; on B2B checkout the underlying name is "Deferred" (the label shown to buyers is "Choose payment method at a later time"). Keep the match configurable.
 ```
 
 ## No deploy needed
@@ -60,7 +66,7 @@ nothing to fill in. Expect an `id` back and empty `userErrors`. Full context and
 On the combined (Plus) location, a mixed cart (an available-now item plus a pre-book item)
 switches to due-on-fulfillment and hides the deferred payment option; an available-now-only
 cart stays on Net 30 with the deferred option visible. The `shopify app dev` tab prints each
-Function execution as you check out. Flow (Part 3) then charges the vaulted card per fulfillment.
+Function execution as you check out. Flow (Part 5) then charges the vaulted card per fulfillment.
 
 ## Teach
 

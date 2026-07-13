@@ -16,7 +16,7 @@ Admin UI, so it's a GraphQL mutation run in your **app's own GraphiQL** (press `
 
 ## Undo a single piece
 
-### Plus payment customization (Part 4)
+### Plus payment customization (Part 3)
 No Admin UI. In the app's GraphiQL (press `g` in the `shopify app dev` tab), list customizations and
 delete yours:
 
@@ -35,14 +35,14 @@ Then re-activate with the `paymentCustomizationCreate` mutation from `payment-cu
 - **Un-assign from products:** Products, select the pre-book products, **Edit products**, the
   **B2B Pre-booking** column, clear the cells (or open a product, **Metafields**, clear the field).
 - **Delete the season entry:** Settings, Custom data, Metaobjects, **B2B Pre-booking**, open the entry,
-  **Delete**. (The *definition* stays, it's app-owned and lives in the toml; you're only deleting the
-  value.)
+  **Delete**. (The *definition* stays, it's store-owned in Settings, Custom data; you're only deleting
+  the value. Re-add it from `data-model-seed.md`.)
 
-### Flows (Parts 2 and 3)
+### Flows (Parts 4 and 5)
 Open the **Shopify Flow** app. Turn off (or delete) **Flow 1** (tag pre-book orders) and **Flow 2**
-(charge the vaulted card on fulfillment). Rebuild from `prompts/03` / `prompts/04`.
+(charge the vaulted card on fulfillment). Rebuild from `prompts/04` / `prompts/05`.
 
-### Theme block (Part 1)
+### Theme block (Part 2)
 Online Store, Themes, **Customize**, open a pre-book product template, select the **B2B Pre-booking**
 block, **Remove block**. Rebuild from `prompts/02`.
 
@@ -62,10 +62,11 @@ Run in this order:
 4. **Remove the theme block** from the product template.
 5. **Cancel + archive** any test orders.
 6. **(Optional, full app slate)** Settings, Apps and sales channels, **uninstall** your workshop app.
-   That removes the theme app extension, the Function, **and the app-owned data-model definitions**.
-   Re-running `shopify app dev` recreates the definitions from the toml, so only do this if you want to
-   rebuild from Part 1.
+   That removes the theme app extension and the Function. It does **not** touch the data model (the
+   season metaobject + `custom.b2b-prebooking` metafield are store-owned, not part of the app), so those
+   definitions survive an uninstall.
 
-> App-owned definitions vs values: you can delete metaobject **entries** and clear metafield **values**
-> in Admin, but the **definitions** (the schema) are app-owned and only removed by uninstalling the app
-> or editing the toml, never via Admin or the Admin API.
+> Definitions vs values: the data-model **definitions** are store-owned, so they live in Settings,
+> Custom data and stay put through an app uninstall. To fully remove them, delete the metaobject and
+> metafield definitions in Admin (or re-run the seed script to recreate them). Deleting metaobject
+> **entries** / clearing metafield **values** leaves the definitions in place.

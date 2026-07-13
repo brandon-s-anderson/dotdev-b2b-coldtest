@@ -20,9 +20,9 @@ implement (see `../starter/b2b-prebooking-workshop/README.md`); a complete refer
 | 0 | `00-store-setup.md` | non-Plus + Plus |
 | 1 | `01-scaffold-app.md` | both |
 | 2 | `02-theme-app-block.md` | both |
-| 3 | `03-flow-tag-prebook-orders.md` | both |
-| 4 | `04-flow-charge-on-fulfillment.md` | both |
-| 5 | `05-plus-payment-terms-function.md` | Plus |
+| 3 | `03-plus-payment-terms-function.md` | Plus |
+| 4 | `04-flow-tag-prebook-orders.md` | both |
+| 5 | `05-flow-charge-on-fulfillment.md` | both |
 
 Step 0 provisions the store structure (B2B catalogs, markets, company locations, payment terms,
 and the pre-booking data model). It assumes you've already imported the products

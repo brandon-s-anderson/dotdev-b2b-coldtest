@@ -10,27 +10,22 @@ anything, you install dependencies and start the dev session.
 ```bash
 cd starter/b2b-prebooking-workshop
 pnpm install
-pnpm run dev   # = shopify app dev --use-localhost
+pnpm run dev              # = shopify app dev --use-localhost
 ```
 
-Pick your Partner org and the `b2b-prebooking` dev store when prompted. Keep this running; you'll
-build against it.
+- The first `dev` **links the app** in your Partner org and writes `client_id` into `shopify.app.toml`
+  for you. Pick your Partner org and the `b2b-prebooking` dev store when prompted, and keep `dev`
+  running, you build against it.
+- **Approve the install in the browser** if it opens: pick your dev store and click **Install**. One
+  click, by design (see below). The app's only scope is payment customizations, used in Part 3.
+- The starter carries **no data model** in `shopify.app.toml`, so this first `dev` needs no write
+  scopes and starts cleanly on a fresh store. (The season metaobject + product metafield already exist
+  on your store, created store-owned by the pre-work seed script, verify them below.)
 
-**First run links the app to your org.** The starter ships unlinked (no `client_id`), so the first
-`dev` asks about the app. **Choose "create a new app"** (accept the default name), don't pick an
-existing app, so the CLI creates the app from this repo's `shopify.app.toml` (with its access scopes)
-and writes the `client_id` back into that file. Approve the install in the browser when it opens; that
-grants the app's scopes (products, metaobjects, and `write_payment_customizations` for Part 4). **Do
-not run `shopify app dev --reset`**, reset generates a fresh minimal config and drops the app-owned
-data model (the `$app` metaobject + product metafield), which breaks Part 1. (Some other DotDev
-workshops tell you to `--reset`, fine for them because they don't ship a data model in the toml; here
-it would wipe ours.)
-
-**If the first run exits with a scope error** (e.g. `[product]: Requires ... write_products`) on a
-brand-new store: that's the app not being installed yet. Finish the browser install/approve, then run
-`pnpm run dev` again, the second run starts clean, syncs the data model, and serves the extensions. If
-scopes still don't take, run `pnpm shopify app deploy` once (pushes the scopes to your app) and then
-`pnpm run dev`.
+> **Why a browser step?** Installing an app that has access scopes goes through the merchant OAuth
+> consent screen, a one-click browser step by design, with **no terminal-only install** (the CLI's own
+> install option just opens the same page). Expect it, it's normal: pick the store, click Install,
+> done. You do this once.
 
 **When it asks for a store password**, that's your storefront password (dev stores are
 password-protected and the theme app extension needs it to preview). Paste the value from Admin,
@@ -44,19 +39,22 @@ the whole room starts at once).
 
 ## What `shopify app dev` does for you here
 
-- **Syncs your app-owned custom data.** The app's `shopify.app.toml` declares the `b2b-prebooking`
-  metaobject and product metafield (the `$app` namespace). Running dev creates those definitions on
-  your store for you, no mutations. Confirm them in Admin under **Settings, Custom data**: the
-  "B2B Pre-booking" metaobject under **Metaobjects**, and the "B2B Pre-booking" product metafield under
-  **Metafields, Products**. They show up as **app-managed**: the **schema** is read-only (declarative
-  `$app` definitions change only in the toml, not in Admin or via the Admin API), but because they're
-  set to `merchant_read_write`, the **values** are yours to edit in Admin, which is how you seed the
-  season in Part 1. This is the data-model read in Part 1 / prompt 02.
-- **Serves the theme app extension** so the block is available in the theme editor while dev runs.
-- **Opens the app's GraphiQL** (press `g`). You seed the season values in the **Admin** in Part 1
-  (GraphiQL is the optional code path there), and in **Part 4 you press `g` to activate the Plus
-  payment Function** with one mutation, GraphiQL runs in this app's context, so `$app` resolves here
-  and the app owns its Function.
+- **Serves the theme app extension** so the block is available in the theme editor while dev runs, and
+  rebuilds on every save (that's how you build the block in Part 2 and the Function in Part 3 without
+  redeploying).
+- **Opens the app's GraphiQL** (press `g`). You use it in **Part 3 to activate the Plus payment
+  Function** with one mutation; GraphiQL runs in this app's context, so the app owns its Function.
+
+## Verify the pre-booking data model (it's already there)
+
+The season lives on the product via a **store-owned** metaobject + product metafield that the pre-work
+seed script created. Confirm them in Admin under **Settings, Custom data**:
+
+- **Metaobjects**, the **B2B Pre-booking** definition (the "season": name + ordering/delivery dates).
+- **Metafields, Products**, the **B2B Pre-booking** field (a metaobject reference to that season).
+
+Because they're store-owned, they're fully editable in Admin (you can even pin the metafield to the
+product page), which is exactly how you seed the season in Part 1. Nothing to create here, just look.
 
 ## Notes
 
@@ -65,9 +63,12 @@ the whole room starts at once).
   once). It's fine here: this app uses none of the tunnel-only features (webhooks/events, app proxy,
   app-defined Flow actions, POS). Localhost mode uses a reverse proxy on port 3458
   (`--localhost-port` to change it).
-- This workshop is **deploy-free**: `dev` serves both extensions and rebuilds on save, and Part 4
-  activates the Function in the app's GraphiQL (press `g`), no deploy. `shopify app deploy` is only for
-  making the build persist after `dev` stops (an optional take-home step). Definitions sync on `dev`.
+- The **build is deploy-free**: `dev` serves both extensions and rebuilds on save, and Part 3
+  activates the Function in the app's GraphiQL (press `g`), no `shopify app deploy` needed in the
+  session. A later `shopify app deploy` is only for making the build persist after `dev` stops (an
+  optional take-home step).
+- `shopify app dev --reset` is harmless now (the app owns no data model to lose); use it only if the
+  CLI ever links you to the wrong org/store and you want to re-pick.
 - Pin every extension and the app's webhooks to the latest **production** (GA) API version, kept
   consistent. When you change a Function's `api_version`, also run `pnpm shopify app function schema`
   to refresh its `schema.graphql`, or the build fails.
@@ -87,5 +88,5 @@ to script it.
 ## You should see
 
 The dev session running, the theme block available in the theme editor, GraphiQL reachable with
-`g`, and the `b2b-prebooking` metaobject + product metafield present in Settings, Custom data. The
+`g`, and the **B2B Pre-booking** metaobject + product metafield present in Settings, Custom data. The
 full working implementation lives on the repo's `finished` branch if you want to compare.

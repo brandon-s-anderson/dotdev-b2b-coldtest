@@ -1,12 +1,13 @@
 # Seed the pre-booking data model (in-session)
 
-The pre-booking **data model** is app-owned. Its **definitions** (the `b2b-prebooking` metaobject and
-the `b2b-prebooking` product metafield) are declared in `starter/b2b-prebooking-workshop/shopify.app.toml`
-and are created automatically when you run `shopify app dev`. You don't create the definitions by hand.
+The pre-booking **data model** is **store-owned**. Its **definitions** (the `b2b_prebooking`
+metaobject and the `custom.b2b-prebooking` product metafield) were created by the pre-work seed script
+(`setup/setup-store.mjs`), so they already exist on your store. You don't create the definitions in the
+session, you can see them in Admin under **Settings, Custom data**.
 
-You do create the **values**: one season entry and the per-product references. Both definitions set
-`access.admin = "merchant_read_write"`, so you author the values right in the **Shopify admin**, no
-GraphQL needed. (The schema stays app-owned and read-only, only the values are yours to edit.)
+You do create the **values**: one season entry and the per-product references. Because the definitions
+are store-owned (admin read/write), you author the values right in the **Shopify admin**, no GraphQL
+needed.
 
 ## 1. Create the season (Admin)
 
@@ -29,26 +30,27 @@ GraphQL needed. (The schema stays app-owned and read-only, only the values are y
    selected cell.
 5. **Save.**
 
-> Assigning one at a time instead? Open a product, then **Metafields** (click **Show all**; the field
-> isn't pinned), then **B2B Pre-booking**, and pick the season.
+> Assigning one at a time instead? Open a product, then **Metafields**, then **B2B Pre-booking**, and
+> pick the season. (Store-owned metafields are pinnable, so you can pin **B2B Pre-booking** to the top
+> of the product page if you'd rather not click **Show all** each time.)
 
 ## Checkpoint
 
-On a pre-book product, `product.metafield(namespace: "$app", key: "b2b-prebooking")` resolves to the
-season and its dates. The theme block (which reads `product.metafields["$app"]["b2b-prebooking"]`) and
-the Plus Function (which reads `metafield(namespace: "$app", key: "b2b-prebooking")`) will now see it.
+On a pre-book product, `product.metafield(namespace: "custom", key: "b2b-prebooking")` resolves to the
+season and its dates. The theme block (which reads `product.metafields["custom"]["b2b-prebooking"]`)
+and the Plus Function (which reads `metafield(namespace: "custom", key: "b2b-prebooking")`) will now
+see it.
 
 ## Optional: do it in GraphQL instead
 
-Prefer code, or want to script it across many products? The app's GraphiQL does the same thing (press
-`g` in `shopify app dev` so `$app` resolves to your app; the standalone GraphiQL app or
-`shopify store execute` would resolve `$app` to the wrong app). Upsert the season, then bulk-set the
-references.
+Prefer code, or want to script it across many products? Because the data model is store-owned, either
+the app's GraphiQL (press `g` in `shopify app dev`) or `shopify store execute` works. Upsert the
+season, then bulk-set the references.
 
 ```graphql
 mutation {
   metaobjectUpsert(
-    handle: { type: "$app:b2b-prebooking", handle: "spring-summer-2027" }
+    handle: { type: "b2b_prebooking", handle: "spring-summer-2027" }
     metaobject: {
       fields: [
         { key: "season_name", value: "Spring/Summer 2027" }
@@ -66,13 +68,13 @@ mutation {
 ```
 
 Copy the returned `metaobject.id`, list your pre-book products (`products(first: 50, query: "tag:prebook")`),
-then set each product's metafield to that id (`metafieldsSet` defaults the namespace to `$app`):
+then set each product's metafield to that id:
 
 ```graphql
 mutation {
   metafieldsSet(metafields: [
-    { ownerId: "gid://shopify/Product/AAA", key: "b2b-prebooking", type: "metaobject_reference", value: "gid://shopify/Metaobject/SEASON" }
-    { ownerId: "gid://shopify/Product/BBB", key: "b2b-prebooking", type: "metaobject_reference", value: "gid://shopify/Metaobject/SEASON" }
+    { ownerId: "gid://shopify/Product/AAA", namespace: "custom", key: "b2b-prebooking", type: "metaobject_reference", value: "gid://shopify/Metaobject/SEASON" }
+    { ownerId: "gid://shopify/Product/BBB", namespace: "custom", key: "b2b-prebooking", type: "metaobject_reference", value: "gid://shopify/Metaobject/SEASON" }
   ]) {
     userErrors { field message }
   }

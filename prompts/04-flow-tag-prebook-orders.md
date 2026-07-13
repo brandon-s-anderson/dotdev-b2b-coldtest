@@ -1,7 +1,7 @@
-# 3. Flow: tag pre-book B2B orders  [both]
+# 4. Flow: tag pre-book B2B orders  [both]
 
 Tag every B2B order that contains a pre-book item so it can be filtered in Admin and so the
-charging Flow (step 4) knows which orders to act on. Shopify Flow is available on all plans.
+charging Flow (step 5) knows which orders to act on. Shopify Flow is available on all plans.
 
 ## Prompt (Sidekick)
 

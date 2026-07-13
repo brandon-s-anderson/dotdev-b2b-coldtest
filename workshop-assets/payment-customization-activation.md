@@ -39,10 +39,13 @@ Function is now live at checkout for the store.
 > **`Could not find Function`?** Confirm `shopify app dev` is running (that's what serves the
 > Function) and that the handle above matches the one in `shopify.extension.toml`.
 
-> **An access-denied / scope error?** The app needs `write_payment_customizations`. The starter
-> already declares it in `shopify.app.toml`, and it's granted when you install the app in Part 1. If
-> you see a scope error, the app installed before that scope was added: quit `dev`, run it again, and
-> approve the updated permission when the browser prompts.
+> **An access-denied / scope error?** The app needs `write_payment_customizations` (declared in
+> `shopify.app.toml`), granted when you install the app in Part 1. If the mutation reports a scope
+> error, the app was created without that scope actually seated (the CLI can blank the local scopes
+> when it first creates the app). Seat it once: confirm `shopify.app.toml` still lists
+> `scopes = "read_payment_customizations,write_payment_customizations"` (restore it if blanked), run
+> `pnpm shopify app deploy` and approve the release, then re-approve the app install in the browser and
+> re-run the mutation. This is the only time you'd `deploy` in the session.
 
 ## Verify
 

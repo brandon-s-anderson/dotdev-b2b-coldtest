@@ -7,14 +7,22 @@ the room we only clone, install, and build. Give yourself a few days of lead tim
 
 ## 1. Accounts and tools
 
-- **Shopify Partner account + a US Plus sandbox dev store** (Partner dashboard, Add store, Create
-  development store, choose the Plus sandbox build). The Plus sandbox gives you B2B plus the Plus-only
-  features the workshop uses.
-  - **Create it as a United States store** (you pick the country at creation, wherever you're based).
-    Keeps it consistent with the materials: USD pricing, US address, and the US SSN for Payments.
+- **Shopify Partner account + a US Plus sandbox dev store** (Partner/Dev dashboard, Add store). When you
+  create it, set these options exactly:
+  - **Store type: Development store** (not a production store).
+  - **Build/plan: Plus** (the Plus sandbox build), this is what unlocks the Plus-only features the
+    workshop uses.
+  - **Uncheck "Generate/start with test data"** (you seed real workshop data with the script; sample
+    products would collide with it).
+  - **Uncheck "Test a feature/developer preview"** (leave it on the current stable version).
+  - **Country: United States.** The create dialog is minimal and has **no** country field, so set it
+    right after creating the store: **Settings, General, Store details**, set country/region to
+    **United States** and currency to **USD**, and add a US **Address**. Keeps it consistent with the
+    materials: USD pricing, US address, and the US SSN for Payments.
   - **B2B is on automatically**, just verify in **Settings, B2B**. You don't set up the company, buyer,
     locations, or products by hand, the seed script does that.
-- **Node.js 20+** and **pnpm** (or npm). Node also runs the seed script.
+- **Node.js 20+** and **pnpm** (recommended) or **npm**. Node also runs the seed script. These docs
+  show `pnpm` commands; if you use npm, swap `pnpm` for `npm` (so `npm install`, `npm run dev`).
 - **Shopify CLI 4+** (`shopify version`; upgrade with `pnpm add -g @shopify/cli@latest`).
 - **Shopify Flow** installed (free, [App Store listing](https://apps.shopify.com/flow)). You build the
   two workflows in-session.
@@ -97,21 +105,25 @@ a bit.
 inbox you control; the `+` alias trick (`you+us@example.com`) lets one inbox run several buyers.
 
 The script creates the products, collections + navigation, the company and buyer, all three locations
-(each sharing one address and the same buyer as admin), markets, catalogs, and payment terms (pre-book
-due-on-fulfillment, Available Now Net 30). Products come from `products/products-import.csv` and carry
-the tags that drive collections, catalogs, and Flow (`available-now`, `prebook`). You **don't** vault a
-card in advance, that's part of the build. Advanced flags (skip products, non-Plus only, custom
-company/address) are documented at the top of `setup-store.mjs`.
+(each sharing one address and the same buyer as admin), markets, catalogs, payment terms (pre-book
+due-on-fulfillment, Available Now Net 30), and the pre-booking **data model** (the season metaobject +
+the `custom.b2b-prebooking` product metafield, store-owned so they're fully editable in Admin). Products
+come from `products/products-import.csv` and carry the tags that drive collections, catalogs, and Flow
+(`available-now`, `prebook`). You **don't** vault a card in advance, that's part of the build. Advanced
+flags (skip products, non-Plus only, custom company/address) are documented at the top of
+`setup-store.mjs`.
 
-The pre-booking **data model is not seeded here**, the app creates it on `shopify app dev` in the
-session. (Optional: `../prompts/00-store-setup.md` walks the same setup via AI prompt if you'd rather
-watch it run.)
+The data model **definitions** are seeded here; you author the season **values** (create the season,
+assign it to the pre-book products) in Part 1 of the session. (Optional: `../prompts/00-store-setup.md`
+walks the same setup via AI prompt if you'd rather watch it run.)
 
 ## Prework checklist (validate before you arrive)
 
 You're ready only when **every** box is true. Verify each, don't assume:
 
-- [ ] **US Plus sandbox store exists**, and **Settings, B2B** shows B2B enabled.
+- [ ] **US Plus sandbox store exists** (Development store, Plus build, no test data, no feature
+      preview), **Settings, General** shows **United States / USD**, and **Settings, B2B** shows B2B
+      enabled.
 - [ ] **Node 20+** (`node --version`), **pnpm** or **npm** (`pnpm --version`), and **Shopify CLI 4+**
       (`shopify version`).
 - [ ] **Shopify Flow installed** (Admin, Apps lists "Shopify Flow").
@@ -126,6 +138,7 @@ You're ready only when **every** box is true. Verify each, don't assume:
   - the workshop products (5 available-now + 5 pre-book; pre-book titles end in `(Pre-book)`),
   - the **Available Now** and **Pre-book** collections,
   - the company **Urban Style** with **three** locations (Available Now, Pre-book, Combined),
+  - the **B2B Pre-booking** metaobject + product metafield in **Settings, Custom data**,
   - and you can sign into the **storefront** as the buyer (**Maya Cruz**) using the emailed code.
 
 Verify CLI auth:
