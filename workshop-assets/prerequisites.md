@@ -16,7 +16,8 @@ the room we only clone, install, and build. Give yourself a few days of lead tim
     locations, or products by hand, the seed script does that.
 - **Node.js 20+** and **pnpm** (or npm). Node also runs the seed script.
 - **Shopify CLI 4+** (`shopify version`; upgrade with `pnpm add -g @shopify/cli@latest`).
-- **Shopify Flow** installed (free: `apps.shopify.com/flow`). You build the two workflows in-session.
+- **Shopify Flow** installed (free, [App Store listing](https://apps.shopify.com/flow)). You build the
+  two workflows in-session.
 - **An AI coding assistant** (Claude Code, Codex, Cursor, VS Code, Antigravity CLI, or Hermes) with
   **both** of these:
   - **Shopify Dev MCP**, docs + API schema while you build. The repo ships the config, so most
