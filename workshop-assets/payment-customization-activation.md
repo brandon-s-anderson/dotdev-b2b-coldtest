@@ -11,8 +11,8 @@ pre-work setup script uses. This is a one-time activation per store.
 
 > **Prerequisite (already done in pre-work):** `shopify store auth` was run with
 > `read_payment_customizations` and `write_payment_customizations` in the scope list (see
-> `setup/README.md`). Those two scopes are what let the CLI create the customization. If you authed
-> before those were added, re-run `shopify store auth` with the full scope string once.
+> `prerequisites.md`, step 4). Those two scopes are what let the CLI create the customization. If you
+> authed before those were added, re-run `shopify store auth` with the full scope string once.
 
 You can run the two steps yourself in a terminal, or just ask your AI assistant to do it. Both use the
 same CLI under the hood.

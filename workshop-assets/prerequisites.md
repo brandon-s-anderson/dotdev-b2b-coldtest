@@ -67,12 +67,24 @@ git clone https://github.com/brandon-s-anderson/dotdev-b2b-coldtest.git
 `pnpm install` is an **in-session** step, not now (`cd starter/b2b-prebooking-workshop && pnpm install`,
 under a minute on venue wifi). Clone and install are safe to do live; the store setup below is not.
 
-## 4. Seed the store (before the session)
+## 4. Authenticate the Shopify CLI (before the session)
 
-From the repo, authenticate the CLI (full scope string in `setup/README.md`), then run the seed script:
+The seed script talks to your store through the CLI, so authenticate once with the scopes it needs.
+Copy this as-is and change only the store URL:
 
 ```bash
-shopify store auth --store <store>.myshopify.com --scopes <see setup/README.md>
+shopify store auth --store <store>.myshopify.com --scopes read_products,write_products,read_inventory,write_inventory,read_locations,read_publications,write_publications,read_customers,write_customers,read_markets,write_markets,read_payment_terms,read_metaobjects,write_metaobjects,read_metaobject_definitions,write_metaobject_definitions,read_online_store_navigation,write_online_store_navigation,read_payment_customizations,write_payment_customizations
+```
+
+It opens a browser to approve the scopes and is one time per store. (The last two,
+`*_payment_customizations`, aren't used by the seed; they're here so the same auth also covers the
+in-session activation of the Plus payment Function, so you never re-auth.)
+
+## 5. Seed the store (before the session)
+
+Then run the seed script with your store and a buyer email:
+
+```bash
 cd workshop-assets/setup
 STORE=<store>.myshopify.com BUYER_EMAIL=you+us@example.com node setup-store.mjs
 ```
@@ -83,12 +95,17 @@ inbox you control; the `+` alias trick (`you+us@example.com`) lets one inbox run
 The script creates the products, collections + navigation, the company and buyer, all three locations
 (each sharing one address and the same buyer as admin), markets, catalogs, and payment terms (pre-book
 due-on-fulfillment, Available Now Net 30). Products come from `products/products-import.csv` and carry
-the tags that drive collections, catalogs, and Flow (`available-now`, `prebook`); bring your own
-products only if they carry those tags. You **don't** vault a card in advance, that's part of the build.
+the tags that drive collections, catalogs, and Flow (`available-now`, `prebook`). You **don't** vault a
+card in advance, that's part of the build. Advanced flags (skip products, non-Plus only, custom
+company/address) are documented at the top of `setup-store.mjs`.
 
 The pre-booking **data model is not seeded here**, the app creates it on `shopify app dev` in the
 session. (Optional: `../prompts/00-store-setup.md` walks the same setup via AI prompt if you'd rather
 watch it run.)
+
+**At the session, confirm your seed worked** before the build: in Admin, your store should have the
+workshop products, the Available Now / Pre-book collections, and the company **Urban Style** with three
+locations. If it doesn't, re-run steps 4 and 5 (a TA can help), it takes a couple of minutes.
 
 ## Plan note
 

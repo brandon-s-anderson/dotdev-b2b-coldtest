@@ -9,7 +9,7 @@
 //   STORE=<your-store>.myshopify.com pnpm run activate
 //
 // Prereq: `shopify store auth` was run for the store WITH read_payment_customizations and
-// write_payment_customizations in the scope list (see workshop-assets/setup/README.md).
+// write_payment_customizations in the scope list (see workshop-assets/prerequisites.md, step 4).
 //
 // Provided as-is for the workshop; run it against a dev store.
 

@@ -69,16 +69,20 @@ tricky Shopify Payments setup and exact steps. The short version:
 
 ## Get ready
 
-**Before the session, seed your store.** Clone the repo, authenticate the CLI, and run the setup
-script. It provisions the whole B2B structure (products with images, collections + menu, company
-**Urban Style**, buyer **Maria Cruz**, all three locations, markets, catalogs, terms, DTC catalog).
-Full scopes string and options are in [`workshop-assets/setup/README.md`](workshop-assets/setup/README.md).
+**Before the session, seed your store.** Clone the repo, authenticate the CLI (step 1), then run the
+setup script (step 2). It provisions the whole B2B structure (products with images, collections + menu,
+company **Urban Style**, buyer **Maria Cruz**, all three locations, markets, catalogs, terms, DTC
+catalog). Advanced flags are documented at the top of `setup-store.mjs`.
 
 ```bash
 # from a folder you keep projects in (not inside another git repo)
 git clone <this-repo-url>
+
+# 1) authenticate the CLI to your store (one time; edit only the store URL)
+shopify store auth --store <your-store>.myshopify.com --scopes read_products,write_products,read_inventory,write_inventory,read_locations,read_publications,write_publications,read_customers,write_customers,read_markets,write_markets,read_payment_terms,read_metaobjects,write_metaobjects,read_metaobject_definitions,write_metaobject_definitions,read_online_store_navigation,write_online_store_navigation,read_payment_customizations,write_payment_customizations
+
+# 2) seed the store
 cd <this-repo>/workshop-assets/setup
-shopify store auth --store <your-store>.myshopify.com --scopes <see setup/README.md>
 STORE=<your-store>.myshopify.com BUYER_EMAIL=you+us@example.com node setup-store.mjs
 ```
 
@@ -106,7 +110,7 @@ The first `shopify app dev` **links the app in your Partner org** and creates th
 │   └── b2b-prebooking-workshop/   see its README for app layout + what ships vs. what you build
 └── workshop-assets/    Prework, seeding, activation, Flow definitions, and reset
     ├── prerequisites.md
-    ├── setup/                          store-setup script + README
+    ├── setup/                          store-setup script (setup-store.mjs)
     ├── data-model-seed.md
     ├── payment-customization-activation.md
     ├── flow/                           exported .flow definitions
