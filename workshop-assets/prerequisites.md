@@ -29,10 +29,19 @@ along; in the room we only clone, install, and build. Give yourself a few days o
   vaulted cards are Shopify-Payments-only ([Help Center](https://help.shopify.com/en/manual/b2b/vaulted-cards)),
   and the pre-order flow needs the card vaulted and charged later on fulfillment. A Plus sandbox supports
   this. Not scriptable (no Admin API to enable a payment provider), so it's a manual step.
-  - **Onboarding on a sandbox:** you click through Shopify Payments account setup first. **Use your own
-    name or a made-up one** (not anyone else's), business type Individual, a real-looking **US** address,
-    and an adult date of birth. For the SSN, `000-00-0000` and the ad-reserved `987-65-...` range are
-    rejected as invalid format; the classic voided **`078-05-1120`** passes. After submitting you'll see
+  - **Onboarding on a sandbox:** you click through the Shopify Payments account setup first. These test
+    values are known to pass on a **US** sandbox (use your own name/email if you prefer, just not anyone
+    else's real details); business type **Individual**:
+    - **Name:** any, a made-up one is fine (e.g. `John Anderson`)
+    - **Date of birth:** any adult date, e.g. `10 / 01 / 1990` (MM / DD / YYYY)
+    - **Email:** any inbox you control
+    - **Phone:** `(415) 555-1234`
+    - **Address:** `123 Brooklyn Ave`, `Brooklyn`, `New York` `11213`, United States
+    - **SSN:** `078-05-1120` (the classic voided SSN; `000-00-0000` and the ad-reserved `987-65-...`
+      range are rejected as invalid format)
+    - **Store / business description:** `this is a test store`
+
+    After submitting you'll see
     **"Some of your details couldn't be verified"** / "update your business details by [date]" and a
     Payments banner saying it "isn't processing transactions, select a plan." **All of that is expected
     and ignorable on a dev sandbox**, it only affects real payouts/live selling. **Test mode still works**:
