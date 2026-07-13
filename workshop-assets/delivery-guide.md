@@ -35,32 +35,28 @@ the room.
 
 ## Prerequisites + TA briefing
 
-Attendees complete these **before** the session (full steps in `prerequisites.md`): a **US** Plus
-sandbox store with B2B on; **Shopify Payments in test mode** with a vaulted test card; **payment
-capture not set to at-checkout** (manual or on-fulfillment, either works); **clone the repo** (the setup script runs from it); run the pre-work
-**setup script** (products, collections, company/buyer, locations, markets, catalogs, terms, DTC);
-`shopify store auth` with the scope list (includes the two `*_payment_customizations` scopes for
-in-session Function activation); install **Shopify Flow**; an AI
-assistant with the Dev MCP + AI Toolkit. `pnpm install` is an **in-session** step (like the other
-workshops); the store structure is scripted; the **data model is created by the app**
-(`shopify app dev`), not pre-work.
+Attendees complete all prework **before** the session; full steps in `prerequisites.md`. In brief: a
+**US** Plus sandbox with B2B on; **Shopify Payments in test mode** with a vaulted test card and capture
+**not** at-checkout; the repo **cloned**; the CLI **authed** with the scope list (includes the two
+`*_payment_customizations` scopes for in-session Function activation); the **seed script** run (products,
+collections, company/buyer, locations, markets, catalogs, terms, DTC); **Shopify Flow** installed; an AI
+assistant with the Dev MCP + AI Toolkit. `pnpm install` is in-session; the **data model is created by the
+app** on `shopify app dev`, not pre-work.
 
-**Contingency (for stragglers).** The line that matters is **local vs server-side**. The clone and
-`pnpm install` are local and fast (~100 MB, well under a minute on the venue wifi), and `pnpm install`
-is a normal in-session step anyway, so a straggler who's missing local pieces catches up in the
-opening. What is **not** recoverable in the room is the **seeded store** (products, company,
-locations, catalogs, terms, Payments, Flow): minutes of API calls plus a 5-to-10-minute manual
-Payments KYC. So the pre-seed and Payments/Flow are the hard prereqs; someone who never ran them
-follows along on the presenter's screen and rebuilds from `finished` after. Have TAs sweep during
-the opening with the question that matters: not "did you install?" but **"is your store seeded?"**
+**Contingency (stragglers).** The line that matters is **local vs server-side**. Clone + `pnpm install`
+are local and fast (~100 MB, under a minute on venue wifi), and `pnpm install` is an in-session step
+anyway, so a straggler catches up in the opening. What's **not** recoverable in the room is the **seeded
+store** (minutes of API calls plus a 5-to-10-minute Payments KYC). So pre-seed and Payments/Flow are the
+hard prereqs; anyone who skipped them follows on the presenter's screen and rebuilds from `finished`
+after. Have TAs sweep in the opening with the question that matters: not "did you install?" but **"is your
+store seeded?"**
 
-**TA briefing, #1 support item: Shopify Payments.** We are the only DotDev workshop that requires it,
-and its onboarding is the most failure-prone prereq (US store + identity/SSN + KYC banners). TAs
-should know the workaround cold: business type Individual, a made-up name, a real-looking US address,
-SSN `078-05-1120` (the classic voided one; `000-00-0000` and `987-65-...` are rejected), then **ignore**
-the "some details couldn't be verified" / "select a plan" banners, test mode still processes test
-charges and vaults cards. Anyone who can't get Payments working can still build everything and watch
-the live vault + charge on the presenter's screen.
+**TA briefing, #1 support item: Shopify Payments.** We're the only DotDev workshop that requires it, and
+onboarding is the most failure-prone prereq (US store + identity/SSN + KYC banners). Workaround, cold:
+business type Individual, a made-up name, a real-looking US address, SSN `078-05-1120` (`000-00-0000` and
+`987-65-...` are rejected), then **ignore** the "some details couldn't be verified" / "select a plan"
+banners, test mode still processes test charges and vaults cards. Anyone stuck on Payments builds
+everything and watches the live vault + charge on the presenter's screen.
 
 ---
 
@@ -81,7 +77,7 @@ where the buyer orders now, sees when it ships, and gets charged automatically w
 you'll learn how to deliver the same outcome for merchants who aren't on Plus. Here's the finished
 thing working."
 
-> 💡 Highest-ROI 4 minutes in the session. They see the destination before any code, so every step
+> 💡 Highest-ROI 3 minutes in the session. They see the destination before any code, so every step
 > later has a "why."
 
 ---
@@ -174,7 +170,7 @@ properties** (`Season`, `Delivery window`) into the add-to-cart form, the all-pl
 pre-order context to cart and checkout; non-Plus has no other hook there (works everywhere, not a
 Plus feature).
 
-> **Highlight (say this) — for a non-dev presenter, point at two lines in `b2b-prebooking.liquid`:**
+> **Highlight (say this). For a non-dev presenter, point at two lines in `b2b-prebooking.liquid`:**
 > 1. `product.metafields["$app"]["b2b-prebooking"]` (near the top): *"This one line is the whole
 >    data-model connection. The block reads the season we attached to this product, nothing is
 >    hardcoded, so it updates automatically when you change the season."*
@@ -211,7 +207,7 @@ option, so the buyer gets one smart cart. Two firsthand gotchas: (1) match the d
 its **real input name** (`"Deferred"`), not the display label; (2) fail open, return no change for
 non-B2B and available-now-only carts, because the Function runs on every checkout.
 
-> **Highlight (say this) — point at two spots in `cart_payment_methods_transform_run.ts`:**
+> **Highlight (say this). Point at two spots in `cart_payment_methods_transform_run.ts`:**
 > 1. The two `return NO_CHANGES` guards at the top: *"The function only acts on a B2B cart that
 >    actually contains a pre-book item. Every other checkout, DTC or available-now-only, passes through
 >    untouched, that's the fail-open safety."*
@@ -231,7 +227,7 @@ deferred; available-now-only cart stays Net 30; Flow 2 then charges per fulfillm
 ## Part 2 payoff: the pre-order lifecycle, end to end (~4 min)
 
 Everything is built; now run the whole lifecycle live on the **combined** location. This is the
-money shot, it's what they just built, all working together. (The Opening was a ~30-60s teaser; here
+money shot, it's what they just built, all working together. (The Opening was a quick teaser; here
 you go deeper, so the repeat is deliberate reinforcement.)
 
 **1. Three carts, three behaviors** (same buyer, same location):
@@ -338,7 +334,7 @@ booth.
 - [ ] Every part has ≥1 Step and ≥1 Teach; each ends with an observable checkpoint
 - [ ] README build track is followable independently; code blocks complete and tested
 - [ ] Starter puts attendees at the exercise start; `finished` branch linked
-- [ ] Anticipated Q&A listed (6); Q&A protected at 10 min
+- [ ] Anticipated Q&A listed (8); Q&A protected at 10 min
 - [ ] Close names a concrete take-home (pattern map + finished branch)
 - [ ] Screen legibility: ≥18pt terminal / 150% editor / high-contrast
 - [ ] Timed: Opening 3 + Framing 5 + Toolkit 4 + Build 25 + Payoff 4 + Non-Plus 7 + Close 2 + Q&A 10 = 60
