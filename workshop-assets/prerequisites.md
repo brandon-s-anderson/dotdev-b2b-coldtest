@@ -58,15 +58,6 @@ along; in the room we only clone, install, and build. Give yourself a few days o
   orders when they're fully fulfilled" or "Manually capture payments for orders."** Both leave the B2B
   payment authorized/vaulted so the charge-on-fulfillment Flow collects it when the order ships; the
   charge-vaulted-payment Flow action behaves the same regardless of which of the two you pick.
-- **An email you can receive mail at, for the buyer.** B2B uses **new customer accounts**, so you
-  sign in as Maria Cruz from the store's customer login with a one-time code emailed to that
-  address. Pass it as `BUYER_EMAIL` when you run setup. You need this to place test orders as a
-  logged-in B2B buyer; the pre-book PDP block and the checkout payment behavior only apply to
-  logged-in B2B buyers, not to the admin or to D2C visitors.
-  - **Tip: use the `+` email alias trick** to run several buyer accounts from one inbox. For
-    example `brandon.anderson+urbanstyle@shopify.com` and `+us2@...` are distinct Shopify
-    customers, but every login code still lands in `brandon.anderson@shopify.com`. Handy for
-    testing different buyers/locations without extra inboxes.
 - **Node.js 20+** and a package manager: **pnpm or npm** (the commands in these docs use pnpm;
   substitute `npm` if you prefer). Node also runs the pre-seed **setup script** (`setup-store.mjs`).
 - **Shopify CLI 4+** installed and authenticated (`shopify version`). On an older major, upgrade
@@ -135,7 +126,14 @@ scopes** (one time per store, the script fails without it):
 The exact scopes string is in `setup/README.md`. Then run the **setup script** (`setup/setup-store.mjs`,
 the recommended one-shot path) to provision everything **before** the workshop, so the in-session
 time goes to code. (An optional AI-prompt path, `../prompts/00-store-setup.md`, exists for those who
-want to see the Admin GraphQL step by step, but the script is the reliable route.) It creates:
+want to see the Admin GraphQL step by step, but the script is the reliable route.)
+
+Pass **`BUYER_EMAIL`** when you run it: that's the buyer (Maria Cruz) you'll sign in as, since B2B uses
+**new customer accounts** and login is a one-time code emailed to that address. Use any inbox you
+control. **Tip:** the `+` alias trick lets you run several buyer accounts from one inbox, e.g.
+`you+us@example.com` and `you+us2@example.com` are distinct customers but both deliver to `you@example.com`.
+
+The script creates:
 
 - **B2B catalogs, markets, and company locations** that separate Available Now from pre-book:
   - Non-Plus: two locations/markets, each with one catalog (Available Now vs pre-book).
