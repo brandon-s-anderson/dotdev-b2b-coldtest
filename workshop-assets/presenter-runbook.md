@@ -5,6 +5,11 @@ narrative + clock; **this is the do-this-next card you keep beside you while bui
 step lists the exact command/tab, the prompt to paste (linked), what to verify, and the one gotcha.
 Built for the **Monday dry run**, run it start to finish once and time it.
 
+**Set this expectation with the room up front:** this is an **AI-assisted ("vibe coding") session, not
+hands-on coding.** You (and the attendees) prompt an AI assistant that writes the code; nobody hand-codes
+or debugs live. If AI output breaks, the move is `git checkout finished -- <path>`, not fixing code. Say
+it in the opening so no one expects a from-scratch coding class.
+
 Attendee-facing source of truth **in the room** is [`SESSION.md`](../SESSION.md) (one follow-along
 follow-along doc with every paste prompt, Admin step, and checkpoint, written for the attendee).
 Overview + prework: [`README.md`](../README.md).

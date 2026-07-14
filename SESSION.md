@@ -3,6 +3,10 @@
 Your single doc for building B2B pre-booking in this session. Keep it open and work top to bottom.
 Copy the prompts straight from the fenced blocks, you don't need to open any other file in the repo.
 
+> **This is an AI-assisted ("vibe coding") build, not hands-on coding.** You paste the prompts below into
+> your AI assistant and it writes the code, you don't hand-write or debug it. Read what it produces; if a
+> step misbehaves, use the recovery steps at the end (you drop in the finished version, you never debug).
+
 Your prework (store seed, Shopify Payments in test mode, Shopify Flow installed) is already done, per
 [`workshop-assets/prerequisites.md`](workshop-assets/prerequisites.md). Background and the "why": the
 [`README`](README.md).

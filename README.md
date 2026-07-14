@@ -4,6 +4,11 @@ A hands-on workshop for partners and developers: build B2B pre-order / pre-booki
 Shopify capabilities, before selling plans are available for B2B. This repo is a **foundation to
 build from**, not a turnkey product: patterns, prompts, and a starter app you extend for your merchant.
 
+> **Format: AI-assisted ("vibe coding"), not hands-on coding.** You build by prompting an AI assistant
+> (Claude, Cursor, etc.), which writes the code; your job is to prompt it, then read and understand what
+> it produced, not to write or debug code by hand. No prior coding experience needed. If a step's AI
+> output misbehaves, you drop in the `finished` version and keep going.
+
 **This README is the workshop overview + prework.** For the live build, attendees use one doc:
 [`SESSION.md`](SESSION.md) (copy-paste prompts, Admin steps, and checkpoints in one place). Each step
 also has a matching prompt file in [`prompts/`](prompts); the `finished` branch is the reference

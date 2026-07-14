@@ -5,6 +5,10 @@ US Plus sandbox with B2B, Shopify Payments in test mode, Shopify Flow, and a sto
 some steps have approval delays, Payments especially. Finish everything below **before you arrive**; in
 the room we only clone, install, and build. Give yourself a few days of lead time for Payments.
 
+> **Format: this is an AI-assisted ("vibe coding") build, not a hands-on coding session.** You'll prompt
+> an AI assistant to write the code, not hand-write or debug it, so no prior coding experience is needed.
+> That's why an AI coding assistant (see below) is a required tool.
+
 ## 1. Accounts and tools
 
 - **Shopify Partner account + a US Plus sandbox dev store** (Partner/Dev dashboard, Add store). When you
