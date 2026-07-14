@@ -26,7 +26,7 @@ the room we only clone, install, and build. Give yourself a few days of lead tim
   - **B2B is on automatically**, just verify in **Settings, B2B**. You don't set up the company, buyer,
     locations, or products by hand, the seed script does that.
 - **Node.js 20+** and **pnpm** (recommended) or **npm**. Node also runs the seed script. These docs
-  show `pnpm` commands; if you use npm, swap `pnpm` for `npm` (so `npm install`, `npm run dev`).
+  show `pnpm` commands; if you use npm, swap `pnpm` for `npm` (e.g. `npm install`, `npm run set-scopes`); the `shopify` CLI commands are the same either way.
 - **Shopify CLI 4+** (`shopify version`; upgrade with `pnpm add -g @shopify/cli@latest`).
 - **Shopify Flow** installed (free, [App Store listing](https://apps.shopify.com/flow)). You build the
   two workflows in-session.

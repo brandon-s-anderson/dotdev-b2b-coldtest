@@ -33,10 +33,10 @@ Set the app's payment-customizations scope and redeploy, so the install grants i
 pnpm run set-scopes
 ```
 
-Start the dev session (= `shopify app dev --use-localhost`), then **approve the install in the browser** (the consent screen lists payment customizations) and keep it running, you build against it. Press `g` for GraphiQL:
+Start the dev session, then **approve the install in the browser** (the consent screen lists payment customizations) and keep it running, you build against it. Press `g` for GraphiQL. (`--use-localhost` serves over a local HTTPS proxy instead of a Cloudflare tunnel, so a full room isn't throttled.)
 
 ```bash
-pnpm run dev
+shopify app dev --use-localhost
 ```
 
 The season metaobject + product metafield already exist on your store, created store-owned by the

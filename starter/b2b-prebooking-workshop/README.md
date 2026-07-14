@@ -48,10 +48,10 @@ Set the app's payment-customizations scope and redeploy:
 pnpm run set-scopes
 ```
 
-Start the dev session (= `shopify app dev --use-localhost`); approve the install and keep it running:
+Start the dev session; approve the install and keep it running (`--use-localhost` avoids Cloudflare-tunnel throttling):
 
 ```shell
-pnpm run dev
+shopify app dev --use-localhost
 ```
 
 `set-scopes` writes the app's `read/write_payment_customizations` scope into `shopify.app.toml` and

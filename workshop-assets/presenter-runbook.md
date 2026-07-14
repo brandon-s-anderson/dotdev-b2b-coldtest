@@ -55,10 +55,10 @@ broken. Build the Function first and every later test order already carries the 
 
 | Tab | What runs | Rule |
 |---|---|---|
-| **Tab 1** | `shopify app dev` (via `pnpm run dev`) | Starts in Part 1, **stays running all session**. Press **`g`** here to open GraphiQL (browser opens, `dev` keeps running). Restart = `q` then `pnpm run dev`. |
+| **Tab 1** | `shopify app dev --use-localhost` | Starts in Part 1, **stays running all session**. Press **`g`** here to open GraphiQL (browser opens, `dev` keeps running). Restart = `q` then `shopify app dev --use-localhost`. |
 | **Tab 2** | Your AI assistant | Where you paste the prompts; the AI writes/edits the code. You never hand-code. |
 
-**Gotcha (dev crash / block goes unstyled):** if Tab 1 dies with `AbortError: The user aborted a request` / `ELIFECYCLE ... exit code 1`, or the block that was rendering suddenly goes **unstyled** (its CSS 404s), it's the dev preview, not your code. Recovery ladder: **1)** `pnpm run dev` again + hard-refresh the storefront; **2)** if the preview is stuck (red `app-preview` errors, edits not landing): `shopify app dev clean` then `pnpm run dev`; **3)** if the terminal says **"The currently available CLI credentials are invalid"** (token expired mid-session, and `dev` can't re-prompt): `shopify auth logout` -> `shopify auth login`, then `pnpm run dev`. Freshest token is right after the app-setup deploy, so a lapse is most likely late in the session. Ignore red `[error] TranslationKeyExists` lines too if the AI used `| t` (theme-check false-positives on app-extension locales; the block still renders). Prompt [`02`](../prompts/02-theme-app-block.md) now has the block use literal copy to avoid them.
+**Gotcha (dev crash / block goes unstyled):** if Tab 1 dies with `AbortError: The user aborted a request` / `ELIFECYCLE ... exit code 1`, or the block that was rendering suddenly goes **unstyled** (its CSS 404s), it's the dev preview, not your code. Recovery ladder: **1)** `shopify app dev --use-localhost` again + hard-refresh the storefront; **2)** if the preview is stuck (red `app-preview` errors, edits not landing): `shopify app dev clean` then `shopify app dev --use-localhost`; **3)** if the terminal says **"The currently available CLI credentials are invalid"** (token expired mid-session, and `dev` can't re-prompt): `shopify auth logout` -> `shopify auth login`, then `shopify app dev --use-localhost`. Freshest token is right after the app-setup deploy, so a lapse is most likely late in the session. Ignore red `[error] TranslationKeyExists` lines too if the AI used `| t` (theme-check false-positives on app-extension locales; the block still renders). Prompt [`02`](../prompts/02-theme-app-block.md) now has the block use literal copy to avoid them.
 
 You never run `shopify app deploy` in the session, `dev` serves everything live.
 
@@ -130,7 +130,7 @@ pnpm run set-scopes
 ```
 Start dev; approve the browser install, then press `g`:
 ```bash
-pnpm run dev
+shopify app dev --use-localhost
 ```
 - **Why `set-scopes` (say it plainly):** "This sets the payment-customizations scope the app needs and
   redeploys, so your first install grants it and Part 3 activation works the first time."
@@ -268,10 +268,10 @@ hot-reloads it. Run these from `starter/b2b-prebooking-workshop`.
 
 | Step | Symptom | Recover |
 |---|---|---|
-| **1. App setup** | `dev` won't start / scope error / `write_products` | `pnpm run set-scopes` -> re-approve the browser install -> `pnpm run dev` |
+| **1. App setup** | `dev` won't start / scope error / `write_products` | `pnpm run set-scopes` -> re-approve the browser install -> `shopify app dev --use-localhost` |
 | **1. Data model / seed** | metaobject, metafield, products, or company missing | Can't fix live (seed is ~2-4 min); the attendee follows on your screen and rebuilds from the seed after. Verify it's really missing in Settings > Custom data first. |
 | **2. Theme block** | broken, washed-out, or no line item properties on the cart | `git checkout finished -- extensions/prebooking-theme/blocks/b2b-prebooking.liquid` (CSS is inline in that one file), save; `dev` reloads. Re-add the block in the theme editor if needed. |
-| **2/3. CSS drops / `dev` crash** | block suddenly unstyled, `AbortError`, `app-preview` errors | Ladder: restart `pnpm run dev` + hard-refresh -> `shopify app dev clean` then `pnpm run dev` -> if "CLI credentials are invalid": `shopify auth logout` / `shopify auth login` then `pnpm run dev`. |
+| **2/3. CSS drops / `dev` crash** | block suddenly unstyled, `AbortError`, `app-preview` errors | Ladder: restart `shopify app dev --use-localhost` + hard-refresh -> `shopify app dev clean` then `shopify app dev --use-localhost` -> if "CLI credentials are invalid": `shopify auth logout` / `shopify auth login` then `shopify app dev --use-localhost`. |
 | **3. Payment Function** | wrong behavior at checkout | `git checkout finished -- extensions/prebooking-payment-terms/src/*`, then re-activate via press-`g`. |
 | **3. Activation** | `ACCESS_DENIED` / `write_payment_customizations` | `pnpm run set-scopes` -> re-approve install -> re-run the `paymentCustomizationCreate` mutation. |
 | **4a/4b. Flows** | Sidekick builds the wrong thing | Import the ready-made `.flow` files from `workshop-assets/flow/` instead of iterating the prompt live. |
@@ -293,7 +293,7 @@ one, prefer `pnpm shopify` so everyone's on the same version.
 | `pnpm install` | Downloads the app's code dependencies into `node_modules` (makes the CLI + build tools available). | Once per fresh clone |
 | `shopify app deploy` | Bundles app config + both extensions into a new **app version** and pushes it to Shopify. First run **creates** the app. Used twice in one-time app setup (create, then again inside `set-scopes`); not during the code build. | App setup |
 | `pnpm run set-scopes` | Repo helper: writes the app's `read/write_payment_customizations` scope into `shopify.app.toml`, pins `api_version`, and redeploys, so the app is registered **with** the scope before you install. | App setup (after first deploy) |
-| `pnpm run dev` | = `shopify app dev --use-localhost`. Starts the **local dev session**: builds + serves the extensions live, hot-reloads on save, opens GraphiQL on press `g`. Stays running in Tab 1. | All session |
+| `shopify app dev --use-localhost` | Starts the **local dev session**: builds + serves the extensions live, hot-reloads on save, opens GraphiQL on press `g`. `--use-localhost` uses a local HTTPS proxy instead of a Cloudflare tunnel (avoids room-wide throttling). Stays running in Tab 1. | All session |
 | `--use-localhost` | Serves `dev` over a local HTTPS proxy (the `mkcert` cert prompt) instead of a Cloudflare tunnel; avoids room-wide throttling. Applies **only** to `dev`, not `deploy`. | Inside the `dev` script |
 | press `g` (in the dev tab) | Keystroke, not a command. Opens **GraphiQL** (query console) scoped to your app; how we activate the payment Function in Part 3. | Part 3 |
 | `shopify store auth` | Logs the CLI into one store with a scope list. Lets the seed script make changes. | Prework |
@@ -302,5 +302,5 @@ one, prefer `pnpm shopify` so everyone's on the same version.
 | `pnpm shopify app function run` | Runs the payment Function locally against a test-input JSON, no store. Quick unit check. | Part 3 (optional) |
 | `pnpm shopify app function build` / `schema` | Compile the Function to Wasm / regenerate its GraphQL schema. `dev` does build on save, so rarely needed by hand. | As needed |
 
-**Mental model:** `pnpm install` / `pnpm run dev` = local-machine stuff; `shopify app deploy` /
+**Mental model:** `pnpm install` / `shopify app dev --use-localhost` = local-machine stuff; `shopify app deploy` /
 `... execute` / `store auth` = talking to Shopify's servers or your store.

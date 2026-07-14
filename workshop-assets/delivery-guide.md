@@ -191,7 +191,7 @@ Two beats; keep them mentally separate so a stall on seeding doesn't eat the the
 
 **Beat 1, the data model (~5 min).** In the already-cloned starter app
 (`starter/b2b-prebooking-workshop`), run `pnpm install`, then the one-time app setup
-(`shopify app deploy` -> `pnpm run set-scopes` -> `pnpm run dev`; exact steps in the runbook).
+(`shopify app deploy` -> `pnpm run set-scopes` -> `shopify app dev --use-localhost`; exact steps in the runbook).
 `set-scopes` seats the app's payment-customizations scope so Part 3 activation works later. With `dev`
 running, the season **metaobject** + `custom.b2b-prebooking` product **metafield** (created store-owned
 by the pre-work seed script) are visible in **Settings, Custom data**, so **show them** (Metaobjects,

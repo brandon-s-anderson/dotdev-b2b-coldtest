@@ -140,13 +140,13 @@ Set the payment-customizations scope your app needs, then redeploy:
 pnpm run set-scopes
 ```
 
-Start the dev session (= `shopify app dev --use-localhost`); approve the install in your browser and press `g` here for GraphiQL:
+Start the dev session; approve the install in your browser and press `g` here for GraphiQL. (`--use-localhost` serves over a local HTTPS proxy instead of a Cloudflare tunnel, so a full room isn't throttled.)
 
 ```bash
-pnpm run dev
+shopify app dev --use-localhost
 ```
 
-<sub>Using npm instead of pnpm? `npm install`, `npm run set-scopes`, `npm run dev` (run `shopify app deploy` as-is).</sub>
+<sub>Using npm instead of pnpm? `npm install`, `npm run set-scopes`; the `shopify …` commands are the same either way.</sub>
 
 `set-scopes` writes your app's payment-customizations scope into `shopify.app.toml` and deploys it, so
 the install grants that permission and Part 3 activation works the first time. Expect a **storefront

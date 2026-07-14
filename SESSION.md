@@ -21,7 +21,7 @@ payment behavior, so always check as the buyer.
 
 | Tab | What | Notes |
 |---|---|---|
-| **1** | Terminal running `pnpm run dev` | Starts in setup, **stays running all session**. Press **`g`** here to open GraphiQL. |
+| **1** | Terminal running `shopify app dev --use-localhost` | Starts in setup, **stays running all session**. Press **`g`** here to open GraphiQL. |
 | **2** | Your AI assistant (Claude / Cursor / etc.) | Where you paste the build prompts. Turn on **auto-accept edits** first. |
 
 No third tab. You don't run `shopify app deploy` during the build, `dev` rebuilds on save.
@@ -69,12 +69,14 @@ pnpm run set-scopes
 Start the dev session. Pick your store and **approve the install in your browser** (the consent screen now lists payment customizations). Leave this running all session; press **`g`** here to open GraphiQL:
 
 ```bash
-pnpm run dev
+shopify app dev --use-localhost
 ```
 
-<sub>Using npm? `npm install`, `npm run set-scopes`, `npm run dev` (run `shopify app deploy` as-is).</sub>
+<sub>Using npm? `npm install`, `npm run set-scopes`; the `shopify …` commands are the same either way.</sub>
 
-On the first `pnpm run dev` you may also be asked for your **storefront password** (Admin → Online Store → Preferences) and, for `--use-localhost`, a mkcert prompt: choose **"Yes, use mkcert to generate it"** and enter your Mac/sudo password (one-time per machine).
+On the first `shopify app dev --use-localhost` run you may also be asked for your **storefront password** (Admin → Online Store → Preferences) and, for `--use-localhost`, a mkcert prompt: choose **"Yes, use mkcert to generate it"** and enter your Mac/sudo password (one-time per machine).
+
+`--use-localhost` serves the dev session over a local HTTPS proxy instead of a Cloudflare tunnel, which avoids room-wide throttling when everyone starts at once.
 
 Leave Tab 1 (`dev`) running for the rest of the session.
 
@@ -350,7 +352,7 @@ version and keep moving. The `finished` branch has every file completed, so from
 
 | Problem | Fix |
 |---|---|
-| `dev` stopped (`AbortError`), or the block suddenly renders **unstyled** (CSS 404), often right after a build step | Work down this ladder: **1)** restart `pnpm run dev` + hard-refresh the storefront; **2)** if the preview is stuck (`app-preview` errors, edits not landing): `shopify app dev clean` then `pnpm run dev`; **3)** if it says **"CLI credentials are invalid"**: `shopify auth logout` → `shopify auth login`, then `pnpm run dev`. |
+| `dev` stopped (`AbortError`), or the block suddenly renders **unstyled** (CSS 404), often right after a build step | Work down this ladder: **1)** restart `shopify app dev --use-localhost` + hard-refresh the storefront; **2)** if the preview is stuck (`app-preview` errors, edits not landing): `shopify app dev clean` then `shopify app dev --use-localhost`; **3)** if it says **"CLI credentials are invalid"**: `shopify auth logout` → `shopify auth login`, then `shopify app dev --use-localhost`. |
 | **Theme block** is broken / won't style / no properties on the cart, and you're stuck | `git checkout finished -- extensions/prebooking-theme/blocks/b2b-prebooking.liquid`, save; re-add the block in the theme editor if needed. |
 | **Payment Function** behaves wrong, and you're stuck | `git checkout finished -- extensions/prebooking-payment-terms/src/*`, then re-activate via press-`g`. |
 | Red `TranslationKeyExists` lines in the terminal | Ignore them (theme-check false positive); the prompt uses literal strings to avoid this |
