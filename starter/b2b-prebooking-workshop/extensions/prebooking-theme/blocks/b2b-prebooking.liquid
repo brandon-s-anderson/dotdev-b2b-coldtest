@@ -10,8 +10,8 @@
     assign season = block.settings.product.metafields["custom"]["b2b-prebooking"].value
 
   Gate rendering to B2B buyers (customer.b2b?) and the theme editor (request.design_mode), put CSS
-  in assets/b2b-prebooking.css loaded via {{ 'b2b-prebooking.css' | asset_url | stylesheet_tag }},
-  and inject hidden inputs properties[Season] and properties[Delivery window] into the cart form.
+  in an inline <style> block in this file (not an assets/ file, so dev-preview asset rotation can't
+  break it), and inject properties[Season] and properties[Delivery window] onto the cart line.
 {%- endcomment -%}
 
 {% schema %}

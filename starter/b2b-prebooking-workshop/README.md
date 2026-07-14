@@ -14,9 +14,10 @@ Build the pieces by following the repo's `README.md` ("How the workshop runs") a
 
 ## What ships vs. what you build
 
-- **`extensions/prebooking-theme`** ships as a **stub**: `blocks/b2b-prebooking.liquid` and
-  `assets/b2b-prebooking.css` contain a comment/TODO and the block schema only. You implement the
-  window display + line item properties in Part 2 (`../../prompts/02-theme-app-block.md`).
+- **`extensions/prebooking-theme`** ships as a **stub**: `blocks/b2b-prebooking.liquid` has a
+  comment/TODO and the block schema only (its CSS goes inline in a `<style>` block in that same file,
+  no separate `assets/` CSS). You implement the window display + line item properties in Part 2
+  (`../../prompts/02-theme-app-block.md`).
 - **`extensions/prebooking-payment-terms`** ships as a **stub**: `src/cart_payment_methods_transform_run.ts`
   returns no operations. You implement the due-on-fulfillment + hide-deferred logic in Part 3
   (`../../prompts/03-plus-payment-terms-function.md`).

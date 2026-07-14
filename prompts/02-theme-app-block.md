@@ -58,10 +58,13 @@ Use literal English strings for all copy; do NOT use the `| t` translation filte
 file (theme-check reports false-positive `TranslationKeyExists` errors for app-extension locales,
 which is confusing on stage, and this isn't a localization exercise).
 
-Put CSS in `assets/b2b-prebooking.css` and load it with `asset_url | stylesheet_tag`
-(theme app blocks cannot use the `{% stylesheet %}` tag). Use neutral colors that read on a light
-storefront theme, and do NOT add an OS `prefers-color-scheme` dark-mode media query (the storefront
-theme controls the palette, not the visitor's OS).
+Put all CSS in a single inline `<style>` block inside the Liquid file. Do NOT use a separate
+`assets/` CSS file or `asset_url` (theme app blocks cannot use the `{% stylesheet %}` tag either);
+an inline `<style>` is Shopify's recommended way to ship instance-specific block CSS and, unlike an
+external asset, it can't be knocked out by dev-preview asset-URL rotation when a sibling extension
+rebuilds. Use neutral colors that read on a light storefront theme, and do NOT add an OS
+`prefers-color-scheme` dark-mode media query (the storefront theme controls the palette, not the
+visitor's OS).
 
 Add a script that attaches `properties[Season]` and `properties[Delivery window]` to the cart line
 so they become visible line item properties. Bake the values into the script from Liquid (`| json`);
