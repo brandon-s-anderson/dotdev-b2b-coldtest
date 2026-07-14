@@ -223,7 +223,7 @@ and no deploy/restart dance.
 | **1. Data model** | both | the season metaobject + product metafield already exist (seeded); create one season and assign it to the pre-book products in Admin | [`01`](prompts/01-scaffold-app.md) | The **B2B Pre-booking** metaobject + `custom.b2b-prebooking` product metafield show in Settings > Custom data; a pre-book product shows the season |
 | **2. Theme block** | both | build and place the PDP block that reads the season and injects line item properties | [`02`](prompts/02-theme-app-block.md) | Pre-book PDP shows the windows; `Season` + `Delivery window` appear on cart and checkout; available-now shows nothing |
 | **3. Plus payment-terms Function** | Plus | implement the Function, then activate it with one mutation in the app's GraphiQL (press `g`) | [`03`](prompts/03-plus-payment-terms-function.md) | On Combined, a mixed cart flips to due-on-fulfillment and hides deferred; a Net-30 cart is unchanged |
-| **4. Flows** | both | two Sidekick workflows: tag pre-book B2B orders, then charge the vaulted card on fulfillment | [`04`](prompts/04-flow-tag-prebook-orders.md) then [`05`](prompts/05-flow-charge-on-fulfillment.md) | Order gets `Prebooking`; fulfilling charges the vaulted method once |
+| **4. Flows** | both | charge the vaulted card on fulfillment (required), then optionally tag orders for a filtered view | [`04`](prompts/04-flow-charge-on-fulfillment.md) then [`05`](prompts/05-flow-tag-prebook-orders.md) | Fulfilling charges the vaulted method once; tagged orders are filterable |
 | **5. Adapt for non-Plus** | non-Plus | no new code: two fixed-term locations; force-vault via an App Store app | n/a | Available-now and pre-book are ordered separately with their own terms; the app hides deferred on a pre-book cart |
 
 Key points per part:
@@ -242,10 +242,10 @@ Key points per part:
   serves the Function, so you activate it with **one mutation in the app's GraphiQL** (press `g`), using
   the stable function handle, so the mutation is identical for everyone. See
   [`payment-customization-activation.md`](workshop-assets/payment-customization-activation.md).
-- **Part 4.** Merchant ops, one part / two prompts: (4a) tag pre-book B2B orders so they're filterable;
-  (4b) charge the vaulted card on fulfillment. One charge Flow serves both plans: non-Plus charges once
-  at full fulfillment, Plus per fulfillment, driven by how each plan generates payment schedules, not by
-  anything you author.
+- **Part 4.** Merchant ops: (4a, required) charge the vaulted card on fulfillment; (4b, optional) tag
+  pre-book orders so they're filterable. The charge Flow is independent of the tag (it keys off the
+  payment schedule) and serves both plans: non-Plus charges once at full fulfillment, Plus per
+  fulfillment, driven by how each plan generates payment schedules, not by anything you author.
 - **Part 5.** Most B2B merchants aren't on Plus. Without the two Plus-only pieces they pre-separate the
   journeys (Available Now on Net 30, Pre-book on due-on-fulfillment), so each single-term order charges
   correctly via the same Flow. The theme block and both Flows work unchanged. The only non-Plus-specific

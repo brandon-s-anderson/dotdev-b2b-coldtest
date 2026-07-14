@@ -146,22 +146,23 @@ everyone, the handle is fixed in the repo. [Run it, show the id back.]
 [Verify as Maya on Combined.] Mixed cart, checkout flips to due on fulfillment and 'pay later' is gone.
 Available-now-only cart stays on Net 30 with pay-later available. That's the checkpoint.
 
-[Bridge:] Right checkout. Now let's make the merchant's life easy, tag and charge these automatically."
+[Bridge:] Right checkout. Now let's make the merchant's life easy, auto-charge these on fulfillment (and optionally tag them)."
 
 ## Part 4: Flows (~4-5 min)
 
 [Admin, Shopify Flow, Sidekick.]
 
-"Two Flows so the store owner never touches this by hand. The first one I built ahead of time, so let me
-just show it. [Show Flow 1.] It tags any B2B order that has a pre-book item as Prebooking. The B2B
-condition keeps regular orders untagged. That tag is purely so the merchant can filter their orders to
-the pre-book ones, the charge Flow doesn't depend on it. You'd build this from the prompt; I pre-built
-mine to save time.
+"Two Flows so the store owner never touches this by hand, and only one is required.
 
-[Build Flow 2 with the Sidekick prompt.] This second one I'll build live. It charges the vaulted card
-when a B2B order's payment schedule comes due, which for due-on-fulfillment is when you fulfill. And
-there's a safety check: it skips any schedule that's already been paid, so it never double-charges.
-Notice it keys off the payment schedule, not the tag, so it doesn't wait on the first Flow at all.
+[Build the charge Flow with the Sidekick prompt.] The required one I'll build live now. It charges the
+vaulted card when a B2B order's payment schedule comes due, which for due-on-fulfillment is when you
+fulfill. And there's a safety check: it skips any schedule that's already been paid, so it never
+double-charges. Notice it keys off the payment schedule, not any tag, so it stands on its own.
+
+[Show the tag Flow.] The second one is optional, a nicety, so I built it ahead of time; let me just show
+it. It tags any B2B order that has a pre-book item as Prebooking. The B2B condition keeps regular orders
+untagged. That tag is purely so the merchant can filter their orders to the pre-book ones, the charge
+Flow doesn't depend on it. You'd build this from the prompt if you want it; I pre-built mine to save time.
 
 [Place the payoff order now.] I'll place my mixed order now so we can fulfill it in a second.
 
@@ -178,8 +179,8 @@ mixed are both due on fulfillment with no pay-later, and the season shows on the
 for that shipment. Then I fulfill the pre-book line, and it charges again, on its own. Two automatic
 charges, one per shipment, and nobody ever touched the card. No waiting on anything.
 
-[Show the filter.] And the order's also tagged Prebooking, so the merchant can filter their orders to
-just the pre-book ones. [Show the filtered Orders list.]
+[If you built the optional tag Flow, show the filter.] The order's also tagged Prebooking, so the
+merchant can filter their orders to just the pre-book ones. [Show the filtered Orders list.]
 
 That's per-fulfillment charging, plus due-on-fulfillment terms, plus the Function, plus the Flow, all
 working together on one Plus order.
@@ -205,8 +206,8 @@ different arrangement.
 
 ## Close (~2 min)
 
-"So you built a B2B pre-order flow: a product-page block that carries season context to checkout, two
-Flows that tag and auto-charge on fulfillment, and, on Plus, the Function that ties it into one smart
+"So you built a B2B pre-order flow: a product-page block that carries season context to checkout, a
+Flow that auto-charges on fulfillment (plus an optional one that tags orders), and, on Plus, the Function that ties it into one smart
 mixed cart, plus the non-Plus version that reaches the same outcome with two locations.
 
 The takeaways are the pattern map, which combination solves which pre-order pattern, and the finished

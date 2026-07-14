@@ -102,7 +102,7 @@ troubleshooting (`Could not find Function`, scope errors) is in
 On the combined (Plus) location, a mixed cart (an available-now item plus a pre-book item)
 switches to due-on-fulfillment and hides the deferred payment option; an available-now-only
 cart stays on Net 30 with the deferred option visible. The `shopify app dev` tab prints each
-Function execution as you check out. Flow (Part 4b) then charges the vaulted card per fulfillment.
+Function execution as you check out. Flow (Part 4a) then charges the vaulted card per fulfillment.
 
 ## Teach (deeper, optional)
 

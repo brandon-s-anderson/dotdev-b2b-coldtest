@@ -1,14 +1,14 @@
 # Flows
 
-Workshop **Part 4** (one beat, two Sidekick prompts). Two Shopify Flow workflows power the
-pre-book order lifecycle, and both work on all plans:
+Workshop **Part 4**. Two Shopify Flow workflows for the pre-book order lifecycle, both on all plans:
 
-- **Flow 1 (Part 4a): tag pre-book B2B orders.** Tags B2B orders that contain a pre-book item so the
-  store owner can filter them in Admin. Merchant-visibility only.
-- **Flow 2 (Part 4b): charge the vaulted card on fulfillment.** Charges the buyer's vaulted method
-  when a B2B order's payment schedule comes due, which for due-on-fulfillment is at fulfillment (once at
-  full fulfillment on non-Plus, per fulfillment on Plus), and skips any schedule already collected
-  (safety check). **Independent of Flow 1**, it keys off the payment schedule, not the tag.
+- **Charge on fulfillment (Part 4a, required).** Charges the buyer's vaulted method when a B2B order's
+  payment schedule comes due, which for due-on-fulfillment is at fulfillment (once at full fulfillment on
+  non-Plus, per fulfillment on Plus), and skips any schedule already collected (safety check). It keys
+  off the payment schedule, not the tag, so it's independent of the tag Flow.
+- **Tag pre-book orders (Part 4b, optional).** Tags B2B orders that contain a pre-book item so the store
+  owner can filter them in Admin. Merchant-visibility only; nothing depends on it. Build it if there's
+  time, or leave it as a take-home.
 
 Talk track: after the theme block (buyer sees pre-book context) and the payment Function (right
 checkout), these Flows make the merchant's life easier managing orders and payments.
@@ -18,8 +18,8 @@ checkout), these Flows make the merchant's life easier managing orders and payme
 Build each Flow live with its Sidekick prompt. The prompts, triggers, conditions, actions,
 and teach notes are documented in the build walkthrough, which is the **single source of truth**:
 
-- Flow 1: [`../../prompts/04-flow-tag-prebook-orders.md`](../../prompts/04-flow-tag-prebook-orders.md)
-- Flow 2: [`../../prompts/05-flow-charge-on-fulfillment.md`](../../prompts/05-flow-charge-on-fulfillment.md)
+- Charge (Part 4a): [`../../prompts/04-flow-charge-on-fulfillment.md`](../../prompts/04-flow-charge-on-fulfillment.md)
+- Tag (Part 4b, optional): [`../../prompts/05-flow-tag-prebook-orders.md`](../../prompts/05-flow-tag-prebook-orders.md)
 
 ## Importing them (optional)
 
@@ -27,8 +27,8 @@ For anyone who'd rather not build the Flows via Sidekick or by hand, exported `.
 are provided here so you can import them directly:
 
 - `flow-1-tag-prebook-orders.flow`
-- `flow-2-charge-on-fulfillment.flow` (may lag the current logic, which was decoupled from the
-  `Prebooking` tag; if in doubt, build Flow 2 from prompt `05` or re-export after building)
+- `flow-2-charge-on-fulfillment.flow` (the charge Flow; may lag the current logic, which was decoupled
+  from the `Prebooking` tag, so build it from prompt `04` or re-export after building)
 
 To import: Shopify admin, Apps, Shopify Flow, Import, then select the `.flow` file. Review the
 conditions after importing, then turn the workflow on.

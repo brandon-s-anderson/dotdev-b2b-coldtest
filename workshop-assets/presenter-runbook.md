@@ -14,7 +14,7 @@ Attendee-facing source of truth **in the room** is [`SESSION.md`](../SESSION.md)
 follow-along doc with every paste prompt, Admin step, and checkpoint, written for the attendee).
 Overview + prework: [`README.md`](../README.md).
 This runbook is the presenter's do-this-next card. Parts: 1 = app setup `01` + season seed; 2 = `02`
-theme block; 3 = `03` Plus Function; **4 = Flows** (`04` tag + `05` charge as sub-steps). **Talk track
+theme block; 3 = `03` Plus Function; **4 = Flows** (`04` charge, required + `05` tag, optional). **Talk track
 after the data model:** theme block so the buyer sees pre-book context; payment Function so checkout
 has the right terms; then Flows so the merchant can manage these orders and payments. **The Function
 (Part 3) is built before the Flows on purpose:** on Combined, only the Function flips terms to
@@ -38,9 +38,10 @@ broken. Build the Function first and every later test order already carries the 
 - [ ] **Fresh build state (the store you build on live).** Wipe your build store back to the seeded
       baseline first with [`reset.md`](reset.md) (delete the payment customization, the season entry +
       product metafields, the theme block, cancel/archive test orders).
-- [ ] **Flow 1 pre-built on your build store.** Leave Flow 1 (tag pre-book orders) built on the store you
-      demo on, so you don't spend live minutes on it. You build **Flow 2 live**. (Attendees can build both
-      from the prompts; the SESSION doc keeps Flow 1.)
+- [ ] **Tag Flow (optional) pre-built on your build store.** The tag Flow (Part 4b, pre-book order tagging)
+      is optional; leave it built on the store you demo on so you can show it in ~30s without spending live
+      minutes. You build the required **charge Flow (4a) live**. (Attendees can build both from the prompts;
+      the SESSION doc keeps both.)
 - [ ] **Storefront login ready.** You test as the B2B buyer **Maya Cruz** via the storefront (one-time
       emailed code), on the **Combined** location. Have that inbox open. Admin preview and DTC do NOT
       trigger the block or the B2B payment behavior.
@@ -200,31 +201,32 @@ mutation {
 
 ---
 
-## PART 4 - Flows (~4-5 min live) [both] - prompts [`04`](../prompts/04-flow-tag-prebook-orders.md) + [`05`](../prompts/05-flow-charge-on-fulfillment.md)
+## PART 4 - Flows (~4-5 min live) [both] - prompts [`04`](../prompts/04-flow-charge-on-fulfillment.md) + [`05`](../prompts/05-flow-tag-prebook-orders.md)
 
 **Frame:** "We've given the buyer the PDP and the right checkout. Now we make the merchant's life easier
-managing these orders and payments." **Flow 1 is already built on your store (pre-flight); you build Flow 2 live.**
+managing these orders and payments." **Build the charge Flow (4a) live, it's the required payoff. The tag
+Flow (4b) is optional, pre-built on your store; show it in ~30s or skip if you're tight.**
 
-### 4a. Tag pre-book orders (pre-built, show ~30s) - prompt [`04`](../prompts/04-flow-tag-prebook-orders.md)
-- Flow 1 is already on your store (built in pre-flight). Just show it, don't build live.
-- **Say:** "B2B-guarded so DTC stays untagged. The `Prebooking` tag is the merchant's filter for pre-book orders. The charge Flow doesn't depend on it, it runs off the payment schedule."
-- The tag is async (2-3 min) but nothing waits on it. Attendees can build Flow 1 themselves from prompt `04`.
-
-### 4b. Charge on fulfillment (~4 min, build live) - prompt [`05`](../prompts/05-flow-charge-on-fulfillment.md)
-- Build **Flow 2** with the Sidekick prompt in [`prompts/05`](../prompts/05-flow-charge-on-fulfillment.md).
-- **Say:** "Charges the vaulted method when a B2B order's payment schedule is due, with a safety check that skips any schedule already collected, `completedAt does not exist`, so no double-charge. Independent of Flow 1, it keys off the schedule, not the tag."
+### 4a. Charge on fulfillment (~4 min, build live, required) - prompt [`04`](../prompts/04-flow-charge-on-fulfillment.md)
+- Build the **charge Flow** with the Sidekick prompt in [`prompts/04`](../prompts/04-flow-charge-on-fulfillment.md).
+- **Say:** "Charges the vaulted method when a B2B order's payment schedule is due, with a safety check that skips any schedule already collected, `completedAt does not exist`, so no double-charge. It keys off the schedule, not any tag, so it stands alone."
 - **Verify:** fulfilling a pre-book order charges the vaulted method once (you'll show this in the payoff).
+
+### 4b. Tag pre-book orders (optional, pre-built, show ~30s) - prompt [`05`](../prompts/05-flow-tag-prebook-orders.md)
+- The tag Flow is already on your store (built in pre-flight). Just show it, or skip if you're tight, don't build live.
+- **Say:** "B2B-guarded so DTC stays untagged. The `Prebooking` tag is the merchant's filter for pre-book orders. The charge Flow doesn't depend on it, it runs off the payment schedule."
+- The tag is async (2-3 min) but nothing waits on it. Attendees can build the tag Flow themselves from prompt `05`.
 
 ---
 
 ## PAYOFF - full lifecycle (~4 min) - everything working together
 
-Run on the **Combined** location. **No tag wait:** Flow 2 charges off the payment schedule, not the tag, so you fulfill immediately.
+Run on the **Combined** location. **No tag wait:** the charge Flow charges off the payment schedule, not the tag, so you fulfill immediately.
 
 1. **Three carts, three behaviors** (same buyer/location): available-now = Net 30 + pay-later; pre-book only = due on fulfillment, no pay-later; mixed = due on fulfillment, no pay-later (point out `Season` / `Delivery window` on the line).
 2. **Place the mixed order.** No "save card" checked -> buyer is prompted to add a card (order carries terms).
-3. **Two fulfillments, two auto-charges:** fulfil the available-now line -> Flow 2 charges the vaulted card for that fulfillment; later fulfil the pre-book line -> Flow 2 charges again. No waiting on any tag.
-4. **Also tagged + filterable:** Flow 1 tags it `Prebooking` (async), show the Orders list filtered by that tag whenever the tag lands.
+3. **Two fulfillments, two auto-charges:** fulfil the available-now line -> the charge Flow charges the vaulted card for that fulfillment; later fulfil the pre-book line -> it charges again. No waiting on any tag.
+4. **Also tagged + filterable (if you built the optional tag Flow):** it tags the order `Prebooking` (async); show the Orders list filtered by that tag whenever the tag lands.
 - **Land it:** "Two automatic charges, one per fulfillment, no one touched the card. That's per-fulfillment charging + due-on-fulfillment terms + the Function + the Flow, together on one Plus order."
 
 ---
@@ -246,7 +248,7 @@ Close + take-home (pattern map + `finished` branch) per the delivery guide. Q&A 
 
 ## Dry-run debrief (capture Monday)
 
-- [ ] Total time vs 60 min (Opening 3 + Framing 5 + Toolkit 4 + Build P1-5 26 + Payoff 4 + non-Plus 7 + Close 2 + Q&A 10). Build P1-5 = data model 5, theme 6, Function 7, Flow tag 4, Flow charge 4.
+- [ ] Total time vs 60 min (Opening 3 + Framing 5 + Toolkit 4 + Build P1-5 26 + Payoff 4 + non-Plus 7 + Close 2 + Q&A 10). Build P1-5 = data model 5, theme 6, Function 7, Flow charge 4, Flow tag 4 (optional, first cut if tight).
 - [ ] Part 1 app setup (`deploy` -> `set-scopes` -> `dev`): does it give ONE install consent that includes the payment scope on a truly fresh clone? Confirm `grep scopes shopify.app.toml` shows the two payment scopes after `set-scopes` (not `""`). The data model should already be visible in Settings, Custom data from the pre-work seed.
 - [ ] Part 3 activation: does `paymentCustomizationCreate` (press `g`) succeed on the first try (no standalone GraphiQL app)? If it reports a scope error, `pnpm run set-scopes` + re-approve install seats it.
 - [ ] Did building the Function (Part 3) before the Flows keep test-order terms correct end to end?

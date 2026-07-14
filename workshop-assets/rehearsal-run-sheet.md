@@ -26,7 +26,7 @@ Everything ladders to that one sentence. If a tangent doesn't serve it, cut it.
 | **You** | Build Part 1 data model (author season + assign) | 4 min |
 | **You** | Build Part 2 theme block (prompt + place + verify) | 6 min |
 | **You** | Build Part 3 payment Function (prompt + activate + verify) | 6 min |
-| **You** | Part 4 Flows (Flow 1 pre-built; build Flow 2 live) | 4 min |
+| **You** | Part 4 Flows (build charge Flow live, required; tag Flow optional, pre-built) | 4 min |
 | **You** | Payoff (full lifecycle on Combined) | 4 min |
 | **You** | Non-Plus adaptation (talk/show) | 6 min |
 | **You** | Close + take-home | 2 min |
@@ -42,14 +42,14 @@ Gita's intro, don't spend dedicated clock on it.
 - **0:06** Part 1 data model (author the season, bulk-assign). → **by 0:10**
 - **0:10** Part 2 theme block: paste prompt, talk the 2 ideas while it builds, place, verify as Maya. → **by 0:16**
 - **0:16** Part 3 Function: paste prompt, talk the 2 ideas, press `g` + activate mutation, verify terms switch. → **by 0:22**
-- **0:22** Part 4 Flows: Flow 1 is pre-built (just show it), build **Flow 2** live (charge on fulfillment). Place the payoff order now. → **by 0:26**
+- **0:22** Part 4 Flows: build the **charge Flow** live (required, charge on fulfillment); the tag Flow is optional and pre-built (show it in ~30s or skip). Place the payoff order now. → **by 0:26**
 - **0:26** Payoff: three carts, two auto-charges, then the tagged/filtered view. → **by 0:30**
 - **0:30** Non-Plus: two-location arrangement, what you lose (dynamic terms + per-fulfillment), force-vault via App Store app. → **by 0:36**
 - **0:36** Close + take-home (pattern map + finished branch). → **by 0:38**
 - **0:38** hand to Q&A (a couple minutes of buffer).
 
 **Checkpoints to say out loud while rehearsing:** "block placed by 16," "Function activated by 22,"
-"payoff order placed by 26." Fulfill whenever, Flow 2 doesn't wait on the tag. If you're past a checkpoint, trigger a cut rule.
+"payoff order placed by 26." Fulfill whenever, the charge Flow doesn't wait on the tag. If you're past a checkpoint, trigger a cut rule.
 
 ## Transitions (the bridges, memorize these one-liners)
 
@@ -57,17 +57,18 @@ Gita's intro, don't spend dedicated clock on it.
 - Toolkit → Part 1: *"Only two of those are Plus-only. Let's start building the parts that work everywhere."*
 - Part 1 → 2: *"The season's on the product. Now let's show it to the buyer."*
 - Part 2 → 3: *"Buyer sees it. Now let's make checkout do the right thing for pre-book."*
-- Part 3 → 4: *"Right checkout. Now let's make the merchant's life easy, tag and charge automatically."*
+- Part 3 → 4: *"Right checkout. Now let's make the merchant's life easy, auto-charge on fulfillment (and optionally tag)."*
 - Part 4 → payoff: *"Let's watch the whole thing run end to end."*
 - Payoff → non-Plus: *"That's the Plus experience. Most B2B merchants aren't on Plus, here's the same outcome one tier down."*
 - Non-Plus → close: *"Same building blocks, different arrangement. Here's what to take home."*
 
 ## If you're behind (cut rules, in order)
 
-1. **Talk less while the AI builds.** The two "while it builds" ideas are the floor; don't add.
-2. **Non-Plus to 4 min:** describe it, don't click through every location.
-3. **Payoff:** show the two auto-charges only; skip re-showing all three carts (you showed terms at each build step).
-4. **Last resort:** if a build stalls >60-90s, `git checkout finished -- <path>`, say "here's the working version," move on. Never debug live.
+1. **Skip the optional tag Flow (4b).** It's pre-built and merchant-visibility only; drop the ~30s show and go straight to the payoff. Charge Flow (4a) is the required one.
+2. **Talk less while the AI builds.** The two "while it builds" ideas are the floor; don't add.
+3. **Non-Plus to 4 min:** describe it, don't click through every location.
+4. **Payoff:** show the two auto-charges only; skip re-showing all three carts (you showed terms at each build step).
+5. **Last resort:** if a build stalls >60-90s, `git checkout finished -- <path>`, say "here's the working version," move on. Never debug live.
 
 ## Live-build safety (rehearse these as reflexes)
 

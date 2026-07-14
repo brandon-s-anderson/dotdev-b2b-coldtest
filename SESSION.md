@@ -281,10 +281,26 @@ Tab 1 prints a line each time the Function runs at checkout.
 
 ## Part 4: Flows
 
-Two Shopify Flow workflows so the store owner doesn't manage pre-book orders by hand: one tags them,
-one charges the vaulted card on fulfillment. Build both in **Admin → Shopify Flow** with Sidekick.
+Automate the merchant's order handling with Shopify Flow (build in **Admin → Shopify Flow** with
+Sidekick). **4a (charge on fulfillment) is required, build it first.** **4b (tag) is optional**, a
+filtered-view nicety you can do if there's time or leave as a take-home.
 
-### 4a. Tag pre-book orders
+### 4a. Charge on fulfillment (required)
+
+```text
+Create a new Flow that charges the vaulted B2B payment method when a B2B order's payment
+schedule reaches its due date, but only if that payment hasn't already been collected.
+```
+
+The trigger fires when a payment schedule comes due (for due-on-fulfillment, that's when you fulfill).
+The "already collected" safety check skips any schedule that's been paid, so it never double-charges. It
+acts on the **payment schedule, not any tag**, so it stands on its own. Same Flow on both plans: non-Plus
+charges once at full fulfillment, Plus charges per fulfillment.
+
+**Checkpoint:** fulfilling a pre-book order charges the vaulted method once (you'll see this in the
+run-through below).
+
+### 4b. Tag pre-book orders (optional)
 
 ```text
 Create a new Flow to tag orders with the tag "Prebooking"
@@ -294,31 +310,17 @@ and the order has a product tagged "prebook".
 
 The B2B condition keeps normal (DTC) orders untagged. The product tag `prebook` is what identifies a
 pre-book line; the order tag **`Prebooking`** lets the store owner filter their Orders list to just the
-pre-book orders. It's purely for visibility, the charge Flow below doesn't depend on it.
+pre-book orders. Purely for visibility, the charge Flow above doesn't depend on it, so skip it if you're
+short on time.
 
 **Checkpoint:** a new B2B pre-book order gets the `Prebooking` tag; a DTC order with the same product
-does not. The tag is async (a couple of minutes), but nothing waits on it.
-
-### 4b. Charge on fulfillment
-
-```text
-Create a new Flow that charges the vaulted B2B payment method when a B2B order's payment
-schedule reaches its due date, but only if that payment hasn't already been collected.
-```
-
-The trigger fires when a payment schedule comes due (for due-on-fulfillment, that's when you fulfill).
-The "already collected" safety check skips any schedule that's been paid, so it never double-charges. It
-acts on the **payment schedule, not the `Prebooking` tag**, so it's independent of Flow 1. Same Flow on
-both plans: non-Plus charges once at full fulfillment, Plus charges per fulfillment.
-
-**Checkpoint:** fulfilling a pre-book order charges the vaulted method once (you'll see this in the
-run-through below).
+does not. The tag is async (a couple of minutes) and nothing waits on it.
 
 ---
 
 ## See it all work together (on Combined)
 
-Flow 2 charges off the payment schedule, not the tag, so you don't wait on Flow 1 here.
+The charge Flow charges off the payment schedule, not the tag, so you don't wait on the tag Flow here.
 
 1. Compare three carts: available-now = Net 30 with pay-later; pre-book only and mixed = due on
    fulfillment with no pay-later (and `Season` / `Delivery window` on the line).
@@ -326,8 +328,9 @@ Flow 2 charges off the payment schedule, not the tag, so you don't wait on Flow 
    terms).
 3. Fulfil the available-now line → the vaulted card is charged for that fulfillment. Fulfil the
    pre-book line → it's charged again (Plus charges per fulfillment). No waiting on any tag.
-4. The order is also tagged **`Prebooking`** by Flow 1, so the store owner can filter the Orders list to
-   just pre-book orders. That tag is async (a couple of minutes) and doesn't gate the charge.
+4. If you built the optional tag Flow, the order is also tagged **`Prebooking`**, so the store owner can
+   filter the Orders list to just pre-book orders. That tag is async (a couple of minutes) and doesn't
+   gate the charge.
 
 ---
 
