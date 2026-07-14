@@ -51,7 +51,7 @@ broken. Build the Function first and every later test order already carries the 
 | Tab | What runs | Rule |
 |---|---|---|
 | **Tab 1** | `shopify app dev` (via `pnpm run dev`) | Starts in Part 1, **stays running all session**. Press **`g`** here to open GraphiQL (browser opens, `dev` keeps running). Restart = `q` then `pnpm run dev`. |
-| **Tab 2** | Your AI assistant | Where you edit code (paste the prompts). |
+| **Tab 2** | Your AI assistant | Where you paste the prompts; the AI writes/edits the code. You never hand-code. |
 
 **Gotcha (dev crash / block goes unstyled):** if Tab 1 dies with `AbortError: The user aborted a request` / `ELIFECYCLE ... exit code 1`, or the block that was rendering suddenly goes **unstyled** (its CSS 404s), it's the dev preview, not your code. Recovery ladder: **1)** `pnpm run dev` again + hard-refresh the storefront; **2)** if the preview is stuck (red `app-preview` errors, edits not landing): `shopify app dev clean` then `pnpm run dev`; **3)** if the terminal says **"The currently available CLI credentials are invalid"** (token expired mid-session, and `dev` can't re-prompt): `shopify auth logout` -> `shopify auth login`, then `pnpm run dev`. Freshest token is right after the app-setup deploy, so a lapse is most likely late in the session. Ignore red `[error] TranslationKeyExists` lines too if the AI used `| t` (theme-check false-positives on app-extension locales; the block still renders). Prompt [`02`](../prompts/02-theme-app-block.md) now has the block use literal copy to avoid them.
 
@@ -235,7 +235,8 @@ Close + take-home (pattern map + `finished` branch) per the delivery guide. Q&A 
 - [ ] Part 3 activation: does `paymentCustomizationCreate` (press `g`) succeed on the first try (no standalone GraphiQL app)? If it reports a scope error, `pnpm run set-scopes` + re-approve install seats it.
 - [ ] Did building the Function (Part 3) before the Flows keep test-order terms correct end to end?
 - [ ] Flow tag latency, did the payoff pacing hide it?
-- [ ] Any AI prompt (02, 03) that produced code needing hand-fixing on stage.
+- [ ] Any AI prompt (02, 03) whose output didn't work first try. Note it so we can harden the prompt;
+      the on-stage move is `git checkout finished -- <path>`, never live-debug (presenter doesn't hand-code).
 - [ ] **Time the AI generation** for Parts 2 and 3 with auto-accept-edits ON. The 6/7-min budgets assume
       a near one-shot with no per-file approvals; if generation alone runs long, widen those budgets (and
       consider trimming Q&A or the non-Plus walk) rather than rushing the payoff.

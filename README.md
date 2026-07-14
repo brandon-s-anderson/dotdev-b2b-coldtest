@@ -178,7 +178,7 @@ one session part with two sub-steps (still two separate Sidekick prompts).
 
 **How to work: two terminal tabs.** Tab 1 runs `shopify app dev` the whole session (it serves the theme
 block and the Function, and rebuilds on every save); when you need GraphiQL, press `g` **here** and it
-opens in your browser while `dev` keeps running. Tab 2 is your AI assistant, where you edit code. You
+opens in your browser while `dev` keeps running. Tab 2 is your AI assistant, where you paste the prompts and it writes the code. You
 don't run `shopify app deploy` during the build; `dev` serves everything live, so there's no third tab
 and no deploy/restart dance.
 
