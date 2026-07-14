@@ -28,11 +28,11 @@ No third tab. You don't run `shopify app deploy` during the build, `dev` rebuild
 
 **What you'll build, in order:**
 
-1. **Data model** — the season the rest of the build reads.
-2. **Theme block** — so the buyer sees pre-book windows on the product page.
-3. **Payment Function** — so checkout gets the right terms for pre-book.
-4. **Flows** — so the store owner can manage these orders and payments automatically.
-5. **Non-Plus** — how the same outcome looks without Plus.
+1. **Data model:** the season the rest of the build reads.
+2. **Theme block:** so the buyer sees pre-book windows on the product page.
+3. **Payment Function:** so checkout gets the right terms for pre-book.
+4. **Flows:** so the store owner can manage these orders and payments automatically.
+5. **Non-Plus:** how the same outcome looks without Plus.
 
 ---
 
@@ -68,7 +68,7 @@ Leave Tab 1 (`dev`) running for the rest of the session.
 
 ---
 
-## Part 1 — Data model (in Admin)
+## Part 1: Data model (in Admin)
 
 The definitions already exist on your store (seeded in prework). You author the **values**: one season,
 then assign it to your pre-book products.
@@ -105,7 +105,7 @@ then assign it to your pre-book products.
 
 ---
 
-## Part 2 — Theme block
+## Part 2: Theme block
 
 The block reads the season you just seeded, shows the ordering + delivery windows to the buyer, and
 attaches those values to the cart line so they carry through to checkout (works on any plan).
@@ -168,7 +168,7 @@ AND
 Part (2) is what makes it work on Horizon; part (1) covers classic themes.
 ```
 
-### While it builds — what's happening
+### While it builds: what's happening
 
 Two ideas to understand the block (no need to open the files):
 
@@ -195,7 +195,7 @@ line, the `/cart/add` intercept (part 2 of the prompt) is missing; check DevTool
 
 ---
 
-## Part 3 — Plus payment Function
+## Part 3: Plus payment Function
 
 On the Combined location, a mixed cart should switch to **due on fulfillment** and hide "pay later" so
 a card gets vaulted. That's what this Function does.
@@ -227,7 +227,7 @@ Match the deferred method by name. On B2B checkout the underlying name is "Defer
 Keep the match configurable.
 ```
 
-### While it builds — what's happening
+### While it builds: what's happening
 
 1. **It fails open:** no changes unless the cart is B2B **and** contains a pre-book item. Everything
    else passes through untouched.
@@ -265,7 +265,7 @@ Tab 1 prints a line each time the Function runs at checkout.
 
 ---
 
-## Part 4 — Flows
+## Part 4: Flows
 
 Two Shopify Flow workflows so the store owner doesn't manage pre-book orders by hand: one tags them,
 one charges the vaulted card on fulfillment. Build both in **Admin → Shopify Flow** with Sidekick.
@@ -283,7 +283,7 @@ pre-book line; the order tag **`Prebooking`** is both a filter for the store own
 next Flow uses.
 
 **Checkpoint:** a new B2B pre-book order gets the `Prebooking` tag; a DTC order with the same product
-does not. The tag can take **2–3 minutes** to appear, you'll confirm it in the run-through below.
+does not. The tag can take **2-3 minutes** to appear, you'll confirm it in the run-through below.
 
 ### 4b. Charge on fulfillment
 
@@ -305,7 +305,7 @@ run-through below).
 
 ## See it all work together (on Combined)
 
-Flow 1's tag can take 2–3 minutes, so place the order first, then continue while it processes.
+Flow 1's tag can take 2-3 minutes, so place the order first, then continue while it processes.
 
 1. Compare three carts: available-now = Net 30 with pay-later; pre-book only and mixed = due on
    fulfillment with no pay-later (and `Season` / `Delivery window` on the line).
@@ -317,7 +317,7 @@ Flow 1's tag can take 2–3 minutes, so place the order first, then continue whi
 
 ---
 
-## Part 5 — How this changes for a non-Plus merchant (no new code)
+## Part 5: How this changes for a non-Plus merchant (no new code)
 
 The theme block and both Flows work unchanged. Without Plus:
 

@@ -20,7 +20,7 @@ repo `README.md` ("How the workshop runs"); this guide wraps a narrative and a c
 | Field | Answer |
 |---|---|
 | Working title | Building B2B Pre-Orders: order now, pay and ship by season |
-| Presenter (build) | Brandon Anderson (hands-on build) |
+| Presenter (build) | Brandon Anderson (live build) |
 | Supporting speaker | Gita Ravindran (intro, use cases, framing) |
 | Technical assistant(s) | Austin Hoefs (booth + workshop backup; has run the exercise) + 1 TA |
 | Target persona(s) | App builders and agencies building for B2B merchants (senior, multi-persona) |
@@ -43,9 +43,11 @@ Attendees complete all prework **before** the session; full steps in `prerequisi
 **US** Plus sandbox with B2B on; **Shopify Payments in test mode** with a vaulted test card and capture
 **not** at-checkout; the repo **cloned**; the CLI **authed** with the seed script's scope list; the
 **seed script** run (products, collections, company/buyer, locations, markets, catalogs, terms, DTC);
-**Shopify Flow** installed; an AI assistant with the Dev MCP + AI Toolkit. `pnpm install` is in-session;
-the **data model is created by the app** on `shopify app dev`, not pre-work. In-session Function
-activation uses the app's own GraphiQL (press `g`), not the CLI auth.
+**Shopify Flow** installed; an AI assistant with the Dev MCP + AI Toolkit. `pnpm install` is in-session.
+The **data model (the season metaobject + the `custom.b2b-prebooking` product metafield) is created
+store-owned by the pre-work seed script**, not by the app. In-session, the app's payment-customizations
+scope is seated by `pnpm run set-scopes` during app setup, and Function activation uses the app's own
+GraphiQL (press `g`), not the CLI auth.
 
 **Contingency (stragglers).** The line that matters is **local vs server-side**. Clone + `pnpm install`
 are local and fast (~100 MB, under a minute on venue wifi), and `pnpm install` is an in-session step
@@ -145,7 +147,7 @@ see teams make on B2B pre-orders."
 
 ---
 
-## Part 1: The toolkit (~4 min)
+## The toolkit (~4 min)
 
 Walk the building blocks on screen (no code yet). This is also the reference map they take home.
 
@@ -175,7 +177,7 @@ else works without Plus. The whole game is which combination you reach for on wh
 
 ---
 
-## Part 2: Build the Plus experience (~25 min, hands-on)
+## Build the Plus experience (~25 min, you build along)
 
 This is the exercise. Attendees code along; the `finished` branch is the recovery path if anyone
 falls behind. Each sub-part has a checkpoint.
@@ -184,14 +186,15 @@ falls behind. Each sub-part has a checkpoint.
 pre-book products, (2) payment Function so checkout has the right experience for pre-book, (3) Flows
 so the merchant can manage these orders and payments. Flows are one beat with two Sidekick prompts.
 
-### 2a. App data model + theme block (~11 min)  [both]
+### Data model + theme block (~11 min)  [both]
 Two beats; keep them mentally separate so a stall on seeding doesn't eat the theme-block time.
 
 **Beat 1, the data model (~5 min).** In the already-cloned starter app
-(`starter/b2b-prebooking-workshop`), run `pnpm install` (~100 MB, under a minute on the venue wifi)
-then `shopify app dev` (`--use-localhost`), it starts clean (the app ships no data model, so no scope
-errors). The season **metaobject** + `custom.b2b-prebooking` product **metafield** were created
-store-owned by the pre-work seed script, so **open Settings, Custom data and show them** (Metaobjects,
+(`starter/b2b-prebooking-workshop`), run `pnpm install`, then the one-time app setup
+(`shopify app deploy` -> `pnpm run set-scopes` -> `pnpm run dev`; exact steps in the runbook).
+`set-scopes` seats the app's payment-customizations scope so Part 3 activation works later. With `dev`
+running, the season **metaobject** + `custom.b2b-prebooking` product **metafield** (created store-owned
+by the pre-work seed script) are visible in **Settings, Custom data**, so **show them** (Metaobjects,
 then Metafields, Products). Then seed one **season** entry and assign it to the pre-order products
 (`workshop-assets/data-model-seed.md`).
 **Teach.** The data model is **store-owned**, created once in pre-work: a season metaobject and a
@@ -220,7 +223,7 @@ Plus feature).
 `custom.b2b-prebooking` product metafield; a B2B buyer on a pre-order product sees the windows; adding
 it shows `Season` and `Delivery window` on the cart line and at checkout. Available-now shows nothing.
 
-### 2b. Plus payment-terms Function (~7 min)  [Plus]: the Plus differentiator
+### Plus payment-terms Function (~7 min)  [Plus]: the Plus differentiator
 Built **before** the Flows on purpose: on the combined location only the Function flips terms to
 due-on-fulfillment, so the test orders you place while building the Flows already carry the right
 terms (build the Flows first and your test orders stay Net 30, and the charge Flow looks broken).
@@ -247,7 +250,7 @@ available-now-only carts, because the Function runs on every checkout.
 **Checkpoint.** ✅ Mixed cart on the combined location flips to due-on-fulfillment and hides
 deferred; available-now-only cart stays Net 30. (The Flows you build next do the charging.)
 
-### 2c. Flows (~8 min)  [both]: merchant ops after the buyer-facing build
+### Flows (~8 min)  [both]: merchant ops after the buyer-facing build
 **Frame.** Theme block = buyer sees pre-book context; Function = right checkout. Now two Flows so the
 merchant can manage these orders and payments without manual tagging or charging. Same part, two
 Sidekick prompts.
@@ -270,7 +273,7 @@ re-fulfillment double-charges.)
 
 ---
 
-## Part 2 payoff: the pre-order lifecycle, end to end (~4 min)
+## Payoff: the pre-order lifecycle, end to end (~4 min)
 
 Everything is built; now run the whole lifecycle live on the **combined** location. This is the
 high point, it's what they just built, all working together. (The Opening was a quick teaser; here
@@ -291,7 +294,7 @@ card**: the order carries terms, so a vaulted method is required. Place it.
 > until the tag has landed** or Flow 2 skips the charge and it looks broken on the projector. Pacing:
 > place this order at the *start* of the payoff, narrate steps 1 and 3 (three carts, the Orders
 > filter) while the tag lands, then fulfill in step 4. If you must show it fast, place a throwaway
-> pre-order order during Part 3 (non-Plus) so it's already tagged when you circle back.
+> pre-order order during the non-Plus segment so it's already tagged when you circle back.
 
 **3. It's tagged and filterable.** Flow 1 auto-tags the order `Prebooking`. Show the Orders list
 **filtered by the `Prebooking` tag**, the merchant's clean pre-order view.
@@ -310,7 +313,7 @@ on one Plus order."
 
 ---
 
-## Part 3: Adapt for a non-Plus merchant (~8 min)
+## Adapt for a non-Plus merchant (~8 min)
 
 **Step / show.** On the pre-seeded two-location store, walk the non-Plus arrangement: the buyer
 orders available-now and pre-order from **separate Company Locations**, each with fixed terms
@@ -374,7 +377,7 @@ booth.
 |---|---|---|
 | Slide deck (open + framing + toolkit + close) | TODO | DotDev 26 Workshops template (Light/Orange) |
 | Starter repo (scaffold + pre-seed prompt/script) | In progress | `dotdev-2026-building-b2b` |
-| Finished-state branch (reference/recovery) | TODO | `finished` branch |
+| Finished-state branch (reference/recovery) | ✅ | `origin/finished` |
 | Attendee build track | ✅ | `README.md` ("How the workshop runs") |
 | Presenter live-build runbook | ✅ | `workshop-assets/presenter-runbook.md` |
 | Prerequisites (frozen) | ✅ draft | `workshop-assets/prerequisites.md` |
