@@ -1,7 +1,7 @@
 # 0. Store setup: catalogs, markets, locations, data model  [non-Plus + Plus]
 
 > **This AI-prompt path is OPTIONAL/educational.** The recommended one-shot pre-work is the setup
-> **script** (`../workshop-assets/setup/setup-store.mjs`, run per `../workshop-assets/prerequisites.md`),
+> **script** (`../workshop-assets/setup/setup-store.mjs`, run per `../PREWORK.md`),
 > which is deterministic and matches how peer DotDev workshops seed stores. This prompt lags the
 > script on a few pieces (collections + menu, DTC catalog, `B2B -` naming, stray-location cleanup).
 > Use it only if you want to watch the Admin GraphQL run step by step.
@@ -62,7 +62,7 @@ On my store, create a store-owned metaobject definition named "B2B Pre-booking" 
 
 Only the **definitions** are created here. You seed the season **entry** and assign it to each pre-book
 product **in the session** (Part 1), in the Shopify admin (Settings, Custom data). See
-`../workshop-assets/data-model-seed.md` and Part 1 of the README build track.
+[`../SESSION.md`](../SESSION.md) Part 1.
 
 ---
 

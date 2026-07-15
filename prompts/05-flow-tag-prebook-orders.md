@@ -1,9 +1,9 @@
 # 5. Flow (optional): tag pre-book B2B orders  [both]
 
 Tag every B2B order that contains a pre-book item so the store owner can filter their Orders list to
-just the pre-book orders. Shopify Flow is available on all plans. This is **Part 4b** of the workshop and
+just the pre-book orders. Shopify Flow is available on all plans. This is **Part 3b** of the workshop and
 it's **optional**: it's a merchant-visibility nicety, not required for the pre-order flow to work. Build
-it in session if there's time, or as a take-home. The charge Flow (Part 4a) runs off the payment
+it in session if there's time, or as a take-home. The charge Flow (Part 3a) runs off the payment
 schedule, not this tag, so the two are independent.
 
 ## Prompt (copy into Sidekick)

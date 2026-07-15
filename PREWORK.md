@@ -1,4 +1,4 @@
-# Prerequisites
+# Prework
 
 **All required, and most can't be done in the session.** This workshop has heavier setup than most (a
 US Plus sandbox with B2B, Shopify Payments in test mode, Shopify Flow, and a store seed script), and
@@ -117,13 +117,13 @@ The script creates the products, collections + navigation, the company and buyer
 (each sharing one address and the same buyer as admin), markets, catalogs, payment terms (pre-book
 due-on-fulfillment, Available Now Net 30), and the pre-booking **data model** (the season metaobject +
 the `custom.b2b-prebooking` product metafield, store-owned so they're fully editable in Admin). Products
-come from `products/products-import.csv` and carry the tags that drive collections, catalogs, and Flow
+come from `workshop-assets/products/products-import.csv` and carry the tags that drive collections, catalogs, and Flow
 (`available-now`, `prebook`). You **don't** vault a card in advance, that's part of the build. Advanced
 flags (skip products, non-Plus only, custom company/address) are documented at the top of
 `setup-store.mjs`.
 
 The data model **definitions** are seeded here; you author the season **values** (create the season,
-assign it to the pre-book products) in Part 1 of the session. (Optional: `../prompts/00-store-setup.md`
+assign it to the pre-book products) in Part 1 of the session. (Optional: `prompts/00-store-setup.md`
 walks the same setup via AI prompt if you'd rather watch it run.)
 
 ## Prework checklist (validate before you arrive)

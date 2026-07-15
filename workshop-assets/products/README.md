@@ -1,8 +1,8 @@
 # Products import
 
-`products-import.csv` is the starter catalog for the workshop. Import it into your dev store
-**before** the session (Shopify admin, Products, Import), so you come in with products already
-tagged and ready to organize into catalogs.
+`products-import.csv` is the starter catalog for the workshop. The **prework seed script imports it for
+you** (see [`../../PREWORK.md`](../../PREWORK.md)), so you don't import it by hand; you come in with
+products already tagged and organized into catalogs.
 
 ## What's in it
 

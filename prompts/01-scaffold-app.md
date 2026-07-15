@@ -27,7 +27,7 @@ Create your app in your Partner org (pick your org, choose **create it as a new 
 shopify app deploy
 ```
 
-Set the app's payment-customizations scope and redeploy, so the install grants it and Part 3 activation works:
+Set the app's payment-customizations scope and redeploy, so the install grants it and Part 2 activation works:
 
 ```bash
 pnpm run set-scopes
@@ -61,9 +61,9 @@ the whole room starts at once).
 ## What `shopify app dev` does for you here
 
 - **Serves the theme app extension** so the block is available in the theme editor while dev runs, and
-  rebuilds on every save (that's how you build the block in Part 2 and the Function in Part 3 without
+  rebuilds on every save (that's how you build the block in Part 1 and the Function in Part 2 without
   redeploying).
-- **Opens the app's GraphiQL** (press `g`). You use it in **Part 3 to activate the Plus payment
+- **Opens the app's GraphiQL** (press `g`). You use it in **Part 2 to activate the Plus payment
   Function** with one mutation; GraphiQL runs in this app's context, so the app owns its Function.
 
 ## Verify the pre-booking data model (it's already there)
@@ -85,7 +85,7 @@ product page), which is exactly how you seed the season in Part 1. Nothing to cr
   app-defined Flow actions, POS). Localhost mode uses a reverse proxy on port 3458
   (`--localhost-port` to change it).
 - The two deploys above are **one-time app setup** (create the app + seat the scope). After that the
-  **code build is deploy-free**: `dev` serves both extensions and rebuilds on save, and Part 3 activates
+  **code build is deploy-free**: `dev` serves both extensions and rebuilds on save, and Part 2 activates
   the Function in the app's GraphiQL (press `g`), so you don't run `shopify app deploy` again while
   building. (The deploy already made the extensions persist after `dev` stops, a nice side benefit.)
 - `shopify app dev --reset` is harmless (the app owns no data model to lose); use it only if the CLI

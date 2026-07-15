@@ -20,22 +20,20 @@ accelerator, you're the author). The `starter/` app ships the extensions as **st
 (see `../starter/b2b-prebooking-workshop/README.md`); a complete reference lives on the `finished`
 branch if you want to compare.
 
-| Step | File | Scope | Session part |
-|---|---|---|---|
-| 0 | `00-store-setup.md` | non-Plus + Plus | Prework (optional AI path) |
-| 1 | `01-scaffold-app.md` | both | Part 1 (data model + start app) |
-| 2 | `02-theme-app-block.md` | both | Part 2 (buyer: PDP) |
-| 3 | `03-plus-payment-terms-function.md` | Plus | Part 3 (buyer: checkout) |
-| 4 | `04-flow-charge-on-fulfillment.md` | both | **Part 4a** (merchant: charge, required) |
-| 5 | `05-flow-tag-prebook-orders.md` | both | **Part 4b** (merchant: tag, optional) |
+| File | Scope | Where it's used |
+|---|---|---|
+| `00-store-setup.md` | non-Plus + Plus | Prework (optional AI path for the store seed) |
+| `01-scaffold-app.md` | both | Part 0 (set up the app) |
+| `02-theme-app-block.md` | both | Part 1 (theme block) |
+| `03-plus-payment-terms-function.md` | Plus | Part 2 (payment Function) |
+| `04-flow-charge-on-fulfillment.md` | both | Part 3, charge Flow (required) |
+| `05-flow-tag-prebook-orders.md` | both | Part 3, tag Flow (optional) |
 
-Part 4 is the "Flows" beat. **4a (charge on fulfillment) is the required one, build it first.** **4b
-(tag pre-book orders) is optional**, a merchant-visibility nicety you can build if there's time or leave
-as a take-home; the charge Flow doesn't depend on it. Talk track after the data model: theme block
-(buyer sees pre-book context) → payment Function (right checkout) → Flows (merchant manages orders and
-payments).
+Part 3 is the "Flows" beat. **The charge Flow is required, build it first.** **The tag Flow is
+optional**, a merchant-visibility nicety you can build if there's time or leave as a take-home; the
+charge Flow doesn't depend on it. Build order after the app is set up: theme block (buyer sees pre-book
+context) → payment Function (right checkout) → Flows (merchant manages orders and payments).
 
-Step 0 provisions the store structure (B2B catalogs, markets, company locations, payment terms,
-and the pre-booking data model). It assumes you've already imported the products
-(`../workshop-assets/products/`) and created a company; see
-`../workshop-assets/prerequisites.md`.
+`00-store-setup.md` provisions the store structure (products, collections, B2B catalogs, markets,
+company locations, payment terms, and the pre-booking data model). It's the same work the seed script
+does; see [`../PREWORK.md`](../PREWORK.md).

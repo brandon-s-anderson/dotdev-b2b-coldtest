@@ -18,7 +18,7 @@ data**:
 
 Because it's store-owned (not app-owned), the metafield is fully editable and pinnable in Admin, which
 is how you seed one season entry and assign it to each pre-book product **in Part 1** (see
-`../workshop-assets/data-model-seed.md`). That's the part you author, the **values**; the definitions
+[`../SESSION.md`](../SESSION.md) Part 1). That's the part you author, the **values**; the definitions
 are already there. This block just reads them.
 
 ## Scaffold (already in the starter)

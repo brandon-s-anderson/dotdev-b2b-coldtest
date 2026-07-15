@@ -1,15 +1,14 @@
 # Follow along
 
 Your single doc for building B2B pre-booking in this session. Keep it open and work top to bottom.
-Copy the prompts straight from the fenced blocks, you don't need to open any other file in the repo.
+Copy the prompts straight from the fenced blocks; you don't need to open any other file in the repo.
 
 > **This is an AI-assisted ("vibe coding") build, not hands-on coding.** You paste the prompts below into
-> your AI assistant and it writes the code, you don't hand-write or debug it. Read what it produces; if a
+> your AI assistant and it writes the code; you don't hand-write or debug it. Read what it produces; if a
 > step misbehaves, use the recovery steps at the end (you drop in the finished version, you never debug).
 
 Your prework (store seed, Shopify Payments in test mode, Shopify Flow installed) is already done, per
-[`workshop-assets/prerequisites.md`](workshop-assets/prerequisites.md). Background and the "why": the
-[`README`](README.md).
+[`PREWORK.md`](PREWORK.md). Background and the "why": the [`README`](README.md).
 
 Test every checkpoint while **logged into the storefront as your B2B buyer (Maya Cruz)** on the
 **Combined** location. The admin preview and normal (DTC) visitors won't trigger the block or the B2B
@@ -17,29 +16,37 @@ payment behavior, so always check as the buyer.
 
 ---
 
-## How you work: two tabs
+## What you'll see (the finished flow)
 
-| Tab | What | Notes |
-|---|---|---|
-| **1** | Terminal running `shopify app dev --use-localhost` | Starts in setup, **stays running all session**. Press **`g`** here to open GraphiQL. |
-| **2** | Your AI assistant (Claude / Cursor / etc.) | Where you paste the build prompts. Turn on **auto-accept edits** first. |
+The demo at the start is the destination. As **Maya Cruz** on a supplier's B2B store:
 
-No third tab. You don't run `shopify app deploy` during the build, `dev` rebuilds on save.
+- Add an **available-now** item: no pre-book panel on the page, and at checkout it's **Net 30** with
+  "pay later" available (**catalogs**, **payment terms**).
+- Add a **pre-book** item: the product page shows the ordering and delivery windows, and the cart line
+  carries `Season` + `Delivery window` (**custom data**, **theme / Liquid**).
+- Go to checkout on the mixed cart: terms flip to **due on fulfillment**, "pay later" is gone, and a card
+  is required (**payment customizations**, **vaulted cards & ACH**).
+- Place the order, then fulfill a line: the vaulted card is **charged automatically** for that shipment,
+  and again when the pre-book line ships (**Shopify Flow**). Maya sees the updates in her account.
 
-**What you'll build, in order:**
-
-1. **Data model:** the season the rest of the build reads.
-2. **Theme block:** so the buyer sees pre-book windows on the product page.
-3. **Payment Function:** so checkout gets the right terms for pre-book.
-4. **Flows:** so the store owner can manage these orders and payments automatically.
-5. **Non-Plus:** how the same outcome looks without Plus.
+You'll build the core of that now: the theme block, the payment Function, and the charge Flow.
 
 ---
 
-## Set up the app (Tab 1)
+## A setup that works (use whatever you like)
+
+You'll have two things going at once: a **terminal** running `shopify app dev --use-localhost` (leave it
+up all session; press **`g`** in it to open GraphiQL), and your **AI assistant** where you paste the
+build prompts. Lay them out however works for you (two terminal tabs, split panes, separate windows).
+Turn on **auto-accept edits** in your assistant so it doesn't stop for approval on every file. You don't
+run `shopify app deploy` during the build; `dev` rebuilds on save.
+
+---
+
+## Part 0: Set up the app
 
 A one-time setup that registers your app **with** the payment-customizations permission *before* you
-install it, so activation in Part 3 works the first time. **Run these one at a time**, top to bottom,
+install it, so activation in Part 2 works the first time. **Run these one at a time**, top to bottom;
 each is its own step (a couple are interactive, so don't paste them as a batch).
 
 Move into the app folder:
@@ -60,7 +67,7 @@ Create your app. When prompted, pick your Partner org, choose **create it as a n
 shopify app deploy
 ```
 
-Set the payment-customizations scope your app needs, then redeploy (**release** again when prompted). This is what makes Part 3 activation work the first time:
+Set the payment-customizations scope your app needs, then redeploy (**release** again when prompted). This is what makes Part 2 activation work the first time:
 
 ```bash
 pnpm run set-scopes
@@ -76,57 +83,19 @@ shopify app dev --use-localhost
 
 On the first `shopify app dev --use-localhost` run you may also be asked for your **storefront password** (Admin → Online Store → Preferences) and, for `--use-localhost`, a mkcert prompt: choose **"Yes, use mkcert to generate it"** and enter your Mac/sudo password (one-time per machine).
 
-`--use-localhost` serves the dev session over a local HTTPS proxy instead of a Cloudflare tunnel, which avoids room-wide throttling when everyone starts at once.
-
-Leave Tab 1 (`dev`) running for the rest of the session.
+`--use-localhost` serves the dev session over a local HTTPS proxy instead of a Cloudflare tunnel, which avoids room-wide throttling when everyone starts at once. Leave `dev` running for the rest of the session.
 
 ---
 
-## Part 1: Data model (in Admin)
+## Part 1: Theme block
 
-The definitions already exist on your store (seeded in prework). You author the **values**: one season,
-then assign it to your pre-book products.
-
-### 1a. See the definitions
-
-**Settings → Custom data:**
-
-- Metaobjects → **B2B Pre-booking**
-- Metafields → Products → **B2B Pre-booking** (`custom.b2b-prebooking`)
-
-### 1b. Create the season
-
-1. **Settings → Custom data → Metaobjects → B2B Pre-booking → Add entry**
-2. Fill in and **Save**:
-
-| Field | Value |
-|---|---|
-| Season name | `Spring/Summer 2027` |
-| Order start date | `2026-07-01` |
-| Order end date | `2026-09-30` |
-| Delivery start date | `2027-01-15` |
-| Delivery end date | `2027-02-28` |
-
-### 1c. Assign the season to the five pre-book products
-
-1. **Products** → select the five titles ending in `(Pre-book)`
-2. **Edit products** to open the bulk editor
-3. **Columns → Metafields → B2B Pre-booking**
-4. Click the first product's B2B Pre-booking cell, **Shift-click** the last one, pick **Spring/Summer
-   2027** once, and it applies to all selected → **Save**
-
-**Checkpoint:** a pre-book product shows the season on its B2B Pre-booking metafield.
-
----
-
-## Part 2: Theme block
-
-The block reads the season you just seeded, shows the ordering + delivery windows to the buyer, and
+We'll build the **theme block** first, the pre-book panel on the product page. It reads the **custom
+data** (the season) attached to a product, shows the ordering + delivery windows to the buyer, and
 attaches those values to the cart line so they carry through to checkout (works on any plan).
 
-### Paste into Tab 2 (your AI assistant)
+### Start the build
 
-Make sure **auto-accept edits** is on, then copy the **entire** block:
+Make sure **auto-accept edits** is on, then paste the **entire** block into your AI assistant:
 
 ```text
 In this theme app extension, create an app block `blocks/b2b-prebooking.liquid`
@@ -182,39 +151,54 @@ AND
 Part (2) is what makes it work on Horizon; part (1) covers classic themes.
 ```
 
-### While it builds: what's happening
+### While it builds: teach, and author the season in Admin
 
-Two ideas to understand the block (no need to open the files):
+The block takes a couple of minutes to generate. Two things to do meanwhile.
 
-1. **It reads the season** from `product.metafields["custom"]["b2b-prebooking"]`, one line, nothing
-   hardcoded, so it updates automatically when the season changes.
-2. **It carries context to checkout** by writing `properties[Season]` and `properties[Delivery window]`
-   onto the cart line, line item properties that work on any plan.
+**Say what the block does (three ideas, no need to open files):**
+
+1. **It runs conditionally:** only for a B2B buyer on a product that has a season (plus the theme editor). Everything else renders nothing.
+2. **It renders the custom-data values:** it reads the season from `product.metafields["custom"]["b2b-prebooking"]`, one line, nothing hardcoded, so it updates automatically when the season changes.
+3. **It adds line item attributes:** it writes `properties[Season]` and `properties[Delivery window]` onto the cart line, so pre-book context reaches checkout on any plan (no Plus required).
+
+**Author the season (Admin), the custom data the block reads.** The **definitions** already exist on your
+store (seeded in prework, store-owned); you're adding the **values**:
+
+1. **See the definitions.** Settings → Custom data → Metaobjects → **B2B Pre-booking**, and Metafields → Products → **B2B Pre-booking** (`custom.b2b-prebooking`).
+2. **Create the season.** Settings → Custom data → Metaobjects → **B2B Pre-booking** → **Add entry**, fill in and **Save**:
+
+| Field | Value |
+|---|---|
+| Season name | `Spring/Summer 2027` |
+| Order start date | `2026-07-01` |
+| Order end date | `2026-09-30` |
+| Delivery start date | `2027-01-15` |
+| Delivery end date | `2027-02-28` |
+
+3. **Assign it to the five pre-book products.** Products → select the five titles ending in `(Pre-book)` → **Edit products** (bulk editor) → **Columns → Metafields → B2B Pre-booking** → click the first product's cell, **Shift-click** the last, pick **Spring/Summer 2027** once (it applies to all) → **Save**.
+
+<sub>Prefer code? Because the data model is store-owned, you can also upsert the season and set the references via the app's GraphiQL (press `g`) or `shopify store execute`. Admin is faster for one season.</sub>
 
 ### Place the block
 
-With `dev` still running: open a **pre-book product** in the theme editor → **Add block → Apps → B2B
-Pre-booking** → save. No deploy needed.
+With `dev` still running, open a **pre-book product** in the theme editor → **Add block → Apps → B2B Pre-booking** → save. No deploy needed.
 
 ### Verify (as Maya Cruz on the storefront)
 
-- A pre-book product page shows the windows panel.
-- Adding it to cart puts `Season` + `Delivery window` on the cart and checkout lines.
-- An available-now product shows no panel and adds no properties.
+- **Available-now product:** no panel; add to cart → no `Season`/`Delivery window` on the line; at checkout it's **Net 30** with "pay later" available.
+- **Pre-book product:** the windows panel renders; add to cart → `Season` + `Delivery window` appear on the cart line and at checkout.
+- At checkout the pre-book cart **still shows Net 30 and the "pay later" option**, that's what Part 2 fixes.
 
-**If it looks off:** washed-out on the storefront but fine in the theme editor usually means a
-dark-mode CSS media query slipped in, remove it. If the block renders but nothing appears on the cart
-line, the `/cart/add` intercept (part 2 of the prompt) is missing; check DevTools → Network → the
-`/cart/add` request should include `properties[Season]`.
+**If it looks off:** washed-out on the storefront but fine in the theme editor usually means a dark-mode CSS media query slipped in, remove it. If the block renders but nothing appears on the cart line, the `/cart/add` intercept (part 2 of the prompt) is missing; check DevTools → Network → the `/cart/add` request should include `properties[Season]`.
 
 ---
 
-## Part 3: Plus payment Function
+## Part 2: Payment customization Function
 
-On the Combined location, a mixed cart should switch to **due on fulfillment** and hide "pay later" so
-a card gets vaulted. That's what this Function does.
+On the Combined location, a mixed cart should switch to **due on fulfillment** and hide "pay later" so a
+card gets vaulted. That's the **payment customization** building block, a Shopify Function in your app.
 
-### Paste into Tab 2 (your AI assistant)
+### Start the build
 
 ```text
 Implement the `cart.payment-methods.transform.run` target.
@@ -241,16 +225,26 @@ Match the deferred method by name. On B2B checkout the underlying name is "Defer
 Keep the match configurable.
 ```
 
-### While it builds: what's happening
+### While it builds: teach, and cover Plus vs non-Plus
 
-1. **It fails open:** no changes unless the cart is B2B **and** contains a pre-book item. Everything
-   else passes through untouched.
-2. **When it acts, it does two things:** set terms to due on fulfillment, and hide the method named
-   `"Deferred"` (that's the real name, not the buyer-facing "Choose payment method at a later time").
+**Say what the Function does (three ideas):**
 
-### Activate it (Tab 1 → press `g`)
+1. **It runs conditionally (fails open):** no changes unless the cart is B2B **and** contains a pre-book item. Every other checkout passes through untouched.
+2. **It hides the deferred option:** it hides the method named `"Deferred"` (the real input name, not the buyer-facing "Choose payment method at a later time"), so a card gets vaulted.
+3. **It changes the payment terms for this order:** it sets **due on fulfillment** (`paymentTermsSet`) for just this checkout.
 
-In the `dev` tab press **`g`** to open GraphiQL, set the API version to the latest stable, and run:
+**Plus vs non-Plus (use the build time to explain the boundary).** Changing payment terms at checkout
+(`paymentTermsSet`) is **Plus-only**. That's why the non-Plus arrangement uses **two separate company
+locations**, one Available Now (Net 30) and one Pre-book (due on fulfillment), so each carries its own
+fixed terms instead of switching them mid-checkout. Hiding the deferred method is available to non-Plus
+too, but through a **public App Store app** rather than a custom Function (custom Functions are Plus-only).
+
+### It won't change checkout yet, activate it
+
+When the build finishes, check out again as Maya, nothing changes. Implementing the Function isn't
+enough; it doesn't run at checkout until you create a **payment customization** that points at it. Do
+that with one mutation in the app's GraphiQL: in the `dev` terminal press **`g`**, set the API version to
+the latest stable, and run:
 
 ```graphql
 mutation {
@@ -268,24 +262,29 @@ mutation {
 You should get back an `id` with empty `userErrors`. This mutation is the same for everyone (the
 `functionHandle` is fixed in the starter).
 
-### Verify (as Maya Cruz on Combined)
+### Verify, then place the order (as Maya Cruz on Combined)
+
+Refresh checkout:
 
 | Cart | Terms | "Pay later" |
 |---|---|---|
 | Mixed (available-now + pre-book) | Due on fulfillment | Hidden |
 | Available-now only | Net 30 | Visible |
 
-Tab 1 prints a line each time the Function runs at checkout.
+Because of the conditional logic, an available-now-only order is untouched. The terminal prints a line
+each time the Function runs. **Place the mixed order** (if you didn't save a card, you're prompted to
+vault one, the order carries terms).
 
 ---
 
-## Part 4: Flows
+## Part 3: Flows
 
-Automate the merchant's order handling with Shopify Flow (build in **Admin → Shopify Flow** with
-Sidekick). **4a (charge on fulfillment) is required, build it first.** **4b (tag) is optional**, a
-filtered-view nicety you can do if there's time or leave as a take-home.
+Now make the merchant's life easier with **Shopify Flow**. The order has arrived in Admin and can be
+partially fulfilled; we want the vaulted card **charged automatically** on fulfillment, which is why the
+Function forced a card on file. Build in **Admin → Shopify Flow** with Sidekick. **3a (charge on
+fulfillment) is required, build it first.** **3b (tag) is optional.**
 
-### 4a. Charge on fulfillment (required)
+### 3a. Charge on fulfillment (required)
 
 ```text
 Shopify Flow: Charge vaulted B2B payment on due installment
@@ -306,16 +305,19 @@ plans: non-Plus charges once at full fulfillment, Plus charges per fulfillment.
 
 **Prefer not to build it live?** Import the ready-made workflow instead:
 [`workshop-assets/flow/flow-2-charge-on-fulfillment.flow`](workshop-assets/flow/flow-2-charge-on-fulfillment.flow)
-(Shopify Flow → **Import**). Built, it looks like this:
+(Shopify Flow → **Import**). Preview it, save it, and **turn it on**. Built, it looks like this:
 
 <a href="workshop-assets/flow/images/charge-on-fulfillment-flow.png"><img src="workshop-assets/flow/images/charge-on-fulfillment-flow.png" alt="Charge vaulted B2B payment Flow: Payment schedule is due trigger, then a Payment schedule completed at does not exist condition, then a Charge vaulted payment for B2B order action" width="320"></a>
 
 <sub>Click to enlarge.</sub>
 
-**Checkpoint:** fulfilling a pre-book order charges the vaulted method once (you'll see this in the
-run-through below).
+**See it work (the payoff).** Back on the order:
 
-### 4b. Tag pre-book orders (optional)
+1. **Partially fulfill** the available-now line → the vaulted card is **charged automatically** for that fulfillment.
+2. Maya sees the order update in her **customer account**.
+3. **Fully fulfill** the pre-book line → the card is **charged again** for that shipment. Two hands-off charges, one per fulfillment, no one touched the card.
+
+### 3b. Tag pre-book orders (optional)
 
 ```text
 Create a new Flow to tag orders with the tag "Prebooking"
@@ -323,10 +325,10 @@ if the order is a B2B order
 and the order has a product tagged "prebook".
 ```
 
-The B2B condition keeps normal (DTC) orders untagged. The product tag `prebook` is what identifies a
-pre-book line; the order tag **`Prebooking`** lets the store owner filter their Orders list to just the
-pre-book orders. Purely for visibility, the charge Flow above doesn't depend on it, so skip it if you're
-short on time.
+The B2B condition keeps normal (DTC) orders untagged. The product tag `prebook` identifies a pre-book
+line; the order tag **`Prebooking`** lets the store owner filter their Orders list to just the pre-book
+orders. Purely for visibility, the charge Flow above doesn't depend on it, so skip it if you're short on
+time.
 
 **Prefer not to build it live?** Import the ready-made workflow instead:
 [`workshop-assets/flow/flow-1-tag-prebook-orders.flow`](workshop-assets/flow/flow-1-tag-prebook-orders.flow)
@@ -336,37 +338,26 @@ short on time.
 
 <sub>Click to enlarge.</sub>
 
-**Checkpoint:** a new B2B pre-book order gets the `Prebooking` tag; a DTC order with the same product
-does not. The tag is async (a couple of minutes) and nothing waits on it.
+**Checkpoint:** a new B2B pre-book order gets the `Prebooking` tag; a DTC order with the same product does not. The tag is async (a couple of minutes) and nothing waits on it.
 
 ---
 
-## See it all work together (on Combined)
+## Recap: non-Plus and take-home
 
-The charge Flow charges off the payment schedule, not the tag, so you don't wait on the tag Flow here.
+You built a B2B pre-order flow: a product-page block that carries season context to checkout (custom
+data + Liquid), a payment customization Function that sets the right terms and forces a vaulted card, and
+a Flow that charges that card automatically on fulfillment.
 
-1. Compare three carts: available-now = Net 30 with pay-later; pre-book only and mixed = due on
-   fulfillment with no pay-later (and `Season` / `Delivery window` on the line).
-2. Place the **mixed** order. If you didn't save a card, you're prompted to vault one (the order carries
-   terms).
-3. Fulfil the available-now line → the vaulted card is charged for that fulfillment. Fulfil the
-   pre-book line → it's charged again (Plus charges per fulfillment). No waiting on any tag.
-4. If you built the optional tag Flow, the order is also tagged **`Prebooking`**, so the store owner can
-   filter the Orders list to just pre-book orders. That tag is async (a couple of minutes) and doesn't
-   gate the charge.
+**Non-Plus.** A non-Plus merchant (Basic, Grow, Advanced) can't change payment terms at checkout
+(`paymentTermsSet`) or charge per fulfillment. That's why your seeded store also has **Available Now** and
+**Pre-book** locations: each carries its own fixed terms, so you pre-separate the journeys instead of
+switching terms on one order. The theme block and the charge Flow work unchanged; force-vaulting comes
+from a public App Store app instead of the custom Function. **Take-home: rebuild this on an Advanced dev
+store using those two locations to see the difference.**
 
----
-
-## Part 5: How this changes for a non-Plus merchant (no new code)
-
-The theme block and both Flows work unchanged. Without Plus:
-
-- Two locations with **fixed** terms (Available Now = Net 30, Pre-book = due on fulfillment) instead of
-  one Combined location that switches terms.
-- Force-vaulting a card comes from an **App Store app** (custom apps with Functions require Plus).
-- No single mixed cart; the two journeys are kept separate.
-
-Your seeded store already has both locations, so you can see the split.
+The [`b2b-preorder-reference-sheet.md`](b2b-preorder-reference-sheet.md) maps six common pre-order
+patterns to the platform building blocks on Plus and non-Plus. This is just one example; we hear lots of
+different use cases from merchants, so go build.
 
 ---
 
@@ -381,11 +372,20 @@ version and keep moving. The `finished` branch has every file completed, so from
 | `dev` stopped (`AbortError`), or the block suddenly renders **unstyled** (CSS 404), often right after a build step | Work down this ladder: **1)** restart `shopify app dev --use-localhost` + hard-refresh the storefront; **2)** if the preview is stuck (`app-preview` errors, edits not landing): `shopify app dev clean` then `shopify app dev --use-localhost`; **3)** if it says **"CLI credentials are invalid"**: `shopify auth logout` → `shopify auth login`, then `shopify app dev --use-localhost`. |
 | **Theme block** is broken / won't style / no properties on the cart, and you're stuck | `git checkout finished -- extensions/prebooking-theme/blocks/b2b-prebooking.liquid`, save; re-add the block in the theme editor if needed. |
 | **Payment Function** behaves wrong, and you're stuck | `git checkout finished -- extensions/prebooking-payment-terms/src/*`, then re-activate via press-`g`. |
-| Red `TranslationKeyExists` lines in the terminal | Ignore them (theme-check false positive); the prompt uses literal strings to avoid this |
-| GraphiQL says "Could not find Function" | `dev` must be running; press `g` again |
-| Activation says `ACCESS_DENIED` / needs `write_payment_customizations` | Run `pnpm run set-scopes` in `starter/b2b-prebooking-workshop`, re-approve the install in the browser, then re-run the mutation. More: [`payment-customization-activation.md`](workshop-assets/payment-customization-activation.md) |
-| **Flow** (4a/4b) built wrong by Sidekick | Import the ready-made `.flow` files from [`workshop-assets/flow/`](workshop-assets/flow/) instead. |
-| Want to start a part over | [`reset.md`](workshop-assets/reset.md) |
+| Red `TranslationKeyExists` lines in the terminal | Ignore them (theme-check false positive); the prompt uses literal strings to avoid this. |
+| GraphiQL says "Could not find Function" | `dev` must be running; press `g` again. |
+| Activation says `ACCESS_DENIED` / needs `write_payment_customizations` | Run `pnpm run set-scopes` in `starter/b2b-prebooking-workshop`, re-approve the install in the browser, then re-run the mutation. |
+| **Flow** built wrong by Sidekick | Import the ready-made `.flow` files from [`workshop-assets/flow/`](workshop-assets/flow/) instead. |
+
+### Start a part over
+
+Reset only touches what you built in the session, not the pre-seeded store structure:
+
+- **Payment customization (Part 2):** no Admin UI, so in the app's GraphiQL (press `g`) run `query { paymentCustomizations(first: 20) { nodes { id title enabled } } }`, then `paymentCustomizationDelete(id: "…")`; re-activate with `paymentCustomizationCreate`.
+- **Season values (Part 1):** clear the **B2B Pre-booking** column in the bulk editor, then delete the season entry (Settings → Custom data → Metaobjects). The definition stays (store-owned).
+- **Theme block (Part 1):** Online Store → Themes → Customize → select the **B2B Pre-booking** block → Remove block.
+- **Flows (Part 3):** open Shopify Flow, turn off or delete the workflow(s).
+- **Test orders:** Cancel (voids the authorization), then Archive.
 
 ---
 

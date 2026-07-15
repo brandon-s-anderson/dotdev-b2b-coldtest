@@ -3,8 +3,8 @@
 Automatically charge the buyer's vaulted card / bank account **on fulfillment**: it fires when a B2B
 order's payment schedule comes due, which for due-on-fulfillment terms is at fulfillment (and **per
 fulfillment** on Plus), with a safety check that skips it if the payment was already collected. This is
-**Part 4a** of the workshop and the **only required Flow**. It's **independent of the tagging Flow**
-(Part 4b): it acts on the payment schedule, not the `Prebooking` tag, so it never waits on tagging. The
+**Part 3a** of the workshop and the **only required Flow**. It's **independent of the tagging Flow**
+(Part 3b): it acts on the payment schedule, not the `Prebooking` tag, so it never waits on tagging. The
 same Flow serves both plans.
 
 ## Prompt (copy into Sidekick)
@@ -62,4 +62,4 @@ charges the vaulted method for the due amount, once, with no waiting on any tag.
   store's payment-capture setting, so either "capture on fulfillment" or "manual capture" is fine
   (just not "automatically at checkout," which collects up front and defeats the model).
 - This depends on the buyer having a vaulted method, which is what the force-vault piece
-  (App Store app on non-Plus, or the Plus Function in Part 3) guarantees.
+  (App Store app on non-Plus, or the Plus Function in Part 2) guarantees.

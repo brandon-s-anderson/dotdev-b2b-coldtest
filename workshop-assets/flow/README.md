@@ -1,12 +1,12 @@
 # Flows
 
-Workshop **Part 4**. Two Shopify Flow workflows for the pre-book order lifecycle, both on all plans:
+Workshop **Part 3**. Two Shopify Flow workflows for the pre-book order lifecycle, both on all plans:
 
-- **Charge on fulfillment (Part 4a, required).** Charges the buyer's vaulted method when a B2B order's
+- **Charge on fulfillment (Part 3a, required).** Charges the buyer's vaulted method when a B2B order's
   payment schedule comes due, which for due-on-fulfillment is at fulfillment (once at full fulfillment on
   non-Plus, per fulfillment on Plus), and skips any schedule already collected (safety check). It keys
   off the payment schedule, not the tag, so it's independent of the tag Flow.
-- **Tag pre-book orders (Part 4b, optional).** Tags B2B orders that contain a pre-book item so the store
+- **Tag pre-book orders (Part 3b, optional).** Tags B2B orders that contain a pre-book item so the store
   owner can filter them in Admin. Merchant-visibility only; nothing depends on it. Build it if there's
   time, or leave it as a take-home.
 
@@ -18,17 +18,17 @@ checkout), these Flows make the merchant's life easier managing orders and payme
 Build each Flow live with its Sidekick prompt. The prompts, triggers, conditions, actions,
 and teach notes are documented in the build walkthrough, which is the **single source of truth**:
 
-- Charge (Part 4a): [`../../prompts/04-flow-charge-on-fulfillment.md`](../../prompts/04-flow-charge-on-fulfillment.md)
-- Tag (Part 4b, optional): [`../../prompts/05-flow-tag-prebook-orders.md`](../../prompts/05-flow-tag-prebook-orders.md)
+- Charge (Part 3a): [`../../prompts/04-flow-charge-on-fulfillment.md`](../../prompts/04-flow-charge-on-fulfillment.md)
+- Tag (Part 3b, optional): [`../../prompts/05-flow-tag-prebook-orders.md`](../../prompts/05-flow-tag-prebook-orders.md)
 
 ## Importing them (optional)
 
 For anyone who'd rather not build the Flows via Sidekick or by hand, exported `.flow` files
 are provided here so you can import them directly:
 
-- `flow-2-charge-on-fulfillment.flow` (the charge Flow, Part 4a, required): schedule-driven, a single
+- `flow-2-charge-on-fulfillment.flow` (the charge Flow, Part 3a, required): schedule-driven, a single
   `completedAt` guard, no tag dependency
-- `flow-1-tag-prebook-orders.flow` (the tag Flow, Part 4b, optional)
+- `flow-1-tag-prebook-orders.flow` (the tag Flow, Part 3b, optional)
 
 To import: Shopify admin, Apps, Shopify Flow, Import, then select the `.flow` file. Review the
 conditions after importing, then turn the workflow on.
