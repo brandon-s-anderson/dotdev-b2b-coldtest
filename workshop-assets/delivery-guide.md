@@ -383,6 +383,7 @@ booth.
 | Slide deck (open + framing + toolkit + close) | TODO | DotDev 26 Workshops template (Light/Orange) |
 | Starter repo (scaffold + pre-seed prompt/script) | In progress | `dotdev-2026-building-b2b` |
 | Finished-state branch (reference/recovery) | ✅ | `origin/finished` |
+| Finished demo store, branded/polished for the opening | TODO | brand up the store shown at the start (logo, theme, product imagery/copy) so it sells the Maya-orders-from-her-supplier story and impresses |
 | Attendee build track | ✅ | `README.md` ("How the workshop runs") |
 | Presenter live-build runbook | ✅ | `workshop-assets/presenter-runbook.md` |
 | Prerequisites (frozen) | ✅ draft | `workshop-assets/prerequisites.md` |
