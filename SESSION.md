@@ -317,7 +317,9 @@ short on time.
 [`workshop-assets/flow/flow-1-tag-prebook-orders.flow`](workshop-assets/flow/flow-1-tag-prebook-orders.flow)
 (Shopify Flow → **Import**). Built, it looks like this:
 
-![Tag pre-book orders Flow: Order created trigger, then a Company id exists condition, then a product tag is prebook condition, then an Add order tags: Prebooking action](workshop-assets/flow/images/tag-prebook-orders-flow.png)
+<a href="workshop-assets/flow/images/tag-prebook-orders-flow.png"><img src="workshop-assets/flow/images/tag-prebook-orders-flow.png" alt="Tag pre-book orders Flow: Order created trigger, then a Company id exists condition, then a product tag is prebook condition, then an Add order tags: Prebooking action" width="320"></a>
+
+<sub>Click to enlarge.</sub>
 
 **Checkpoint:** a new B2B pre-book order gets the `Prebooking` tag; a DTC order with the same product
 does not. The tag is async (a couple of minutes) and nothing waits on it.
