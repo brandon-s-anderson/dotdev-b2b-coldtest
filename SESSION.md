@@ -339,7 +339,7 @@ time.
 
 ---
 
-## Test the full order (as Maya Cruz)
+## Part 4: Test the full order (as Maya Cruz)
 
 Everything is built. Run one clean end-to-end test order to see all three pieces work together, as the
 **B2B buyer, Maya Cruz**, on the **Combined** location.

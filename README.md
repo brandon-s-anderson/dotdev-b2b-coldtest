@@ -85,6 +85,7 @@ The runnable steps live in [`SESSION.md`](SESSION.md). At a glance:
 - **Part 1: Theme block.** The PDP panel that reads the season (custom data) and carries it to checkout; you author the season values in Admin while the AI builds.
 - **Part 2: Payment Function** *(Plus)*. Switch a pre-book cart to due-on-fulfillment and force a vaulted card.
 - **Part 3: Flows.** Charge the vaulted card automatically on fulfillment (required); optionally tag pre-book orders for a filtered view.
+- **Part 4: Test the full order.** Place one order as the buyer and watch the vaulted card auto-charge on each fulfillment.
 - **Recap: non-Plus.** The same outcome one tier down, using two fixed-term locations.
 
 ## Your seeded store (take 2 minutes to look)
