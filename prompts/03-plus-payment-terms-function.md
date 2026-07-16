@@ -30,26 +30,41 @@ along; the teach callouts below show what matters.
 ```text
 Implement the `cart.payment-methods.transform.run` target.
 
-You only need to edit files in `src/` (dev is running and rebuilds on save);
-do not run any CLI commands.
+Follow these constraints so the build stays fast:
+- Edit only the files in `src/` (the `.ts` and its `.graphql` input query). dev is running and rebuilds on save.
+- Do NOT run any CLI commands. Do NOT wait for or inspect `generated/api.ts` (type codegen is a separate step that does not hot-reload; write against the query below). If generated types look stale, ignore it and proceed.
+- Do NOT run sleep/polling loops or inspect running processes. If the environment looks off, note it in one line and move on; do not investigate.
 
-Input query:
-- the cart's purchasing company id
-- each line's merchandise ... on ProductVariant {
-    product { metafield(namespace: "custom", key: "b2b-prebooking") { value } }
+Use exactly this input query (purchasingCompany is under cart.buyerIdentity, not cart):
+
+query {
+  cart {
+    buyerIdentity {
+      purchasingCompany { company { id } }
+    }
+    lines {
+      merchandise {
+        __typename
+        ... on ProductVariant {
+          product {
+            metafield(namespace: "custom", key: "b2b-prebooking") { value }
+          }
+        }
+      }
+    }
   }
-- the available paymentMethods { id name }
+  paymentMethods { id name }
+}
 
 Logic:
-- If there's no purchasing company, return no changes.
+- If cart.buyerIdentity.purchasingCompany is null, return no operations.
 - If any line's product has the `custom.b2b-prebooking` metafield set, it's a pre-book cart:
-  - return a `paymentTermsSet` operation with an event trigger of `FULFILLMENT_CREATED`
-    (due on fulfillment)
+  - return a `paymentTermsSet` operation with an event trigger of `FULFILLMENT_CREATED` (due on fulfillment)
   - plus `paymentMethodHide` for any payment method whose name matches the deferred option
+- Otherwise return no operations.
 
 Match the deferred method by name. On B2B checkout the underlying name is "Deferred"
-(the label shown to buyers is "Choose payment method at a later time").
-Keep the match configurable.
+(the label shown to buyers is "Choose payment method at a later time"). Keep the match configurable.
 ```
 
 ### While it builds (~2–3 min): talk this through

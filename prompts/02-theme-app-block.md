@@ -41,6 +41,8 @@ In this theme app extension, create an app block `blocks/b2b-prebooking.liquid`
 with a `product` setting (autofill true).
 
 You only need to edit files (dev is running and hot-reloads); do not run any CLI commands.
+Do NOT run sleep/polling loops, inspect running processes, or wait for codegen; if a change
+doesn't appear, note it in one line and move on, do not investigate the environment.
 
 Read the product's metaobject reference into a `season` variable from the `custom` namespace:
 `product.metafields["custom"]["b2b-prebooking"].value`.

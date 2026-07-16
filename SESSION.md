@@ -102,6 +102,8 @@ In this theme app extension, create an app block `blocks/b2b-prebooking.liquid`
 with a `product` setting (autofill true).
 
 You only need to edit files (dev is running and hot-reloads); do not run any CLI commands.
+Do NOT run sleep/polling loops, inspect running processes, or wait for codegen; if a change
+doesn't appear, note it in one line and move on, do not investigate the environment.
 
 Read the product's metaobject reference into a `season` variable from the `custom` namespace:
 `product.metafields["custom"]["b2b-prebooking"].value`.
@@ -203,26 +205,41 @@ card gets vaulted. That's the **payment customization** building block, a Shopif
 ```text
 Implement the `cart.payment-methods.transform.run` target.
 
-You only need to edit files in `src/` (dev is running and rebuilds on save);
-do not run any CLI commands.
+Follow these constraints so the build stays fast:
+- Edit only the files in `src/` (the `.ts` and its `.graphql` input query). dev is running and rebuilds on save.
+- Do NOT run any CLI commands. Do NOT wait for or inspect `generated/api.ts` (type codegen is a separate step that does not hot-reload; write against the query below). If generated types look stale, ignore it and proceed.
+- Do NOT run sleep/polling loops or inspect running processes. If the environment looks off, note it in one line and move on; do not investigate.
 
-Input query:
-- the cart's purchasing company id
-- each line's merchandise ... on ProductVariant {
-    product { metafield(namespace: "custom", key: "b2b-prebooking") { value } }
+Use exactly this input query (purchasingCompany is under cart.buyerIdentity, not cart):
+
+query {
+  cart {
+    buyerIdentity {
+      purchasingCompany { company { id } }
+    }
+    lines {
+      merchandise {
+        __typename
+        ... on ProductVariant {
+          product {
+            metafield(namespace: "custom", key: "b2b-prebooking") { value }
+          }
+        }
+      }
+    }
   }
-- the available paymentMethods { id name }
+  paymentMethods { id name }
+}
 
 Logic:
-- If there's no purchasing company, return no changes.
+- If cart.buyerIdentity.purchasingCompany is null, return no operations.
 - If any line's product has the `custom.b2b-prebooking` metafield set, it's a pre-book cart:
-  - return a `paymentTermsSet` operation with an event trigger of `FULFILLMENT_CREATED`
-    (due on fulfillment)
+  - return a `paymentTermsSet` operation with an event trigger of `FULFILLMENT_CREATED` (due on fulfillment)
   - plus `paymentMethodHide` for any payment method whose name matches the deferred option
+- Otherwise return no operations.
 
 Match the deferred method by name. On B2B checkout the underlying name is "Deferred"
-(the label shown to buyers is "Choose payment method at a later time").
-Keep the match configurable.
+(the label shown to buyers is "Choose payment method at a later time"). Keep the match configurable.
 ```
 
 ### While it builds: teach, and cover Plus vs non-Plus
@@ -383,6 +400,17 @@ different use cases from merchants, so go build.
 **Golden rule:** if a step's code is broken and the fix isn't obvious in a minute, drop in the finished
 version and keep moving. The `finished` branch has every file completed, so from
 `starter/b2b-prebooking-workshop` you can run `git checkout finished -- <path>` and `dev` hot-reloads it.
+
+**Watch the clock.** The theme block usually generates in ~3 min and the Function in ~2-3 min. If a build
+runs well past that, or the AI starts investigating the environment (sleep/polling loops, process checks,
+waiting on `generated/api.ts`), stop it and drop in the finished file rather than let it rabbit-hole:
+
+```bash
+# theme block
+git checkout finished -- extensions/prebooking-theme/blocks/b2b-prebooking.liquid
+# payment Function
+git checkout finished -- extensions/prebooking-payment-terms/src/*
+```
 
 | Problem | Fix |
 |---|---|
