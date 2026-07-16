@@ -1,13 +1,17 @@
 {%- comment -%}
   B2B Pre-booking block. STARTER STUB (you build this in the session).
 
-  TODO (see ../../../../prompts/02-theme-app-block.md):
+  TODO: implement this from the workshop prompt (SESSION.md Part 1). Everything you need is in that
+  prompt and in AGENTS.md; do NOT search the repo for a prompts file or for the data model.
+
   For a logged-in B2B buyer on a pre-book product, read the season from the product's
   custom.b2b-prebooking metafield and render the ordering + delivery windows, and inject visible
   line item properties (Season, Delivery window) into the add-to-cart form.
 
   The season is the metaobject reference on the product (custom namespace):
     assign season = block.settings.product.metafields["custom"]["b2b-prebooking"].value
+  Season metaobject fields (correct as-is, seeded on the store, not in this repo):
+    season_name, order_start_date, order_end_date, delivery_start_date, delivery_end_date
 
   Gate rendering to B2B buyers (customer.b2b?) and the theme editor (request.design_mode), put CSS
   in an inline <style> block in this file (not an assets/ file, so dev-preview asset rotation can't

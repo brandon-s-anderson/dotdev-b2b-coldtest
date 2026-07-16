@@ -104,6 +104,8 @@ with a `product` setting (autofill true).
 You only need to edit files (dev is running and hot-reloads); do not run any CLI commands.
 Do NOT run sleep/polling loops, inspect running processes, or wait for codegen; if a change
 doesn't appear, note it in one line and move on, do not investigate the environment.
+The metaobject field keys below are correct, use them as-is; do not search the repo to confirm
+the data model (it's seeded on the store, not in this repo).
 
 Read the product's metaobject reference into a `season` variable from the `custom` namespace:
 `product.metafields["custom"]["b2b-prebooking"].value`.
@@ -209,6 +211,8 @@ Follow these constraints so the build stays fast:
 - Edit only the files in `src/` (the `.ts` and its `.graphql` input query). dev is running and rebuilds on save.
 - Do NOT run any CLI commands. Do NOT wait for or inspect `generated/api.ts` (type codegen is a separate step that does not hot-reload; write against the query below). If generated types look stale, ignore it and proceed.
 - Do NOT run sleep/polling loops or inspect running processes. If the environment looks off, note it in one line and move on; do not investigate.
+- Type the input and output LOCALLY in the .ts to mirror the query below; do NOT import from `../generated/api` (tsconfig `rootDir` is `./src`, so that import breaks the typecheck).
+- Trust the Shopify validator for the final check; do NOT read `schema.graphql`.
 
 Use exactly this input query (purchasingCompany is under cart.buyerIdentity, not cart):
 

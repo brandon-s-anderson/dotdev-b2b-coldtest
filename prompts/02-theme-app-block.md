@@ -43,6 +43,8 @@ with a `product` setting (autofill true).
 You only need to edit files (dev is running and hot-reloads); do not run any CLI commands.
 Do NOT run sleep/polling loops, inspect running processes, or wait for codegen; if a change
 doesn't appear, note it in one line and move on, do not investigate the environment.
+The metaobject field keys below are correct, use them as-is; do not search the repo to confirm
+the data model (it's seeded on the store, not in this repo).
 
 Read the product's metaobject reference into a `season` variable from the `custom` namespace:
 `product.metafields["custom"]["b2b-prebooking"].value`.

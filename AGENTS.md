@@ -16,4 +16,16 @@ has a tight clock):
 - **One-shot the code.** The prompts give the exact input query and logic. Write the file(s) once, let
   the validator / typecheck run, fix a genuine error if flagged, and stop, do not re-verify repeatedly.
 
-The complete reference implementation lives on the `finished` branch.
+## Key facts (so you never hunt or guess)
+
+- The season **data model lives on the store** (seeded in prework), not in this repo: metaobject
+  `b2b_prebooking` with `season_name`, `order_start_date`, `order_end_date`, `delivery_start_date`,
+  `delivery_end_date`; product metafield `custom.b2b-prebooking` (metaobject reference). Use these keys
+  as-is; don't search the repo to confirm them.
+- Payment Function: purchasing company is `cart.buyerIdentity.purchasingCompany.company.id`; the deferred
+  method's name is `"Deferred"`; type the input/output locally (do NOT import `../generated/api`, the
+  tsconfig `rootDir` is `./src`).
+
+Building the extensions? The full contract and gotchas are in
+`starter/b2b-prebooking-workshop/AGENTS.md`. The complete reference implementation lives on the
+`finished` branch.
