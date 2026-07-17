@@ -4,8 +4,9 @@ Workshop **Part 3**. Two Shopify Flow workflows for the pre-book order lifecycle
 
 - **Charge on fulfillment (Part 3a, required).** Charges the buyer's vaulted method when a B2B order's
   payment schedule comes due, which for due-on-fulfillment is at fulfillment (once at full fulfillment on
-  non-Plus, per fulfillment on Plus), and skips any schedule already collected (safety check). It keys
-  off the payment schedule, not the tag, so it's independent of the tag Flow.
+  non-Plus, per fulfillment on Plus). Just a trigger and an action, no condition: the charge action
+  already skips schedules that have been paid. It keys off the payment schedule, not the tag, so it's
+  independent of the tag Flow.
 - **Tag pre-book orders (Part 3b, optional).** Tags B2B orders that contain a pre-book item so the store
   owner can filter them in Admin. Merchant-visibility only; nothing depends on it. Build it if there's
   time, or leave it as a take-home.
@@ -26,8 +27,8 @@ and teach notes are documented in the build walkthrough, which is the **single s
 For anyone who'd rather not build the Flows via Sidekick or by hand, exported `.flow` files
 are provided here so you can import them directly:
 
-- `flow-2-charge-on-fulfillment.flow` (the charge Flow, Part 3a, required): schedule-driven, a single
-  `completedAt` guard, no tag dependency
+- `flow-2-charge-on-fulfillment.flow` (the charge Flow, Part 3a, required): schedule-driven trigger,
+  then the charge action, no condition
 - `flow-1-tag-prebook-orders.flow` (the tag Flow, Part 3b, optional)
 
 To import: Shopify admin, Apps, Shopify Flow, Import, then select the `.flow` file. Review the

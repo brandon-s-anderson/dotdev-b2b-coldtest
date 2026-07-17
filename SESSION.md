@@ -308,27 +308,26 @@ Sidekick. **3a (charge on fulfillment) is required, build it first.** **3b (tag)
 ### 3a. Charge on fulfillment (required)
 
 ```text
-Shopify Flow: Charge vaulted B2B payment on due installment
+Shopify Flow: Charge vaulted B2B payment on due date
 
-Trigger: Payment schedule due
-Condition: paymentSchedule.completedAt is nil (installment not yet collected)
-Action: Capture vaulted payment method, using paymentSchedule.id
+Trigger: Payment schedule is due
+Action: Charge vaulted payment for B2B order
 
-Do not use an order-level paid check. The condition must be installment-specific to avoid
-double-charging. Designed for per fulfillment B2B payment capture.
+No condition needed: the "Charge vaulted payment for B2B order" action already skips schedules that
+have been paid, so it won't double-charge. Designed for per fulfillment B2B payment capture.
 ```
 
-The trigger fires when a payment schedule comes due (for due-on-fulfillment, that's when you fulfill).
-The `completedAt is nil` check is **installment-specific**, it skips any schedule that's already been
-collected, so it never double-charges (an order-level "paid" check would over-charge on multi-installment
-orders). It acts on the **payment schedule, not any tag**, so it stands on its own. Same Flow on both
-plans: non-Plus charges once at full fulfillment, Plus charges per fulfillment.
+The trigger fires when a payment schedule comes due (for due-on-fulfillment, that's when you fulfill),
+and the action charges the vaulted method for that schedule. No condition is needed: the **charge action
+already skips schedules that have been paid**, so it won't double-charge. It acts on the **payment
+schedule, not any tag**, so it stands on its own. Same Flow on both plans: non-Plus charges once at full
+fulfillment, Plus charges per fulfillment.
 
 **Prefer not to build it live?** Import the ready-made workflow instead:
 [`workshop-assets/flow/flow-2-charge-on-fulfillment.flow`](workshop-assets/flow/flow-2-charge-on-fulfillment.flow)
 (Shopify Flow → **Import**). Preview it, save it, and **turn it on**. Built, it looks like this:
 
-<a href="workshop-assets/flow/images/charge-on-fulfillment-flow.png"><img src="workshop-assets/flow/images/charge-on-fulfillment-flow.png" alt="Charge vaulted B2B payment Flow: Payment schedule is due trigger, then a Payment schedule completed at does not exist condition, then a Charge vaulted payment for B2B order action" width="320"></a>
+<a href="workshop-assets/flow/images/charge-on-fulfillment-flow.png"><img src="workshop-assets/flow/images/charge-on-fulfillment-flow.png" alt="Charge vaulted B2B payment Flow: a Payment schedule is due trigger connected straight to a Charge vaulted payment for B2B order action, no condition" width="320"></a>
 
 <sub>Click to enlarge.</sub>
 

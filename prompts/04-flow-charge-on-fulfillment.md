@@ -2,28 +2,26 @@
 
 Automatically charge the buyer's vaulted card / bank account **on fulfillment**: it fires when a B2B
 order's payment schedule comes due, which for due-on-fulfillment terms is at fulfillment (and **per
-fulfillment** on Plus), with a safety check that skips it if the payment was already collected. This is
-**Part 3a** of the workshop and the **only required Flow**. It's **independent of the tagging Flow**
-(Part 3b): it acts on the payment schedule, not the `Prebooking` tag, so it never waits on tagging. The
-same Flow serves both plans.
+fulfillment** on Plus). This is **Part 3a** of the workshop and the **only required Flow**. It's
+**independent of the tagging Flow** (Part 3b): it acts on the payment schedule, not the `Prebooking` tag,
+so it never waits on tagging. The same Flow serves both plans.
 
 ## Prompt (copy into Sidekick)
 
 ```text
-Shopify Flow: Charge vaulted B2B payment on due installment
+Shopify Flow: Charge vaulted B2B payment on due date
 
-Trigger: Payment schedule due
-Condition: paymentSchedule.completedAt is nil (installment not yet collected)
-Action: Capture vaulted payment method, using paymentSchedule.id
+Trigger: Payment schedule is due
+Action: Charge vaulted payment for B2B order
 
-Do not use an order-level paid check. The condition must be installment-specific to avoid
-double-charging. Designed for per fulfillment B2B payment capture.
+No condition needed: the "Charge vaulted payment for B2B order" action already skips schedules that
+have been paid, so it won't double-charge. Designed for per fulfillment B2B payment capture.
 ```
 
 ### While Sidekick builds: talk this through
 
 1. **Trigger = payment schedule due:** for a due-on-fulfillment order that fires when you fulfill; a Net 30 order would fire 30 days out.
-2. **Safety check:** skip if the payment was already collected (`completedAt` exists), so it never double-charges.
+2. **Just trigger and action:** no condition needed, the charge action skips already-paid schedules itself.
 3. **Independent of the tagging Flow:** it keys off the payment schedule, not the `Prebooking` tag, so there's nothing to wait for.
 4. **One Flow, both plans:** non-Plus charges once at full fulfillment; Plus charges per fulfillment because the platform creates a schedule per shipment.
 
@@ -31,11 +29,9 @@ double-charging. Designed for per fulfillment B2B payment capture.
 
 - **Trigger:** Payment schedule is due (fires when a payment schedule's due date is reached;
   for due-on-fulfillment that is when fulfillment happens)
-- **Condition (the only one):**
-  - `paymentSchedule.completedAt` does not exist (the installment hasn't been collected yet: the safety /
-    double-charge guard). Keep it **installment-specific**, an order-level "paid" check would double-charge
-    on multi-installment orders.
-- **Action:** Charge vaulted payment for B2B order (against the due `paymentSchedule.id`)
+- **Action:** Charge vaulted payment for B2B order
+- **No condition:** the charge action already skips schedules that have been paid, so it won't
+  double-charge, no separate guard is needed.
 
 ## One Flow, both plans
 
@@ -51,13 +47,15 @@ charges the vaulted method for the due amount, once, with no waiting on any tag.
 
 ## Teach (deeper, optional)
 
-- The `completedAt does not exist` condition is the safety check the presenter asked for: it skips any
-  schedule that's already been collected, so a re-run or re-fulfillment can't double-charge.
+- **No explicit "already paid" guard is needed.** The **Charge vaulted payment for B2B order** action
+  skips schedules that have already been collected, so a re-run or re-fulfillment can't double-charge.
+  (Earlier iterations added a `paymentSchedule.completedAt is nil` condition for this; it turned out to
+  be redundant with the action's built-in check, so the Flow is just trigger, then action.)
 - It's inherently **B2B-scoped** without an explicit "is B2B" condition: the trigger fires on a payment
   schedule (which only B2B / net-terms orders have) and the action charges a vaulted B2B method. It keys
   off the schedule, not the `Prebooking` tag, so the charge never depends on the optional tagging Flow. In
-  this store's model every B2B order that should auto-charge is on terms, so "any B2B schedule that's due,
-  if not already collected" is the right rule.
+  this store's model every B2B order that should auto-charge is on terms, so "charge any B2B schedule when
+  it's due" is the right rule.
 - The action charges the vaulted method through the order's payment schedule, independent of the
   store's payment-capture setting, so either "capture on fulfillment" or "manual capture" is fine
   (just not "automatically at checkout," which collects up front and defeats the model).
