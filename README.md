@@ -53,23 +53,21 @@ workshop wires these together:
 6. **Vaulted cards & ACH**: save a payment method on the order to charge later.
 7. **Shopify Flow**: charge the vaulted method automatically when the payment schedule comes due.
 
-Only two pieces are Plus-only: dynamic payment terms at checkout (the Function) and per-fulfillment
-charging. Everything else works on any plan.
+A couple of these are Plus-only (see [What actually requires Plus](#what-actually-requires-plus));
+everything else works on any plan.
 
 ## What actually requires Plus
 
-**B2B is now on every plan** (Basic and up), not just Plus: any merchant can run companies, locations,
-catalogs, net terms, and vaulted cards. You build everything on your Plus dev store; only three things
-gate on the merchant's plan:
+**B2B is now on every plan** (Basic and up): any merchant can run companies, locations, catalogs, net
+terms, and vaulted cards. You build on a Plus dev store, but only two things gate on the merchant's plan:
 
-- **Dynamic payment terms at checkout** (`paymentTermsSet` Function, Plus-only): flips a mixed cart to
-  due-on-fulfillment. Non-Plus splits into two fixed-term locations instead.
+- **Custom app Functions** (Plus-only): the payment-customization Function switches a mixed cart to
+  due-on-fulfillment and hides "pay later" to force a vaulted card. Non-Plus uses two fixed-term
+  locations plus an App Store app for the hide.
 - **Per-fulfillment charging** (Plus-only): Plus bills each shipment separately; non-Plus charges once
   at full fulfillment.
-- **Custom apps that contain Functions** (Plus-only): the force-vault Function is custom on Plus;
-  non-Plus gets the same "hide pay later" from an App Store (public) app.
 
-Beyond those three, the build is identical on either tier.
+Everything else is identical on either tier.
 
 ## How the workshop runs
 
@@ -124,14 +122,11 @@ values**, which is Part 1.
 `main` is the starter you build from; the `finished` branch has the completed solution (also your
 in-session recovery path).
 
-## Recap
+## Take-home
 
-Starting from the pre-seeded B2B structure, you build the pre-order experience: a PDP block that carries
-season context to checkout, a payment Function that sets the right terms and forces a vaulted card, and a
-Flow that charges that card automatically on fulfillment. Then you adapt for a non-Plus merchant, who
-reaches the same outcome by splitting into two fixed-term locations. Redo or reset instructions live in
-[`SESSION.md`](SESSION.md) ("Start a part over"); the [reference sheet](b2b-preorder-reference-sheet.md)
-maps six pre-order patterns to the building blocks for building more at home.
+Reset or redo a part via [`SESSION.md`](SESSION.md) ("Start a part over"). The
+[reference sheet](b2b-preorder-reference-sheet.md) maps six pre-order patterns to these building blocks
+on Plus and non-Plus, use it to build variations after the session.
 
 ## Where to go next (extension ideas)
 
