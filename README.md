@@ -47,22 +47,14 @@ order that carries a season signal and is paid on fulfillment. This workshop bui
 
 Against your own dev store: a B2B buyer views a pre-book product and sees its ordering and delivery
 windows, adds it to the cart, and at checkout the order is set to due-on-fulfillment; when it ships, the
-vaulted card is charged automatically. You build the full **Plus** experience first, then adapt it for a
-**non-Plus** merchant.
-
-| | Non-Plus | Plus |
-|---|---|---|
-| Product modeling | Separate available-now and pre-book products | Available-now + pre-book in one mixed cart |
-| Visibility | Separate catalog + location/market per type | Single location with both catalogs |
-| Payment terms | Static "due on fulfillment" on the pre-book location | Function switches Net 30 to due-on-fulfillment when a pre-book item is in the cart |
-| Force a vaulted card | App Store (public) app hides "pay later" | Custom payment-customization Function hides "pay later" |
-| Charge on fulfillment | One Flow, charges at full fulfillment | Same Flow, charges per fulfillment |
-| Season on cart/checkout | Line item properties (all plans) | Line item properties (same mechanism) |
+vaulted card is charged automatically. You build this on Plus; what a non-Plus merchant does differently
+is summarized in [What actually requires Plus](#what-actually-requires-plus) and the
+[reference sheet](b2b-preorder-reference-sheet.md).
 
 ## The building blocks
 
-Pre-orders are just one feature; they're a combination of features that are already on the platform. The
-workshop wires these together:
+Pre-orders aren't a single feature; they're a combination of platform capabilities that are already
+there. The workshop wires these together:
 
 1. **Catalogs (+ Markets)**: which products and prices each B2B buyer's location sees.
 2. **Payment terms**: when the balance is due (Net 30, or **due on fulfillment**) on the company location.
@@ -112,7 +104,7 @@ The seed script (run in prework) builds the B2B structure the workshop sits on.
 - **Two product groups** tagged `available-now` and `prebook` (pre-book titles carry a `(Pre-book)` suffix); smart collections + menu links per group are a legibility aid.
 - **Three wholesale locations** under one company - Combined, Available Now, Pre-book. All share one address and the same buyer-as-admin: not separate places, just the lever for separate catalogs, terms, and orders per journey.
 - **A market + catalog per location** at wholesale pricing; Combined carries both catalogs on one market for a mixed cart.
-- **Terms per location:** Available Now = Net 30, Pre-book = **due on fulfillment**, Combined = Net 30 (the Payment  Function switches it per checkout).
+- **Terms per location:** Available Now = Net 30, Pre-book = **due on fulfillment**, Combined = Net 30 (the Payment Function switches it per checkout).
 
 Separate products (not one product in two states) avoids inventory complexity; pre-book keeps selling
 past zero stock (inventory policy `continue`) since each order sizes the production run. The data model
