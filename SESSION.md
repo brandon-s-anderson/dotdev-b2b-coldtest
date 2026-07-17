@@ -14,6 +14,9 @@ Test every checkpoint while **logged into the storefront as your B2B buyer (Maya
 **Combined** location. The admin preview and normal (DTC) visitors won't trigger the block or the B2B
 payment behavior, so always check as the buyer.
 
+> **Stuck on a build?** Jump to [Quick recovery](#quick-recovery). One command drops in the finished
+> file and `dev` reloads: `git checkout origin/finished -- <path>` (run from `starter/b2b-prebooking-workshop`).
+
 ---
 
 ## What you'll see (the finished flow)
