@@ -9,13 +9,11 @@ so it never waits on tagging. The same Flow serves both plans.
 ## Prompt (copy into Sidekick)
 
 ```text
-Shopify Flow: Charge vaulted B2B payment on due date
+Create a new Flow to automatically charge a saved B2B payment method when a payment schedule
+becomes due.
 
-Trigger: Payment schedule is due
-Action: Charge vaulted payment for B2B order
-
-No condition needed: the "Charge vaulted payment for B2B order" action already skips schedules that
-have been paid, so it won't double-charge. Designed for per fulfillment B2B payment capture.
+When a payment schedule due date is reached, capture the vaulted payment method associated with
+that payment schedule.
 ```
 
 ### While Sidekick builds: talk this through

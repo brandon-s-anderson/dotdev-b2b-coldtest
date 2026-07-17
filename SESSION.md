@@ -308,13 +308,11 @@ Sidekick. **3a (charge on fulfillment) is required, build it first.** **3b (tag)
 ### 3a. Charge on fulfillment (required)
 
 ```text
-Shopify Flow: Charge vaulted B2B payment on due date
+Create a new Flow to automatically charge a saved B2B payment method when a payment schedule
+becomes due.
 
-Trigger: Payment schedule is due
-Action: Charge vaulted payment for B2B order
-
-No condition needed: the "Charge vaulted payment for B2B order" action already skips schedules that
-have been paid, so it won't double-charge. Designed for per fulfillment B2B payment capture.
+When a payment schedule due date is reached, capture the vaulted payment method associated with
+that payment schedule.
 ```
 
 The trigger fires when a payment schedule comes due (for due-on-fulfillment, that's when you fulfill),
