@@ -416,6 +416,8 @@ waiting on `generated/api.ts`), stop it and drop in the finished file rather tha
 git checkout origin/finished -- extensions/prebooking-theme/blocks/b2b-prebooking.liquid
 # payment Function
 git checkout origin/finished -- extensions/prebooking-payment-terms/src/*
+# everything (both extensions, if you're not sure which broke)
+git checkout origin/finished -- extensions
 ```
 
 | Problem | Fix |
