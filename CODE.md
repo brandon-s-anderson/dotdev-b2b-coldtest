@@ -9,25 +9,24 @@ them in sync, e.g.:
 
 # Paste-in code (fallback)
 
-Prefer not to prompt the AI from scratch, or your build stalled? This file has the finished code for the
-two things you build in the session. **Two ways to use it, either works:**
+Prefer not to prompt from scratch, or your build stalled? Each step below is **one copyable prompt**:
+copy the whole block for the step you need and paste it into your AI assistant (the same one you're
+building with). The prompt tells the AI exactly which file(s) to write, and `dev` hot-reloads on save.
 
-- **A. Let your AI apply it (recommended, no file hunting).** Select a file's instruction line **and** the
-  code block under it, and paste the two together into your AI assistant. The instruction names the exact
-  file to write; `dev` hot-reloads on save.
-- **B. Copy it into the file yourself.** Open the file at the path in the heading and replace its whole
-  contents with the code block.
+Even simpler if you know git: from `starter/b2b-prebooking-workshop`, `git checkout finished -- <path>`
+drops in the same code in one command.
 
-This is the same code as the `finished` branch, so `git checkout finished -- <path>` (run from
-`starter/b2b-prebooking-workshop`) does the same thing in one command. After the theme block you still
-**place the block in the theme editor**; after the Function you still **activate it** (SESSION Part 2:
-press `g`, run the `paymentCustomizationCreate` mutation).
+After the theme block, place it on a pre-book product in the theme editor. After the Function, activate
+it (SESSION Part 2: press `g`, run the `paymentCustomizationCreate` mutation).
 
 ---
 
-## Part 1 code: theme block
+## Part 1 prompt: theme block
 
-Paste to your AI: *replace the entire contents of `extensions/prebooking-theme/blocks/b2b-prebooking.liquid` with the code below, then stop.*
+Copy this whole block into your AI:
+
+````text
+In extensions/prebooking-theme/blocks/b2b-prebooking.liquid, replace the entire file contents with exactly this, then stop. Do not run any commands.
 
 ```liquid
 {%- comment -%}
@@ -193,15 +192,18 @@ Paste to your AI: *replace the entire contents of `extensions/prebooking-theme/b
 }
 {% endschema %}
 ```
-
-After pasting: place the block on a pre-book product in the theme editor (**Add block -> Apps -> B2B Pre-booking**), then verify as Maya (SESSION Part 1).
+````
 
 ---
 
-## Part 2 code: payment Function (two files)
+## Part 2 prompt: payment Function (both files, one prompt)
 
-Paste to your AI: *replace the entire contents of `extensions/prebooking-payment-terms/src/cart_payment_methods_transform_run.graphql` with the code below, then stop.*
+Copy this whole block into your AI:
 
+````text
+Update my payment customization Function by replacing the entire contents of these two files with exactly what is shown below, then stop. Do not run any commands.
+
+File 1: extensions/prebooking-payment-terms/src/cart_payment_methods_transform_run.graphql
 ```graphql
 query CartPaymentMethodsTransformRunInput {
   cart {
@@ -232,8 +234,7 @@ query CartPaymentMethodsTransformRunInput {
 }
 ```
 
-Paste to your AI: *replace the entire contents of `extensions/prebooking-payment-terms/src/cart_payment_methods_transform_run.ts` with the code below, then stop.*
-
+File 2: extensions/prebooking-payment-terms/src/cart_payment_methods_transform_run.ts
 ```typescript
 interface PaymentMethod {
   id: string;
@@ -353,6 +354,6 @@ function methodMatchesAnyPattern(method: PaymentMethod, patterns: string[]): boo
 
 export { DUE_ON_FULFILLMENT_TRIGGER, DEFERRED_METHOD_PATTERNS };
 ```
+````
 
-After pasting both files: activate the Function (SESSION Part 2: press `g` in the `dev` terminal, run the `paymentCustomizationCreate` mutation), then verify as Maya on Combined.
-```
+After pasting, activate the Function (SESSION Part 2: press `g` in the `dev` terminal, run the `paymentCustomizationCreate` mutation), then verify as Maya on Combined.
