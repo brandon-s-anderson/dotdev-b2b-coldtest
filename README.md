@@ -61,14 +61,14 @@ vaulted card is charged automatically. You build the full **Plus** experience fi
 
 ## The building blocks
 
-Pre-booking isn't one feature; it's a combination of primitives that are already on the platform. The
+Pre-orders are just one feature; they're a combination of features that are already on the platform. The
 workshop wires these together:
 
 1. **Catalogs (+ Markets)**: which products and prices each B2B buyer's location sees.
 2. **Payment terms**: when the balance is due (Net 30, or **due on fulfillment**) on the company location.
 3. **Custom data**: metaobjects + metafields; the "season" model attached to the product.
 4. **Online store theme (Liquid)**: the PDP block that shows the windows and carries `Season` / `Delivery window` onto the cart line.
-5. **Payment customizations** *(Plus)*: a Shopify Function that switches terms and hides "pay later" for pre-book carts.
+5. **Payment customizations** *(Plus)*: a Shopify Function that switches terms and hides "pay later" for pre-order carts.
 6. **Vaulted cards & ACH**: save a payment method on the order to charge later.
 7. **Shopify Flow**: charge the vaulted method automatically when the payment schedule comes due.
 
@@ -77,8 +77,8 @@ everything else works on any plan.
 
 ## What actually requires Plus
 
-**B2B is now on every plan** (Basic and up): any merchant can run companies, locations, catalogs, net
-terms, and vaulted cards. You build on a Plus dev store, but only two things gate on the merchant's plan:
+**B2B is now on every plan**: any merchant can run companies, locations, catalogs, net
+terms, and vaulted cards (using Shopify Payments). You build on a Plus dev store, but only two things gate on the merchant's plan:
 
 - **Custom app Functions** (Plus-only): the payment-customization Function switches a mixed cart to
   due-on-fulfillment and hides "pay later" to force a vaulted card. Non-Plus uses two fixed-term
@@ -105,17 +105,16 @@ The runnable steps live in [`SESSION.md`](SESSION.md). At a glance:
 - **Part 4: Test the full order.** Place one order as the buyer and watch the vaulted card auto-charge on each fulfillment.
 - **Recap: non-Plus.** The same outcome one tier down, using two fixed-term locations.
 
-## Your seeded store (take 2 minutes to look)
+## Your seeded store
 
-The seed script (run in prework) builds the B2B structure the workshop sits on. You don't build it live,
-but it **is** the non-Plus pattern:
+The seed script (run in prework) builds the B2B structure the workshop sits on.
 
 - **Two product groups** tagged `available-now` and `prebook` (pre-book titles carry a `(Pre-book)` suffix); smart collections + menu links per group are a legibility aid.
-- **Two wholesale locations** under one company (Available Now, Pre-book) plus a Plus **Combined** location. All share one address and the same buyer-as-admin: not separate places, just the lever for separate catalogs, terms, and orders per journey.
+- **Three wholesale locations** under one company - Combined, Available Now, Pre-book. All share one address and the same buyer-as-admin: not separate places, just the lever for separate catalogs, terms, and orders per journey.
 - **A market + catalog per location** at wholesale pricing; Combined carries both catalogs on one market for a mixed cart.
-- **Terms per location:** Available Now = Net 30, Pre-book = **due on fulfillment**, Combined = Net 30 (the Plus Function switches it per checkout).
+- **Terms per location:** Available Now = Net 30, Pre-book = **due on fulfillment**, Combined = Net 30 (the Payment  Function switches it per checkout).
 
-Separate products (not one product in two states) avoids inventory gymnastics; pre-book keeps selling
+Separate products (not one product in two states) avoids inventory complexity; pre-book keeps selling
 past zero stock (inventory policy `continue`) since each order sizes the production run. The data model
 (season metaobject + product metafield) is seeded too; the one thing you author live is the **season
 values**, which is Part 1.
@@ -146,7 +145,7 @@ Reset or redo a part via [`SESSION.md`](SESSION.md) ("Start a part over"). The
 [reference sheet](b2b-preorder-reference-sheet.md) maps six pre-order patterns to these building blocks
 on Plus and non-Plus, use it to build variations after the session.
 
-## Where to go next (extension ideas)
+## Additional ideas for continued building
 
 - Attach line item properties on **every** add path (quick-add, bulk order), not just the PDP, via a site-wide app embed that intercepts `/cart/add`.
 - On Plus, add a **checkout UI extension** for a more polished pre-book line display.
