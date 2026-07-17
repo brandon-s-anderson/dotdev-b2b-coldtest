@@ -11,9 +11,7 @@ not a turnkey product: patterns, prompts, and a starter app you extend for your 
 
 This README is the **overview**. The two working docs are:
 
-- **[`PREWORK.md`](PREWORK.md)**: everything to set up **before** the session (US Plus sandbox, Shopify
-  Payments in test mode, Shopify Flow, and the store seed). Heavier than most workshops and **cannot be
-  done live**, so do it all beforehand.
+- **[`PREWORK.md`](PREWORK.md)**: the before-session setup (see [Prerequisites](#prerequisites) below), with exact steps and a validation checklist.
 - **[`SESSION.md`](SESSION.md)**: the in-session follow-along: every command, prompt, and checkpoint in
   order. Open it and build.
 
@@ -25,6 +23,18 @@ merchants. The build is AI-assisted, so you'll be comfortable if you can:
 - run commands in a terminal,
 - clone and edit a project from GitHub, and
 - follow basic Shopify Admin and B2B concepts.
+
+## Prerequisites
+
+Set all of this up **before the session**, it can't be done live. Full steps and a validation checklist
+are in **[`PREWORK.md`](PREWORK.md)**; give yourself lead time for Shopify Payments especially.
+
+- **US Shopify Plus sandbox** dev store, with **B2B** on
+- **Shopify Payments** in **test mode** (payment capture not at checkout)
+- **Shopify Flow** installed
+- **Node.js 20+**, **pnpm** (or npm), and **Shopify CLI 4+**
+- An **AI coding assistant** with the **Shopify Dev MCP** and **AI Toolkit**
+- The **store seeded** with the workshop data (seed script in PREWORK)
 
 ## The problem
 
