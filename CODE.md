@@ -1,3 +1,12 @@
+<!--
+MAINTAINERS: the code blocks below are copied verbatim from the `finished` branch. They are a second
+home for the same code, so if you change the finished extension files, regenerate these blocks to keep
+them in sync, e.g.:
+  git show finished:starter/b2b-prebooking-workshop/extensions/prebooking-theme/blocks/b2b-prebooking.liquid
+  git show finished:starter/b2b-prebooking-workshop/extensions/prebooking-payment-terms/src/cart_payment_methods_transform_run.graphql
+  git show finished:starter/b2b-prebooking-workshop/extensions/prebooking-payment-terms/src/cart_payment_methods_transform_run.ts
+-->
+
 # Paste-in code (fallback)
 
 Prefer not to prompt the AI from scratch, or your build stalled? This file has the finished code for the
