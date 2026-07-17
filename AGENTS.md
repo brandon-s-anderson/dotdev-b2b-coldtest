@@ -11,7 +11,7 @@ has a tight clock):
   (`ps`, `pgrep`, etc.), and do NOT wait for or inspect `generated/api.ts` (GraphQL type codegen is a
   separate step that does not hot-reload). Write against the GraphQL input query given in the prompt.
 - **Do not investigate.** If generated types look stale or the environment looks off, note it in one
-  line and proceed. If a build is actually broken, the presenter drops in the finished file from the
+  line and proceed. If a build is actually broken, drop in the finished file from the
   `finished` branch; you do not debug the environment.
 - **One-shot the code.** The prompts give the exact input query and logic. Write the file(s) once, let
   the validator / typecheck run, fix a genuine error if flagged, and stop, do not re-verify repeatedly.

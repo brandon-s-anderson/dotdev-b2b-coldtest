@@ -324,7 +324,11 @@ already skips schedules that have been paid**, so it won't double-charge. It act
 schedule, not any tag**, so it stands on its own. Same Flow on both plans: non-Plus charges once at full
 fulfillment, Plus charges per fulfillment.
 
-**Prefer not to build it live?** Import the ready-made workflow instead:
+**Or build it by hand (fastest, no Sidekick):** in Shopify Flow, **Create workflow** → trigger **Payment
+schedule is due** → action **Charge vaulted payment for B2B order** → **turn it on**. Two steps, no
+condition.
+
+**Prefer to import it?** Use the ready-made workflow:
 [`workshop-assets/flow/charge-on-fulfillment.flow`](workshop-assets/flow/charge-on-fulfillment.flow)
 (Shopify Flow → **Import**). Preview it, save it, and **turn it on**. Built, it looks like this:
 

@@ -73,7 +73,7 @@ charges up front and defeats pay-on-fulfillment).
 The seed step runs from it, so clone early (it's ~23 MB, mostly product images):
 
 ```bash
-git clone https://github.com/brandon-s-anderson/dotdev-b2b-coldtest.git
+git clone https://github.com/Shopify/dotdev-workshop-b2b.git
 ```
 
 `pnpm install` is an **in-session** step, not now (`cd starter/b2b-prebooking-workshop && pnpm install`,

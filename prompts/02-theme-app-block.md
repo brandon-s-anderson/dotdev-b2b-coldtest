@@ -94,7 +94,7 @@ AND
 Part (2) is what makes it work on Horizon; part (1) covers classic themes.
 ```
 
-### While it builds (~2–3 min): talk this through
+### While it builds: what's happening
 
 You do **not** need to open the Liquid file. Say these two ideas out loud:
 

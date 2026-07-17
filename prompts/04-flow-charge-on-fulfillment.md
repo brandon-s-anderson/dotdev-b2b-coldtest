@@ -16,7 +16,7 @@ When a payment schedule due date is reached, capture the vaulted payment method 
 that payment schedule.
 ```
 
-### While Sidekick builds: talk this through
+### While it builds: what's happening
 
 1. **Trigger = payment schedule due:** for a due-on-fulfillment order that fires when you fulfill; a Net 30 order would fire 30 days out.
 2. **Just trigger and action:** no condition needed, the charge action skips already-paid schedules itself.

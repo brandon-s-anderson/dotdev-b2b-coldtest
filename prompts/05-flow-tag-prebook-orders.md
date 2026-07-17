@@ -14,7 +14,7 @@ if the order is a B2B order
 and the order has a product tagged "prebook".
 ```
 
-### While Sidekick builds: talk this through
+### While it builds: what's happening
 
 1. **B2B guard:** only tag when the order has a purchasing company, so DTC stays clean.
 2. **Product tag `prebook`:** detects pre-book lines; order tag **`Prebooking`** is what merchants filter on to see just their pre-book orders.

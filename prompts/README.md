@@ -1,7 +1,7 @@
 # Prompts
 
-**In the live session, attendees follow [`SESSION.md`](../SESSION.md)** (one doc: talk track, clicks,
-paste prompts, while-it-builds teach notes). These files are the same paste prompts with optional
+**In the live session, attendees follow [`SESSION.md`](../SESSION.md)** (one doc: the steps, clicks,
+paste prompts, and while-it-builds notes). These files are the same paste prompts with optional
 deeper notes if you want them open separately.
 
 Work through these in order. Each file has the exact CLI command and/or AI prompt to use,

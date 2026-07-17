@@ -69,7 +69,7 @@ Match the deferred method by name. On B2B checkout the underlying name is "Defer
 (the label shown to buyers is "Choose payment method at a later time"). Keep the match configurable.
 ```
 
-### While it builds (~2–3 min): talk this through
+### While it builds: what's happening
 
 You do **not** need to open the TypeScript file. Say these two ideas out loud:
 
