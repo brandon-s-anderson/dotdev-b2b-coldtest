@@ -27,9 +27,9 @@ and teach notes are documented in the build walkthrough, which is the **single s
 For anyone who'd rather not build the Flows via Sidekick or by hand, exported `.flow` files
 are provided here so you can import them directly:
 
-- `flow-2-charge-on-fulfillment.flow` (the charge Flow, Part 3a, required): schedule-driven trigger,
+- `charge-on-fulfillment.flow` (the charge Flow, Part 3a, required): schedule-driven trigger,
   then the charge action, no condition
-- `flow-1-tag-prebook-orders.flow` (the tag Flow, Part 3b, optional)
+- `tag-prebook-orders.flow` (the tag Flow, Part 3b, optional)
 
 To import: Shopify admin, Apps, Shopify Flow, Import, then select the `.flow` file. Review the
 conditions after importing, then turn the workflow on.

@@ -322,7 +322,7 @@ schedule, not any tag**, so it stands on its own. Same Flow on both plans: non-P
 fulfillment, Plus charges per fulfillment.
 
 **Prefer not to build it live?** Import the ready-made workflow instead:
-[`workshop-assets/flow/flow-2-charge-on-fulfillment.flow`](workshop-assets/flow/flow-2-charge-on-fulfillment.flow)
+[`workshop-assets/flow/charge-on-fulfillment.flow`](workshop-assets/flow/charge-on-fulfillment.flow)
 (Shopify Flow → **Import**). Preview it, save it, and **turn it on**. Built, it looks like this:
 
 <a href="workshop-assets/flow/images/charge-on-fulfillment-flow.png"><img src="workshop-assets/flow/images/charge-on-fulfillment-flow.png" alt="Charge vaulted B2B payment Flow: a Payment schedule is due trigger connected straight to a Charge vaulted payment for B2B order action, no condition" width="320"></a>
@@ -346,7 +346,7 @@ orders. Purely for visibility, the charge Flow above doesn't depend on it, so sk
 time.
 
 **Prefer not to build it live?** Import the ready-made workflow instead:
-[`workshop-assets/flow/flow-1-tag-prebook-orders.flow`](workshop-assets/flow/flow-1-tag-prebook-orders.flow)
+[`workshop-assets/flow/tag-prebook-orders.flow`](workshop-assets/flow/tag-prebook-orders.flow)
 (Shopify Flow → **Import**). Built, it looks like this:
 
 <a href="workshop-assets/flow/images/tag-prebook-orders-flow.png"><img src="workshop-assets/flow/images/tag-prebook-orders-flow.png" alt="Tag pre-book orders Flow: Order created trigger, then a Company id exists condition, then a product tag is prebook condition, then an Add order tags: Prebooking action" width="320"></a>
