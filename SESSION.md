@@ -86,7 +86,7 @@ shopify app dev --use-localhost
 
 On the first `shopify app dev --use-localhost` run you may also be asked for your **storefront password** (Admin → Online Store → Preferences) and, for `--use-localhost`, a mkcert prompt: choose **"Yes, use mkcert to generate it"** and enter your Mac/sudo password (one-time per machine).
 
-`--use-localhost` serves the dev session over a local HTTPS proxy instead of a Cloudflare tunnel, which avoids room-wide throttling when everyone starts at once. Leave `dev` running for the rest of the session.
+`--use-localhost` serves the dev session over a local HTTPS proxy instead of a Cloudflare tunnel, which avoids room-wide throttling when everyone starts at once.
 
 ---
 
